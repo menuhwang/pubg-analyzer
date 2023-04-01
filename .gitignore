@@ -35,5 +35,8 @@ out/
 
 ### VS Code ###
 .vscode/
-/src/main/java/com/menu/wdtmk/data/
+/data/
 
+/src/main/resources/application-prod.properties
+/src/main/resources/application-local.properties
+/src/test/resources/application-test.properties
