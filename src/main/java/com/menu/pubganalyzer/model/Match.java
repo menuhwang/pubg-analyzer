@@ -1,5 +1,6 @@
 package com.menu.pubganalyzer.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.menu.pubganalyzer.model.enums.Shard;
 import com.menu.pubganalyzer.model.enums.match.*;
 import lombok.Builder;
@@ -25,8 +26,11 @@ public class Match {
     private MatchType matchType;
     private LocalDateTime createdAt;
 
+    @JsonIgnore
     private Asset asset; //Entity ignore
+    @JsonIgnore
     private Set<Participant> participants; //Entity ignore
+    @JsonIgnore
     private Set<Roster> rosters; //Entity ignore
 
     private Match() {

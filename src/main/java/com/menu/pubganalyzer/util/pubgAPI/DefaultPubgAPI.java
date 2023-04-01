@@ -17,9 +17,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.*;
 
 @Component
-@RequiredArgsConstructor
 public class DefaultPubgAPI implements PubgAPI {
-    private final RestTemplate restTemplate;
+    private final RestTemplate restTemplate = new RestTemplate();
 
 //    @Value("${util.pubg.api.token}")
 //    private String TOKEN;
