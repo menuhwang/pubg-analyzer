@@ -1,11 +1,7 @@
 package com.menu.pubganalyzer.util.pubgAPI;
 
-import com.menu.pubganalyzer.model.Asset;
-import com.menu.pubganalyzer.model.Match;
-import com.menu.pubganalyzer.model.Participant;
-import com.menu.pubganalyzer.model.Roster;
+import com.menu.pubganalyzer.model.*;
 import com.menu.pubganalyzer.model.enums.Shard;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,24 +11,28 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class DefaultPubgAPI implements PubgAPI {
     private final RestTemplate restTemplate = new RestTemplate();
-
-//    @Value("${util.pubg.api.token}")
-//    private String TOKEN;
-
     private static final String BASE_URL = "https://api.pubg.com";
     private static Shard shard = Shard.STEAM;
 
-    private static final HttpEntity DEFAULT_HTTP_ENTITY;
+    private final HttpEntity DEFAULT_HTTP_ENTITY;
+    private final HttpEntity AUTH_HTTP_ENTITY;
 
-    static {
+    public DefaultPubgAPI(@Value("${util.pubg.api.token}") String token) {
         HttpHeaders defaultHeaders = new HttpHeaders();
         defaultHeaders.set("accept", "application/vnd.api+json");
 
         DEFAULT_HTTP_ENTITY = new HttpEntity(defaultHeaders);
+
+        HttpHeaders authHeaders = new HttpHeaders();
+        authHeaders.set("accept", "application/vnd.api+json");
+        authHeaders.set("Authorization", "Bearer " + token);
+
+        AUTH_HTTP_ENTITY = new HttpEntity(authHeaders);
     }
 
     @Override
@@ -78,7 +78,8 @@ public class DefaultPubgAPI implements PubgAPI {
                         for (String participantId : r.getParticipants()) participants.get(participantId).setRoster(r);
                         rosters.add(r);
                     }
-                    default -> {}
+                    default -> {
+                    }
                 }
             } catch (IllegalArgumentException ignore) {
             }
@@ -89,5 +90,33 @@ public class DefaultPubgAPI implements PubgAPI {
         match.setRosters(rosters);
 
         return match;
+    }
+
+    @Override
+    public Player player(String nickname) {
+        String url = BASE_URL + "/shards/" + shard.name().toLowerCase() + "/players?filter[playerNames]=" + nickname;
+
+        ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, AUTH_HTTP_ENTITY, Map.class);
+
+        List<Map<String, Object>> data = (ArrayList) response.getBody().get("data");
+
+        return Player.of(data.get(0));
+    }
+
+    @Override
+    public Set<Player> player(Collection<String> nicknames) {
+        StringBuilder url = new StringBuilder(BASE_URL + "/shards/" + shard.name().toLowerCase() + "/players?filter[playerNames]=");
+        for (String nickname : nicknames) {
+            url.append(nickname);
+            url.append(",");
+        }
+
+        url.deleteCharAt(url.length() - 1);
+
+        ResponseEntity<Map> response = restTemplate.exchange(url.toString(), HttpMethod.GET, AUTH_HTTP_ENTITY, Map.class);
+
+        List<Map<String, Object>> data = (ArrayList) response.getBody().get("data");
+
+        return data.stream().map(Player::of).collect(Collectors.toSet());
     }
 }
