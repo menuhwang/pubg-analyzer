@@ -4,30 +4,39 @@ import com.menu.pubganalyzer.model.enums.Shard;
 import lombok.Builder;
 import lombok.Getter;
 
+import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
+@Entity
 public class Roster {
+    @Id
     private String id;
     private boolean won;
+    @Enumerated(EnumType.STRING)
     private Shard shardId;
+    @Column(name = "winPlace")
     private int rank;
     private int teamId;
+    @ManyToOne(fetch = FetchType.LAZY)
     private Match match;
-    private Set<String> participants; //Entity ignore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "roster")
+    private Set<Participant> participants = new HashSet<>();
+    @Transient
+    private Set<String> participantIds;
 
-    private Roster() {
+    protected Roster() {
     }
 
     @Builder
-    private Roster(String id, boolean won, Shard shardId, int rank, int teamId, Collection<String> participants, Match match) {
+    private Roster(String id, boolean won, Shard shardId, int rank, int teamId, Collection<String> participantIds, Match match) {
         this.id = id;
         this.won = won;
         this.shardId = shardId;
         this.rank = rank;
         this.teamId = teamId;
-        this.participants = new HashSet<>(participants);
+        this.participantIds = new HashSet<>(participantIds);
         this.match = match;
     }
 
@@ -45,7 +54,7 @@ public class Roster {
                 .shardId(Shard.valueOf(((String) attributes.get("shardId")).toUpperCase()))
                 .rank((int) stats.get("rank"))
                 .teamId((int) stats.get("teamId"))
-                .participants(participants)
+                .participantIds(participants)
                 .match(match)
                 .build();
     }

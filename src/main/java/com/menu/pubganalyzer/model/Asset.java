@@ -6,20 +6,29 @@ import com.menu.pubganalyzer.model.enums.match.MapName;
 import com.menu.pubganalyzer.model.enums.match.MatchType;
 import com.menu.pubganalyzer.model.enums.match.SeasonState;
 import lombok.Builder;
+import lombok.Getter;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
+@Getter
+@Entity
 public class Asset {
+    @Id
     private String id;
     private String name;
     private String description;
     private String url;
     private LocalDateTime createdAt;
+    @OneToOne(fetch = FetchType.LAZY)
     private Match match;
 
-    private Asset() {
+    protected Asset() {
     }
 
     @Builder

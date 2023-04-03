@@ -74,7 +74,7 @@ public class DefaultPubgAPI implements PubgAPI {
                         }
                         case "roster" -> {
                             Roster r = Roster.of(include, match);
-                            for (String participantId : r.getParticipants())
+                            for (String participantId : r.getParticipantIds())
                                 participants.get(participantId).setRoster(r);
                             rosters.add(r);
                         }

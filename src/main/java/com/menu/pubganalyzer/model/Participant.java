@@ -6,19 +6,27 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import javax.persistence.*;
 import java.util.Map;
 
 @Builder
 @AllArgsConstructor
 @Getter
+@Entity
+@Table(indexes = {
+        @Index(name = "participant_playerId_match_index", columnList = "playerId, match_id")
+})
 public class Participant {
+    @Id
     private String id;
+    @Enumerated(EnumType.STRING)
     private Shard shardId;
     private int dbnos;
     private int assists;
     private int boosts;
     private int heals;
     private float damageDealt;
+    @Enumerated(EnumType.STRING)
     private DeathType deathType;
     private int headshotKills;
     private int killPlace;
@@ -37,10 +45,12 @@ public class Participant {
     private int winPlace;
     private String name;
     private String playerId;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Roster roster;
+    @ManyToOne(fetch = FetchType.LAZY)
     private Match match;
 
-    private Participant() {
+    protected Participant() {
     }
 
     public void setRoster(Roster roster) {

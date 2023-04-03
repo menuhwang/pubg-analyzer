@@ -1,11 +1,14 @@
 package com.menu.pubganalyzer.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.menu.pubganalyzer.model.enums.Shard;
-import com.menu.pubganalyzer.model.enums.match.*;
+import com.menu.pubganalyzer.model.enums.match.GameMode;
+import com.menu.pubganalyzer.model.enums.match.MapName;
+import com.menu.pubganalyzer.model.enums.match.MatchType;
+import com.menu.pubganalyzer.model.enums.match.SeasonState;
 import lombok.Builder;
 import lombok.Getter;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
@@ -14,26 +17,37 @@ import java.util.Map;
 import java.util.Set;
 
 @Getter
+@Entity
+@Table(name = "matches",
+        indexes = {
+        @Index(name = "match_id_shard_index", columnList = "id, shardId")
+})
 public class Match {
+    @Id
     private String id;
+    @Enumerated(EnumType.STRING)
     private GameMode gameMode;
+    @Enumerated(EnumType.STRING)
     private SeasonState seasonState;
     private int duration;
     private String titleId;
+    @Enumerated(EnumType.STRING)
     private Shard shardId;
+    @Enumerated(EnumType.STRING)
     private MapName mapName;
     private boolean isCustomMatch;
+    @Enumerated(EnumType.STRING)
     private MatchType matchType;
     private LocalDateTime createdAt;
 
-    @JsonIgnore
-    private Asset asset; //Entity ignore
-    @JsonIgnore
-    private Set<Participant> participants; //Entity ignore
-    @JsonIgnore
-    private Set<Roster> rosters; //Entity ignore
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "match", cascade = {CascadeType.ALL})
+    private Asset asset;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "match", cascade = {CascadeType.ALL})
+    private Set<Participant> participants = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "match", cascade = {CascadeType.ALL})
+    private Set<Roster> rosters = new HashSet<>();
 
-    private Match() {
+    protected Match() {
     }
 
     @Builder
