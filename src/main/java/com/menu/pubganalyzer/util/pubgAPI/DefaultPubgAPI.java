@@ -2,18 +2,15 @@ package com.menu.pubganalyzer.util.pubgAPI;
 
 import com.menu.pubganalyzer.model.*;
 import com.menu.pubganalyzer.model.enums.Shard;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import com.menu.pubganalyzer.util.pubgAPI.exception.MatchNotFoundException;
+import com.menu.pubganalyzer.util.pubgAPI.exception.PlayerNotFoundException;
+import org.springframework.http.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Component
 public class DefaultPubgAPI implements PubgAPI {
     private final RestTemplate restTemplate = new RestTemplate();
     private static final String BASE_URL = "https://api.pubg.com";
@@ -22,7 +19,7 @@ public class DefaultPubgAPI implements PubgAPI {
     private final HttpEntity DEFAULT_HTTP_ENTITY;
     private final HttpEntity AUTH_HTTP_ENTITY;
 
-    public DefaultPubgAPI(@Value("${util.pubg.api.token}") String token) {
+    public DefaultPubgAPI(String token) {
         HttpHeaders defaultHeaders = new HttpHeaders();
         defaultHeaders.set("accept", "application/vnd.api+json");
 
@@ -43,51 +40,57 @@ public class DefaultPubgAPI implements PubgAPI {
     @Override
     public Match match(String matchId) {
         String url = BASE_URL + "/shards/" + shard.name().toLowerCase() + "/matches/" + matchId;
+        Match match = null;
+        try {
+            ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, DEFAULT_HTTP_ENTITY, Map.class);
 
-        ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, DEFAULT_HTTP_ENTITY, Map.class);
-        Map<String, Object> data = (LinkedHashMap) response.getBody().get("data");
-        List<Map<String, Object>> included = (ArrayList) response.getBody().get("included");
-        included.sort((in1, in2) -> {
-            String type1 = (String) in1.get("type");
-            String type2 = (String) in2.get("type");
+            Map<String, Object> data = (LinkedHashMap) response.getBody().get("data");
+            List<Map<String, Object>> included = (ArrayList) response.getBody().get("included");
+            included.sort((in1, in2) -> {
+                String type1 = (String) in1.get("type");
+                String type2 = (String) in2.get("type");
 
-            int order1 = type1.equals("asset") ? 1 : type1.equals("participant") ? 2 : 3;
-            int order2 = type2.equals("asset") ? 1 : type2.equals("participant") ? 2 : 3;
+                int order1 = type1.equals("asset") ? 1 : type1.equals("participant") ? 2 : 3;
+                int order2 = type2.equals("asset") ? 1 : type2.equals("participant") ? 2 : 3;
 
-            return order1 - order2;
-        });
+                return order1 - order2;
+            });
 
-        Match match = Match.of(data);
+            match = Match.of(data);
 
-        Set<Roster> rosters = new HashSet<>();
-        Map<String, Participant> participants = new HashMap<>();
-        List<Asset> assets = new ArrayList<>();
+            Set<Roster> rosters = new HashSet<>();
+            Map<String, Participant> participants = new HashMap<>();
+            List<Asset> assets = new ArrayList<>();
 
-        for (Map<String, Object> include : included) {
-            try {
-                String type = (String) include.get("type");
+            for (Map<String, Object> include : included) {
+                try {
+                    String type = (String) include.get("type");
 
-                switch (type) {
-                    case "asset" -> assets.add(Asset.of(include, match));
-                    case "participant" -> {
-                        Participant p = Participant.of(include, match);
-                        participants.put(p.getId(), p);
+                    switch (type) {
+                        case "asset" -> assets.add(Asset.of(include, match));
+                        case "participant" -> {
+                            Participant p = Participant.of(include, match);
+                            participants.put(p.getId(), p);
+                        }
+                        case "roster" -> {
+                            Roster r = Roster.of(include, match);
+                            for (String participantId : r.getParticipants())
+                                participants.get(participantId).setRoster(r);
+                            rosters.add(r);
+                        }
+                        default -> {
+                        }
                     }
-                    case "roster" -> {
-                        Roster r = Roster.of(include, match);
-                        for (String participantId : r.getParticipants()) participants.get(participantId).setRoster(r);
-                        rosters.add(r);
-                    }
-                    default -> {
-                    }
+                } catch (IllegalArgumentException ignore) {
                 }
-            } catch (IllegalArgumentException ignore) {
             }
-        }
 
-        match.setAsset(assets.get(0));
-        match.setParticipants(participants.values());
-        match.setRosters(rosters);
+            match.setAsset(assets.get(0));
+            match.setParticipants(participants.values());
+            match.setRosters(rosters);
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) throw new MatchNotFoundException(matchId);
+        }
 
         return match;
     }
@@ -100,7 +103,11 @@ public class DefaultPubgAPI implements PubgAPI {
 
         List<Map<String, Object>> data = (ArrayList) response.getBody().get("data");
 
-        return Player.of(data.get(0));
+        Player player = Player.of(data.get(0));
+
+        if (player.getMatchIds().size() == 0) throw new PlayerNotFoundException();
+
+        return player;
     }
 
     @Override
