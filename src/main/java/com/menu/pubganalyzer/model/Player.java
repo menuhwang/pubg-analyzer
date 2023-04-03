@@ -5,22 +5,30 @@ import com.menu.pubganalyzer.model.enums.Shard;
 import lombok.Builder;
 import lombok.Getter;
 
+import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
+@Entity
+@Table(indexes = {
+        @Index(name = "player_name_shard_index", columnList = "name, shardId", unique = true),
+})
 public class Player {
+    @Id
     private String id;
     private String name;
     private String titleId;
+    @Enumerated(EnumType.STRING)
     private Shard shardId;
     private String patchVersion;
+    @Transient
     @JsonIgnore
     Set<String> matchIds;
 
-    private Player() {
+    protected Player() {
     }
 
     @Builder

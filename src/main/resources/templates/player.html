@@ -1,0 +1,10 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/fragments/header.html :: header(${viewTitle})"></head>
+<body>
+<div class="container">
+    <h1 id="nickname" th:data-player-nickname="${player.name}" th:data-player-id="${player.id}" th:text="${player.name}"></h1>
+    <button class="btn btn-primary">전적 갱신</button>
+</div>
+<th:block th:replace="/fragments/footer.html"></th:block>
+</body>
+</html>
