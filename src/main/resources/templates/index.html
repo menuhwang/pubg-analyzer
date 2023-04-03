@@ -3,22 +3,22 @@
 <body>
     <div class="container h-100 d-flex flex-column">
         <h1 class="text-center mt-auto mb-3">PUBG Analyzer</h1>
-        <div class="row justify-content-center mb-3">
+        <form class="row justify-content-center mb-3" method="get" action="/players">
             <div class="col-2">
-                <select class="form-select">
+                <select name="shard" class="form-select">
                     <option selected th:each="shard : ${shards}" th:if="${shard == 'STEAM'}" th:value="${shard}" th:text="${shard}"></option>
                     <option th:each="shard : ${shards}" th:unless="${shard == 'STEAM'}" th:value="${shard}" th:text="${shard}"></option>
                 </select>
             </div>
             <div class="col">
-                <input type="text" class="form-control" id="input-nickname" placeholder="닉네임을 입력해주세요.">
+                <input type="text" name="nickname" class="form-control" id="input-nickname" placeholder="닉네임을 입력해주세요.">
             </div>
             <div class="col-auto">
-                <button class="btn btn-outline-dark h-100 align-middle">
+                <button type="submit" class="btn btn-outline-dark h-100 align-middle">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
             </div>
-        </div>
+        </form>
         <div class="card mb-auto" id="bookmark">
             <div class="card-header">
                 Bookmark

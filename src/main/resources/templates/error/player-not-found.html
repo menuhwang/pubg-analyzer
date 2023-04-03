@@ -1,0 +1,12 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/fragments/header.html :: header(${viewTitle})"></head>
+<body>
+<div class="container h-100 d-flex flex-column justify-content-center">
+    <div class="d-flex flex-column">
+        <h1 class="text-center">해당 유저를 찾을 수 없습니다.</h1>
+        <a class="btn btn-primary mx-auto" href="/">홈으로</a>
+    </div>
+</div>
+<th:block th:replace="/fragments/footer.html"></th:block>
+</body>
+</html>
