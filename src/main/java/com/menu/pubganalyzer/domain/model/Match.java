@@ -97,7 +97,6 @@ public class Match {
 
     public String getCreatedOffset() {
         LocalDateTime now = LocalDateTime.now(ZoneId.of("UTC"));
-        System.out.println(now);
         long offset = ChronoUnit.MINUTES.between(this.createdAt, now);
         if (offset < 60) return offset + "분 전";
         if (offset < (24 * 60)) return offset / 60 + "시간 전";

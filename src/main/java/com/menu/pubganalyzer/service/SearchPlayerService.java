@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,7 @@ public class SearchPlayerService {
     private final ParticipantRepository participantRepository;
     private final MatchRepository matchRepository;
 
+    @Transactional
     public SearchPlayer searchPlayer(SearchPlayerReq request, Pageable pageable) {
         Shard shard = request.getShard();
         String nickname = request.getNickname();

@@ -89,7 +89,7 @@ public class Participant {
                 .weaponsAcquired((int) stats.get("weaponsAcquired"))
                 .winPlace((int) stats.get("winPlace"))
                 .name((String) stats.get("name"))
-                .playerId(((String) stats.get("playerId")).startsWith("account") ? (String) stats.get("playerId") : null)
+                .playerId(((String) stats.get("playerId")).startsWith("account") ? (String) stats.get("playerId") : "ai")
                 .match(match)
                 .build();
     }
