@@ -15,7 +15,12 @@ public class PlayerService {
 
     public Player getPlayerByNickname(Shard shard, String nickname) {
         pubgAPI.setShard(shard);
+
         return playerRepository.findByShardIdAndName(shard, nickname)
-                .orElseGet(() -> playerRepository.save(pubgAPI.player(nickname)));
+                                .orElseGet(() -> {
+                                    Player player = pubgAPI.player(nickname);
+                                    playerRepository.save(player);
+                                    return player;
+                                });
     }
 }
