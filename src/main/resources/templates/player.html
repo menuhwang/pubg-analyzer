@@ -2,56 +2,64 @@
 <head th:replace="/fragments/header.html :: header(${viewTitle})"></head>
 <body>
     <nav th:replace="/fragments/navbar.html"></nav>
-    <div class="container">
-        <div class="card mt-5 mb-3">
-            <div class="card-body">
-                <h1 id="nickname" th:data-player-nickname="${player.name}" th:data-player-id="${player.id}" th:text="${player.name}"></h1>
-                <div class="d-flex">
-                    <button class="btn btn-primary me-2">전적 갱신</button>
-                    <button class="btn btn-outline-warning"><i class="fa-solid fa-bookmark"></i></button>
+    <div class="container py-5">
+        <div class="row g-4">
+            <!--sidebar:left-->
+            <div class="col-lg-2"></div>
+            <div class="col-md-8 col-lg-6 vstack gap-4">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h1 id="nickname" th:data-player-nickname="${player.name}" th:data-player-id="${player.id}" th:text="${player.name}"></h1>
+                        <div class="d-flex">
+                            <button class="btn btn-primary me-2">전적 갱신</button>
+                            <button class="btn btn-outline-warning"><i class="fa-solid fa-bookmark"></i></button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div id="matches">
-            <div th:each="match : ${matches}" class="card mb-3">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col d-flex flex-column">
-                            <div>
-                                <span class="align-bottom fs-3" th:text="${'#' + match.getParticipantById(player.id).getWinPlace()}"></span>
-                                <span class="align-bottom fs-6" th:text="${'/ ' + match.getRosters().size()}"></span>
+                <div id="stats">
+                    <div th:each="stat : ${stats}" class="card mb-3">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col d-flex flex-column">
+                                    <div>
+                                        <span class="align-bottom fs-3" th:text="${'#' + stat.winPlace}"></span>
+                                        <span class="align-bottom fs-6" th:text="${'/ ' + stat.match.rosters.size()}"></span>
+                                    </div>
+                                    <span th:text="${stat.match.getCreatedOffset()}"
+                                          data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                          data-bs-custom-class="custom-tooltip"
+                                          th:data-bs-title="${stat.match.getZonedCreatedAt()}"></span>
+                                </div>
+                                <div class="col d-flex flex-column">
+                                    <span th:text="${stat.match.mapName.getMapNameKor()}"></span>
+                                    <span th:text="${stat.match.getGameMode()}"></span>
+                                </div>
+                                <div class="col d-flex flex-column">
+                                    <span>킬</span>
+                                    <span th:text="${stat.kills}"></span>
+                                </div>
+                                <div class="col d-flex flex-column">
+                                    <span>어시스트</span>
+                                    <span th:text="${stat.assists}"></span>
+                                </div>
+                                <div class="col d-flex flex-column">
+                                    <span>데미지</span>
+                                    <span th:text="${stat.damageDealt}"></span>
+                                </div>
+                                <div class="col d-flex flex-column">
+                                    <span>부활</span>
+                                    <span th:text="${stat.revives}"></span>
+                                </div>
+                                <div class="col-auto">
+                                    <a href="#" class="btn btn-primary my-auto"><i class="fa-solid fa-arrow-right"></i></a>
+                                </div>
                             </div>
-                            <span th:text="${match.getCreatedOffset()}"
-                                  data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                  data-bs-custom-class="custom-tooltip"
-                                  th:data-bs-title="${match.getCreatedAt()}"></span>
-                        </div>
-                        <div class="col d-flex flex-column">
-                            <span th:text="${match.getMapName()}"></span>
-                            <span th:text="${match.getGameMode()}"></span>
-                        </div>
-                        <div class="col d-flex flex-column">
-                            <span>킬</span>
-                            <span th:text="${match.getParticipantById(player.id).getKills()}"></span>
-                        </div>
-                        <div class="col d-flex flex-column">
-                            <span>어시스트</span>
-                            <span th:text="${match.getParticipantById(player.id).getAssists()}"></span>
-                        </div>
-                        <div class="col d-flex flex-column">
-                            <span>데미지</span>
-                            <span th:text="${match.getParticipantById(player.id).getDamageDealt()}"></span>
-                        </div>
-                        <div class="col d-flex flex-column">
-                            <span>부활</span>
-                            <span th:text="${match.getParticipantById(player.id).getRevives()}"></span>
-                        </div>
-                        <div class="col-auto">
-                            <a href="#" class="btn btn-primary my-auto"><i class="fa-solid fa-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
             </div>
+            <!--sidebar:right-->
+            <div class="col-lg-2"></div>
         </div>
     </div>
     <th:block th:replace="/fragments/footer.html"></th:block>
