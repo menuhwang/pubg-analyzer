@@ -1,4 +1,4 @@
-package com.menu.pubganalyzer.model.enums.match;
+package com.menu.pubganalyzer.domain.model.enums.match;
 
 public enum MapName {
     Baltic_Main("Erangel (Remastered)", "에란겔"),

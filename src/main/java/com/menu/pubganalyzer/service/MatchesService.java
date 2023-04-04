@@ -1,10 +1,10 @@
 package com.menu.pubganalyzer.service;
 
-import com.menu.pubganalyzer.dao.repository.MatchRepository;
-import com.menu.pubganalyzer.model.Match;
-import com.menu.pubganalyzer.model.Player;
-import com.menu.pubganalyzer.model.dto.MatchRes;
-import com.menu.pubganalyzer.model.enums.Shard;
+import com.menu.pubganalyzer.domain.repository.MatchRepository;
+import com.menu.pubganalyzer.domain.model.Match;
+import com.menu.pubganalyzer.domain.model.Player;
+import com.menu.pubganalyzer.domain.dto.MatchRes;
+import com.menu.pubganalyzer.domain.model.enums.Shard;
 import com.menu.pubganalyzer.util.pubgAPI.PubgAPI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

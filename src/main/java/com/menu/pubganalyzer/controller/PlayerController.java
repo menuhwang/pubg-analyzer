@@ -1,8 +1,8 @@
 package com.menu.pubganalyzer.controller;
 
-import com.menu.pubganalyzer.model.Player;
-import com.menu.pubganalyzer.model.dto.MatchRes;
-import com.menu.pubganalyzer.model.enums.Shard;
+import com.menu.pubganalyzer.domain.model.Player;
+import com.menu.pubganalyzer.domain.dto.MatchRes;
+import com.menu.pubganalyzer.domain.model.enums.Shard;
 import com.menu.pubganalyzer.service.MatchesService;
 import com.menu.pubganalyzer.service.PlayerService;
 import lombok.RequiredArgsConstructor;

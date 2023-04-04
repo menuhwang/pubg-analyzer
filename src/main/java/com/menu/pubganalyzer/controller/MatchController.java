@@ -1,7 +1,7 @@
 package com.menu.pubganalyzer.controller;
 
-import com.menu.pubganalyzer.model.Match;
-import com.menu.pubganalyzer.model.enums.Shard;
+import com.menu.pubganalyzer.domain.model.Match;
+import com.menu.pubganalyzer.domain.model.enums.Shard;
 import com.menu.pubganalyzer.service.MatchesService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

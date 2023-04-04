@@ -1,10 +1,5 @@
-package com.menu.pubganalyzer.model;
+package com.menu.pubganalyzer.domain.model;
 
-import com.menu.pubganalyzer.model.enums.Shard;
-import com.menu.pubganalyzer.model.enums.match.GameMode;
-import com.menu.pubganalyzer.model.enums.match.MapName;
-import com.menu.pubganalyzer.model.enums.match.MatchType;
-import com.menu.pubganalyzer.model.enums.match.SeasonState;
 import lombok.Builder;
 import lombok.Getter;
 

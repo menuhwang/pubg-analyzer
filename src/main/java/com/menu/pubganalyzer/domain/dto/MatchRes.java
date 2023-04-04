@@ -1,8 +1,8 @@
-package com.menu.pubganalyzer.model.dto;
+package com.menu.pubganalyzer.domain.dto;
 
-import com.menu.pubganalyzer.model.Match;
-import com.menu.pubganalyzer.model.Participant;
-import com.menu.pubganalyzer.model.Roster;
+import com.menu.pubganalyzer.domain.model.Match;
+import com.menu.pubganalyzer.domain.model.Participant;
+import com.menu.pubganalyzer.domain.model.Roster;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

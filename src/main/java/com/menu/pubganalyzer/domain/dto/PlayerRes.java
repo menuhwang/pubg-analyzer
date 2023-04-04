@@ -1,6 +1,6 @@
-package com.menu.pubganalyzer.model.dto;
+package com.menu.pubganalyzer.domain.dto;
 
-import com.menu.pubganalyzer.model.Player;
+import com.menu.pubganalyzer.domain.model.Player;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

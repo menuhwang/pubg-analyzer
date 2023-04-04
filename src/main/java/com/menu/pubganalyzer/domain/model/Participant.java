@@ -1,7 +1,7 @@
-package com.menu.pubganalyzer.model;
+package com.menu.pubganalyzer.domain.model;
 
-import com.menu.pubganalyzer.model.enums.Shard;
-import com.menu.pubganalyzer.model.enums.match.DeathType;
+import com.menu.pubganalyzer.domain.model.enums.Shard;
+import com.menu.pubganalyzer.domain.model.enums.match.DeathType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

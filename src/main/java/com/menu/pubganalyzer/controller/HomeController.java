@@ -1,6 +1,6 @@
 package com.menu.pubganalyzer.controller;
 
-import com.menu.pubganalyzer.model.enums.Shard;
+import com.menu.pubganalyzer.domain.model.enums.Shard;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

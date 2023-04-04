@@ -1,8 +1,8 @@
 package com.menu.pubganalyzer.service;
 
-import com.menu.pubganalyzer.dao.repository.PlayerRepository;
-import com.menu.pubganalyzer.model.Player;
-import com.menu.pubganalyzer.model.enums.Shard;
+import com.menu.pubganalyzer.domain.repository.PlayerRepository;
+import com.menu.pubganalyzer.domain.model.Player;
+import com.menu.pubganalyzer.domain.model.enums.Shard;
 import com.menu.pubganalyzer.util.pubgAPI.PubgAPI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

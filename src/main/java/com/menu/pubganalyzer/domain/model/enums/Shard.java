@@ -1,4 +1,4 @@
-package com.menu.pubganalyzer.model.enums;
+package com.menu.pubganalyzer.domain.model.enums;
 
 public enum Shard {
     CONSOLE,

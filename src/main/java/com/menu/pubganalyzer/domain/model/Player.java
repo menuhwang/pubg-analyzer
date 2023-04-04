@@ -1,7 +1,7 @@
-package com.menu.pubganalyzer.model;
+package com.menu.pubganalyzer.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.menu.pubganalyzer.model.enums.Shard;
+import com.menu.pubganalyzer.domain.model.enums.Shard;
 import lombok.Builder;
 import lombok.Getter;
 

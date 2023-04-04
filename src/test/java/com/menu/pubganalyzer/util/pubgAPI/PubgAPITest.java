@@ -1,8 +1,8 @@
 package com.menu.pubganalyzer.util.pubgAPI;
 
-import com.menu.pubganalyzer.model.Match;
-import com.menu.pubganalyzer.model.Player;
-import com.menu.pubganalyzer.model.enums.Shard;
+import com.menu.pubganalyzer.domain.model.Match;
+import com.menu.pubganalyzer.domain.model.Player;
+import com.menu.pubganalyzer.domain.model.enums.Shard;
 import com.menu.pubganalyzer.util.pubgAPI.exception.MatchNotFoundException;
 import com.menu.pubganalyzer.util.pubgAPI.exception.PlayerNotFoundException;
 import org.junit.jupiter.api.Test;
