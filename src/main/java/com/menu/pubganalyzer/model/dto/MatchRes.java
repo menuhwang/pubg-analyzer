@@ -8,6 +8,10 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -57,5 +61,22 @@ public class MatchRes {
                 .filter(p -> p.getPlayerId().equals(playerId))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public String getCreatedAt() {
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(this.createdAt, ZoneId.of("UTC"));
+        ZonedDateTime createdAtKor = zonedDateTime.withZoneSameInstant(ZoneId.of("Asia/Seoul"));
+        return createdAtKor.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
+    }
+
+    public String getCreatedOffset() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("UTC"));
+        System.out.println(now);
+        long offset = ChronoUnit.MINUTES.between(this.createdAt, now);
+        if (offset < 60) return offset + "분 전";
+        if (offset < (24 * 60)) return offset / 60 + "시간 전";
+        if (offset < (30 * 24 * 60)) return offset / (24 * 60) + "일 전";
+        if (offset < (12 * 30 * 24 * 60)) return offset / (30 * 24 * 60) + "달 전";
+        return offset / 518400 + "년 전";
     }
 }
