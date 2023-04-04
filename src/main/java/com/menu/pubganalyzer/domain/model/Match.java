@@ -10,7 +10,10 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
@@ -43,8 +46,10 @@ public class Match {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "match", cascade = {CascadeType.ALL})
     private Asset asset;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "match", cascade = {CascadeType.ALL})
+    @OrderBy("winPlace")
     private Set<Participant> participants = new HashSet<>();
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "match", cascade = {CascadeType.ALL})
+    @OrderBy("rank")
     private Set<Roster> rosters = new HashSet<>();
 
     protected Match() {
@@ -70,6 +75,35 @@ public class Match {
 
     public void setParticipants(Collection<Participant> participants) {
         this.participants = new HashSet<>(participants);
+    }
+
+    public Participant getParticipant(Player player) {
+        return getParticipants().stream()
+                .filter(p -> p.getPlayerId().equals(player.getId()))
+                .findFirst().orElse(null);
+    }
+
+    public Participant getParticipant(String playerId) {
+        return getParticipants().stream()
+                .filter(p -> p.getPlayerId().equals(playerId))
+                .findFirst().orElse(null);
+    }
+
+    public String getZonedCreatedAt() {
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(this.createdAt, ZoneId.of("UTC"));
+        ZonedDateTime createdAtKor = zonedDateTime.withZoneSameInstant(ZoneId.of("Asia/Seoul"));
+        return createdAtKor.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
+    }
+
+    public String getCreatedOffset() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("UTC"));
+        System.out.println(now);
+        long offset = ChronoUnit.MINUTES.between(this.createdAt, now);
+        if (offset < 60) return offset + "분 전";
+        if (offset < (24 * 60)) return offset / 60 + "시간 전";
+        if (offset < (30 * 24 * 60)) return offset / (24 * 60) + "일 전";
+        if (offset < (12 * 30 * 24 * 60)) return offset / (30 * 24 * 60) + "달 전";
+        return offset / 518400 + "년 전";
     }
 
     public void setRosters(Collection<Roster> rosters) {
