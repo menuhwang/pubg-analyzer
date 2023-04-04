@@ -11,7 +11,7 @@ public enum MapName {
     Range_Main("Camp Jackal", "훈련장"),
     Savage_Main("Sanhok", "사녹"),
     Summerland_Main("Karakin", "카라킨"),
-    Tiger_Main("Taego", "테이고"),
+    Tiger_Main("Taego", "태이고"),
     ;
 
     private final String mapName;
