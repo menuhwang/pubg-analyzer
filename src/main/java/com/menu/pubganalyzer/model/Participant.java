@@ -59,7 +59,7 @@ public class Participant {
 
     public static Participant of(Map<String, Object> raw, Match match) {
         String type = (String) raw.getOrDefault("type", null);
-        if (type == null || !type.equals("participant")) throw new IllegalArgumentException("정상적인 로스터 데이터를 입력해주세요.");
+        if (type == null || !type.equals("participant")) throw new IllegalArgumentException("정상적인 참가자 데이터를 입력해주세요.");
 
         Map<String, Object> attributes = (Map<String, Object>) raw.get("attributes");
         Map<String, Object> stats = (Map<String, Object>) attributes.get("stats");
