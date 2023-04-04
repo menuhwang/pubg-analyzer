@@ -67,19 +67,21 @@ public class DefaultPubgAPI implements PubgAPI {
                     String type = (String) include.get("type");
 
                     switch (type) {
-                        case "asset" -> assets.add(Asset.of(include, match));
-                        case "participant" -> {
+                        case "asset":
+                            assets.add(Asset.of(include, match));
+                            break;
+                        case "participant":
                             Participant p = Participant.of(include, match);
                             participants.put(p.getId(), p);
-                        }
-                        case "roster" -> {
+                            break;
+                        case "roster":
                             Roster r = Roster.of(include, match);
                             for (String participantId : r.getParticipantIds())
                                 participants.get(participantId).setRoster(r);
                             rosters.add(r);
-                        }
-                        default -> {
-                        }
+                            break;
+                        default :
+                            break;
                     }
                 } catch (IllegalArgumentException ignore) {
                 }
