@@ -1,7 +1,6 @@
 package com.menu.pubganalyzer.util.pubgAPI;
 
 import com.menu.pubganalyzer.domain.model.*;
-import com.menu.pubganalyzer.model.*;
 import com.menu.pubganalyzer.domain.model.enums.Shard;
 import com.menu.pubganalyzer.util.pubgAPI.exception.MatchNotFoundException;
 import com.menu.pubganalyzer.util.pubgAPI.exception.PlayerNotFoundException;
