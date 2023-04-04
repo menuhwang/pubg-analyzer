@@ -23,7 +23,7 @@ public class MatchesService {
         Set<Match> matches = matchRepository.findByShardIdAndPlayerId(player.getShardId(), player.getId());
         return matches.stream()
                 .map(MatchRes::of)
-                .sorted(Comparator.comparing(MatchRes::getCreatedAt))
+                .sorted(Comparator.comparing(MatchRes::getCreatedAt).reversed())
                 .collect(Collectors.toList());
     }
 
