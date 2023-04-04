@@ -1,7 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="/fragments/header.html :: header(${viewTitle})"></head>
+<head th:replace="~{fragments/header :: header(${viewTitle})}"></head>
 <body>
-    <nav th:replace="/fragments/navbar.html"></nav>
+    <nav th:replace="~{fragments/navbar :: navbar}"></nav>
     <div class="container h-100 d-flex flex-column">
         <h1 class="text-center mt-auto mb-3">PUBG Analyzer</h1>
         <form class="row justify-content-center mb-3" method="get" action="/players">
@@ -34,6 +34,6 @@
             </div>
         </div>
     </div>
-<th:block th:replace="/fragments/footer.html"></th:block>
+<th:block th:replace="~{fragments/footer :: footer}"></th:block>
 </body>
 </html>

@@ -1,7 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="/fragments/header.html :: header(${viewTitle})"></head>
+<head th:replace="~{fragments/header :: header(${viewTitle})}"></head>
 <body>
-    <nav th:replace="/fragments/navbar.html"></nav>
+    <nav th:replace="~{fragments/navbar :: navbar}"></nav>
     <div class="container py-5">
         <div class="row g-4">
             <!--sidebar:left-->
@@ -62,7 +62,7 @@
             <div class="col-lg-2"></div>
         </div>
     </div>
-    <th:block th:replace="/fragments/footer.html"></th:block>
+    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
     <script>
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
