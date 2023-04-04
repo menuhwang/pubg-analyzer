@@ -38,7 +38,7 @@ public class Participant {
     private int roadKills;
     private float swimDistance;
     private int teamKills;
-    private int timeSurvived;
+    private float timeSurvived;
     private int vehicleDestroys;
     private float walkDistance;
     private int weaponsAcquired;
@@ -83,7 +83,7 @@ public class Participant {
                 .roadKills((int) stats.get("roadKills"))
                 .swimDistance(stats.get("swimDistance") instanceof Integer ? (float) (int) stats.get("swimDistance") : ((Double) stats.get("swimDistance")).floatValue())
                 .teamKills((int) stats.get("teamKills"))
-                .timeSurvived((int) stats.get("timeSurvived"))
+                .timeSurvived(stats.get("timeSurvived") instanceof Integer ? (float) (int) stats.get("timeSurvived") : ((Double) stats.get("timeSurvived")).floatValue())
                 .vehicleDestroys((int) stats.get("vehicleDestroys"))
                 .walkDistance(stats.get("walkDistance") instanceof Integer ? (float) (int) stats.get("walkDistance") : ((Double) stats.get("walkDistance")).floatValue())
                 .weaponsAcquired((int) stats.get("weaponsAcquired"))
