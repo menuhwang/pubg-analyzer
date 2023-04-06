@@ -19,9 +19,9 @@
             <div class="col-md-8 col-lg-6 vstack gap-4">
                 <div class="card">
                     <div class="card-body">
-                        <h1 id="nickname" th:data-player-nickname="${player.name}" th:data-player-id="${player.id}" th:text="${player.name}"></h1>
+                        <h1 class="mb-3" id="nickname" th:data-player-id="${player.id}" th:text="${player.name}"></h1>
                         <div class="d-flex">
-                            <button class="btn btn-primary me-2">전적 갱신</button>
+                            <button class="btn btn-primary me-2" th:data-player-nickname="${player.name}" onclick="renewPlayer(event)">전적 갱신</button>
                             <button class="btn btn-outline-warning"><i class="fa-solid fa-bookmark"></i></button>
                         </div>
                     </div>
@@ -169,6 +169,19 @@
             killsAvg.innerText = calcResult.getKillsAvg();
             assistsAvg.innerText = calcResult.getAssistsAvg();
             damageAvg.innerText = calcResult.getDamageDealtAvg();
+        }
+
+        function renewPlayer(event) {
+            const nickname = event.target.getAttribute('data-player-nickname');
+
+            fetch(`/api/players/${nickname}`, {method: 'PATCH'})
+                .then(res => {
+                    if (!res.ok) {
+                        alert('잘못된 접근입니다.');
+                        return;
+                    }
+                    location.reload();
+                })
         }
     </script>
 </body>
