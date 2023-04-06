@@ -59,7 +59,7 @@ public class SearchPlayerService {
             // 새로 조회하는 유저라면, pubgAPI로 플레이어를 조회한다.
             log.info("새로운 유저 조회 Shard:{}, Nickname:{}", shard.name(), nickname);
             player = pubgAPI.player(nickname);
-
+            playerRepository.save(player);
             // 유저 매치 히스토리를 갱신한다.
             participants = renewHistory(player);
         }
