@@ -7,7 +7,7 @@
             <!--sidebar:left-->
             <div class="col-lg-2"></div>
             <div class="col-md-8 col-lg-6 vstack gap-4">
-                <div class="card mb-3">
+                <div class="card">
                     <div class="card-body">
                         <h1 id="nickname" th:data-player-nickname="${player.name}" th:data-player-id="${player.id}" th:text="${player.name}"></h1>
                         <div class="d-flex">
@@ -17,7 +17,7 @@
                     </div>
                 </div>
                 <div id="stats">
-                    <div th:each="stat : ${stats}" class="card mb-3">
+                    <div th:each="stat : ${stats}" class="card mt-3">
                         <div class="card-body">
                             <div class="row align-items-center">
                                 <div class="col d-flex flex-column">
@@ -59,7 +59,9 @@
                 </div>
             </div>
             <!--sidebar:right-->
-            <div class="col-lg-2"></div>
+            <div class="col-lg-2">
+                <div class="border" style="position: sticky; top: 50vh">합산</div>
+            </div>
         </div>
     </div>
     <th:block th:replace="~{fragments/footer :: footer}"></th:block>
