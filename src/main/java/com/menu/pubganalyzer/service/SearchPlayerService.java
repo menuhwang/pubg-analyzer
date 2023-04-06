@@ -19,10 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -61,7 +58,7 @@ public class SearchPlayerService {
             player = pubgAPI.player(nickname);
             playerRepository.save(player);
             // 유저 매치 히스토리를 갱신한다.
-            participants = renewHistory(player);
+            participants = renewHistory(player, matches -> eventPublisher.publishEvent(SaveMatchesEvent.of(matches)));
         }
 
         searchPlayer.setPlayer(player);
@@ -72,7 +69,17 @@ public class SearchPlayerService {
         return searchPlayer;
     }
 
-    private List<Participant> renewHistory(Player player) {
+    public void renewHistory(String nickname) {
+        Player player = playerRepository.findByName(nickname)
+                .orElseThrow(() -> new RuntimeException("등록된 유저가 없습니다."));
+
+        pubgAPI.setShard(player.getShardId());
+        player = pubgAPI.player(nickname);
+
+        renewHistory(player, matchRepository::saveAll);
+    }
+
+    private List<Participant> renewHistory(Player player, MatchInsertStrategy matchInsertStrategy) {
         Shard shard = player.getShardId();
         String nickname = player.getName();
         pubgAPI.setShard(shard);
@@ -81,24 +88,20 @@ public class SearchPlayerService {
         Set<String> matchIds = player.getMatchIds();
 
         // DB에서 검색
-        Set<Match> matches = matchRepository.findByIdInFetchParticipant(matchIds);
+        Set<Match> matches = findMatch(matchIds);
 
         // 결과값 id로 매핑
-        Set<String> exsistsMatchIds = matches.stream()
-                .map(Match::getId)
-                .collect(Collectors.toSet());
+        Set<String> existsMatchIds = Match.extractIds(matches);
 
         // DB에 없는 데이터 취합 : 입력값과 결과값의 차집합
-        matchIds.removeAll(exsistsMatchIds);
+        matchIds.removeAll(existsMatchIds);
 
         // DB에 없는 데이터 api로 조회
-        Set<Match> response = matchIds.stream()
-                .parallel()
-                .map(pubgAPI::match)
-                .collect(Collectors.toSet());
+        Set<Match> response = getMatch(matchIds);
 
-        // async
-        eventPublisher.publishEvent(SaveMatchesEvent.of(response));
+//        // async
+//        eventPublisher.publishEvent(SaveMatchesEvent.of(response));
+        matchInsertStrategy.insert(response);
 
         // redis add
 
@@ -118,5 +121,21 @@ public class SearchPlayerService {
         });
 
         return participants;
+    }
+
+    private Set<Match> findMatch(Collection<String> matchIds) {
+        // 추후 캐시 검색도 추가.
+        return matchRepository.findByIdInFetchParticipant(matchIds);
+    }
+
+    private Set<Match> getMatch(Collection<String> matchIds) {
+        return matchIds.stream()
+                .parallel()
+                .map(pubgAPI::match)
+                .collect(Collectors.toSet());
+    }
+
+    private interface MatchInsertStrategy {
+        void insert(Collection<Match> matches);
     }
 }

@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Entity
@@ -107,6 +108,12 @@ public class Match {
 
     public void setRosters(Collection<Roster> rosters) {
         this.rosters = new HashSet<>(rosters);
+    }
+
+    public static Set<String> extractIds(Collection<Match> matches) {
+        return matches.stream()
+                .map(Match::getId)
+                .collect(Collectors.toSet());
     }
 
     public static Match of(Map<String, Object> raw) {
