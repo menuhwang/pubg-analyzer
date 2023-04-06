@@ -9,8 +9,11 @@ import com.menu.pubganalyzer.domain.model.enums.Shard;
 import com.menu.pubganalyzer.domain.repository.MatchRepository;
 import com.menu.pubganalyzer.domain.repository.ParticipantRepository;
 import com.menu.pubganalyzer.domain.repository.PlayerRepository;
+import com.menu.pubganalyzer.event.SaveMatchesEvent;
 import com.menu.pubganalyzer.util.pubgAPI.PubgAPI;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,9 +21,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SearchPlayerService {
@@ -28,30 +33,50 @@ public class SearchPlayerService {
     private final PlayerRepository playerRepository;
     private final ParticipantRepository participantRepository;
     private final MatchRepository matchRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public SearchPlayer searchPlayer(SearchPlayerReq request, Pageable pageable) {
         Shard shard = request.getShard();
         String nickname = request.getNickname();
+        log.info("유저 검색 요청 Shard:{}, Nickname:{}", shard.name(), nickname);
 
         SearchPlayer searchPlayer = new SearchPlayer();
 
         pubgAPI.setShard(request.getShard());
 
-        Player player = playerRepository.findByShardIdAndName(shard, nickname)
-                .orElseGet(() -> {
-                    Player p = pubgAPI.player(nickname);
-                    playerRepository.save(p);
-                    return p;
-                });
+        Optional<Player> optionalPlayer = playerRepository.findByShardIdAndName(shard, nickname);
+
+        Player player;
+        List<Participant> participants;
+
+        if (optionalPlayer.isPresent()) {
+            // 이미 등록된 유저라면, DB에서 Participant를 가져온다.
+            player = optionalPlayer.get();
+            Page<Participant> participantPage = participantRepository.findByPlayerIdOrderByMatch_CreatedAtDesc(player.getId(), pageable);
+            participants = participantPage.getContent();
+        } else {
+            // 새로 조회하는 유저라면, pubgAPI로 플레이어를 조회한다.
+            log.info("새로운 유저 조회 Shard:{}, Nickname:{}", shard.name(), nickname);
+            player = pubgAPI.player(nickname);
+
+            // 유저 매치 히스토리를 갱신한다.
+            participants = renewHistory(player);
+        }
 
         searchPlayer.setPlayer(player);
+        searchPlayer.setParticipants(participants);
 
-        if (player.getMatchIds().isEmpty()) {
-            Page<Participant> participantPage = participantRepository.findByPlayerIdOrderByMatch_CreatedAtDesc(player.getId(), pageable);
-            searchPlayer.setParticipants(participantPage.getContent());
-            return searchPlayer;
-        }
+        log.info("유저 검색 완료 Shard:{}, Nickname:{}", shard.name(), nickname);
+
+        return searchPlayer;
+    }
+
+    private List<Participant> renewHistory(Player player) {
+        Shard shard = player.getShardId();
+        String nickname = player.getName();
+        pubgAPI.setShard(shard);
+        log.info("전적 갱신 Shard:{}, Nickname:{}", shard.name(), nickname);
 
         Set<String> matchIds = player.getMatchIds();
 
@@ -72,7 +97,9 @@ public class SearchPlayerService {
                 .map(pubgAPI::match)
                 .collect(Collectors.toSet());
 
-        matchRepository.saveAll(response); // batch
+        // async
+        eventPublisher.publishEvent(SaveMatchesEvent.of(response));
+
         // redis add
 
         matches.addAll(response);
@@ -90,8 +117,6 @@ public class SearchPlayerService {
             return order * -1;
         });
 
-        searchPlayer.setParticipants(participants);
-
-        return searchPlayer;
+        return participants;
     }
 }
