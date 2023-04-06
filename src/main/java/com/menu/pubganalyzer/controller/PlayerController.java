@@ -2,11 +2,6 @@ package com.menu.pubganalyzer.controller;
 
 import com.menu.pubganalyzer.domain.SearchPlayer;
 import com.menu.pubganalyzer.domain.dto.SearchPlayerReq;
-import com.menu.pubganalyzer.domain.model.Player;
-import com.menu.pubganalyzer.domain.dto.MatchRes;
-import com.menu.pubganalyzer.domain.model.enums.Shard;
-import com.menu.pubganalyzer.service.MatchesService;
-import com.menu.pubganalyzer.service.PlayerService;
 import com.menu.pubganalyzer.service.SearchPlayerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -15,8 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/players")
