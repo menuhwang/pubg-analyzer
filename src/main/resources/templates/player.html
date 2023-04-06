@@ -1,11 +1,21 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/header :: header(${viewTitle})}"></head>
+<head>
+    <style>
+        i.pa-match-calc-flag[data-flag="false"] {
+            color: lightgray !important;
+        }
+        i.pa-match-calc-flag[data-flag="true"] {
+            color: green !important;
+        }
+    </style>
+</head>
 <body>
     <nav th:replace="~{fragments/navbar :: navbar}"></nav>
-    <div class="container py-5">
+    <div class="container-fluid py-5 px-4">
         <div class="row g-4">
             <!--sidebar:left-->
-            <div class="col-lg-2"></div>
+            <aside class="col-lg-3"></aside>
             <div class="col-md-8 col-lg-6 vstack gap-4">
                 <div class="card">
                     <div class="card-body">
@@ -17,7 +27,7 @@
                     </div>
                 </div>
                 <div id="stats">
-                    <div th:each="stat : ${stats}" class="card mt-3">
+                    <div th:each="stat : ${stats}" class="card mt-3 position-relative" th:data-result-kills="${stat.kills}" th:data-result-assists="${stat.assists}" th:data-result-damageDealt="${stat.damageDealt}">
                         <div class="card-body">
                             <div class="row align-items-center">
                                 <div class="col d-flex flex-column">
@@ -55,19 +65,111 @@
                                 </div>
                             </div>
                         </div>
+                        <i class="pa-match-calc-flag fa-solid fa-check position-absolute top-0 end-0 m-2" data-flag="false" role="button"></i>
                     </div>
                 </div>
             </div>
             <!--sidebar:right-->
-            <div class="col-lg-2">
-                <div class="border" style="position: sticky; top: 50vh">합산</div>
-            </div>
+            <aside class="col-lg-3">
+                <div class="card" id="matches-result-calc" style="position: sticky; top: 50vh">
+                    <div class="card-header">합산</div>
+                    <div class="card-body px-0 py-1">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div>경기 수</div>
+                                <div id="matches-result-calc-matches">0</div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div>킬 합산</div>
+                                <div id="matches-result-calc-kills">0</div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div>어시스트 합산</div>
+                                <div id="matches-result-calc-assists">0</div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div>공격 포인트</div>
+                                <div id="matches-result-calc-points">0</div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div>데미지 합산</div>
+                                <div id="matches-result-calc-damage">0</div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div>킬 avg.</div>
+                                <div id="matches-result-calc-kills-avg">0</div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div>어시스트 avg.</div>
+                                <div id="matches-result-calc-assists-avg">0</div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div>데미지 avg.</div>
+                                <div id="matches-result-calc-damage-avg">0</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </aside>
         </div>
     </div>
     <th:block th:replace="~{fragments/footer :: footer}"></th:block>
     <script>
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+        const calcResult = {
+            matches: 0,
+            kills: 0,
+            assists: 0,
+            damageDealt: 0,
+            getPoint: () => calcResult.kills + calcResult.assists,
+            getKillsAvg: () => (calcResult.kills/calcResult.matches).toFixed(2),
+            getAssistsAvg: () => (calcResult.assists/calcResult.matches).toFixed(2),
+            getDamageDealtAvg: () => (calcResult.damageDealt/calcResult.matches).toFixed(2),
+        };
+
+        const flagButtons = document.querySelectorAll('i.pa-match-calc-flag');
+
+        flagButtons.forEach(flagBtn => {
+            flagBtn.addEventListener('click', event => {
+                const flag = event.target.getAttribute('data-flag');
+                event.target.setAttribute('data-flag', flag === "false" ? "true" : "false");
+                const resultEle = event.target.parentElement;
+                if (flag === "false") {
+                    calcResult.matches++;
+                    calcResult.kills += Number(resultEle.getAttribute('data-result-kills'));
+                    calcResult.assists += Number(resultEle.getAttribute('data-result-assists'));
+                    calcResult.damageDealt += Number(resultEle.getAttribute('data-result-damageDealt'));
+                } else {
+                    calcResult.matches--;
+                    calcResult.kills -= Number(resultEle.getAttribute('data-result-kills'));
+                    calcResult.assists -= Number(resultEle.getAttribute('data-result-assists'));
+                    calcResult.damageDealt -= Number(resultEle.getAttribute('data-result-damageDealt'));
+                }
+                renderCalc();
+                console.log(calcResult);
+            })
+        })
+
+        function renderCalc() {
+            const matches = document.getElementById('matches-result-calc-matches');
+            const kills = document.getElementById('matches-result-calc-kills');
+            const assists = document.getElementById('matches-result-calc-assists');
+            const points = document.getElementById('matches-result-calc-points');
+            const damage = document.getElementById('matches-result-calc-damage');
+            const killsAvg = document.getElementById('matches-result-calc-kills-avg');
+            const assistsAvg = document.getElementById('matches-result-calc-assists-avg');
+            const damageAvg = document.getElementById('matches-result-calc-damage-avg');
+            matches.innerText = calcResult.matches;
+            kills.innerText = calcResult.kills;
+            assists.innerText = calcResult.assists;
+            points.innerText = calcResult.getPoint();
+            damage.innerText = calcResult.damageDealt.toFixed(2);
+            killsAvg.innerText = calcResult.getKillsAvg();
+            assistsAvg.innerText = calcResult.getAssistsAvg();
+            damageAvg.innerText = calcResult.getDamageDealtAvg();
+        }
     </script>
 </body>
 </html>
