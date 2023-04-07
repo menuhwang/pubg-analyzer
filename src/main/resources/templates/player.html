@@ -8,6 +8,13 @@
         i.pa-match-calc-flag[data-flag="true"] {
             color: green !important;
         }
+
+        .pa-renew-spinner[aria-hidden="true"] {
+            display: none;
+        }
+        .pa-renew-spinner[aria-hidden="false"] {
+            display: inline-flex;
+        }
     </style>
 </head>
 <body>
@@ -21,7 +28,10 @@
                     <div class="card-body">
                         <h1 class="mb-3" id="nickname" th:data-player-id="${player.id}" th:text="${player.name}"></h1>
                         <div class="d-flex">
-                            <button class="btn btn-primary me-2" th:data-player-nickname="${player.name}" onclick="renewPlayer(event)">전적 갱신</button>
+                            <button class="pa-renew-btn btn btn-primary me-2" th:data-player-nickname="${player.name}" onclick="renewPlayer(event)">
+                                전적 갱신
+                                <span class="pa-renew-spinner spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            </button>
                             <button class="btn btn-outline-warning"><i class="fa-solid fa-bookmark"></i></button>
                         </div>
                     </div>
@@ -172,16 +182,31 @@
         }
 
         function renewPlayer(event) {
+            renewSpinnerToggle();
             const nickname = event.target.getAttribute('data-player-nickname');
 
             fetch(`/api/players/${nickname}`, {method: 'PATCH'})
                 .then(res => {
                     if (!res.ok) {
-                        alert('잘못된 접근입니다.');
+                        alert('갱신 실패.');
+                        renewSpinnerToggle();
                         return;
                     }
                     location.reload();
-                })
+                }).catch(res => {
+                    renewSpinnerToggle();
+                    alert('갱신 실패.');
+            })
+        }
+
+        function renewSpinnerToggle() {
+            const renewSpinner = document.querySelector('.pa-renew-spinner');
+            const renewBtn = document.querySelector('.pa-renew-btn');
+
+            const status = renewSpinner.getAttribute('aria-hidden');
+
+            renewBtn.disabled = status === "true";
+            renewSpinner.setAttribute('aria-hidden', status === "false" ? "true" : "false");
         }
     </script>
 </body>
