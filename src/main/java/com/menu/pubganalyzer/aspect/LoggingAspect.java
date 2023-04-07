@@ -18,7 +18,7 @@ public class LoggingAspect {
     private static final String RESPONSE_LOG = "RESPONSE [{}] {} {}ms";
     private static final String QUERY_PATH_PATTERN = "%s/%s";
 
-    @Around("within(com.menu.pubganalyzer.controller.*)")
+    @Around("within(com.menu.pubganalyzer.controller..*)")
     public Object controllerLogging(ProceedingJoinPoint pjp) throws Throwable {
         HttpServletRequest req = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
         String method = req.getMethod();
