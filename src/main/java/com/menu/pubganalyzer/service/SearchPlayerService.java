@@ -1,5 +1,6 @@
 package com.menu.pubganalyzer.service;
 
+import com.menu.pubganalyzer.config.CacheType;
 import com.menu.pubganalyzer.domain.SearchPlayer;
 import com.menu.pubganalyzer.domain.dto.SearchPlayerReq;
 import com.menu.pubganalyzer.domain.model.Match;
@@ -13,6 +14,7 @@ import com.menu.pubganalyzer.event.SaveMatchesEvent;
 import com.menu.pubganalyzer.util.pubgAPI.PubgAPI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -69,7 +71,8 @@ public class SearchPlayerService {
         return searchPlayer;
     }
 
-    public void renewHistory(String nickname) {
+    @Cacheable(value = "renew_players", key = "#nickname")
+    public boolean renewHistory(String nickname) {
         Player player = playerRepository.findByName(nickname)
                 .orElseThrow(() -> new RuntimeException("등록된 유저가 없습니다."));
 
@@ -77,6 +80,8 @@ public class SearchPlayerService {
         player = pubgAPI.player(nickname);
 
         renewHistory(player, matchRepository::saveAll);
+
+        return true;
     }
 
     private List<Participant> renewHistory(Player player, MatchInsertStrategy matchInsertStrategy) {
@@ -99,8 +104,6 @@ public class SearchPlayerService {
         // DB에 없는 데이터 api로 조회
         Set<Match> response = getMatch(matchIds);
 
-//        // async
-//        eventPublisher.publishEvent(SaveMatchesEvent.of(response));
         matchInsertStrategy.insert(response);
 
         // redis add
