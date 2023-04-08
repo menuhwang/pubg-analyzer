@@ -2,6 +2,7 @@ package com.menu.pubganalyzer.config;
 
 public enum CacheType {
     RENEW_PLAYERS("renew_players", 10 * 60, 1024),
+    MATCHES("matches", 60, 10000),
     ;
 
     private final String cacheName;

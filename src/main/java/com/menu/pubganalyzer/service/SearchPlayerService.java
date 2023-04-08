@@ -1,6 +1,5 @@
 package com.menu.pubganalyzer.service;
 
-import com.menu.pubganalyzer.config.CacheType;
 import com.menu.pubganalyzer.domain.SearchPlayer;
 import com.menu.pubganalyzer.domain.dto.SearchPlayerReq;
 import com.menu.pubganalyzer.domain.model.Match;
@@ -92,26 +91,11 @@ public class SearchPlayerService {
 
         Set<String> matchIds = player.getMatchIds();
 
-        // DB에서 검색
-        Set<Match> matches = findMatch(matchIds);
+        Set<Match> matches = getMatch(matchIds);
 
-        // 결과값 id로 매핑
-        Set<String> existsMatchIds = Match.extractIds(matches);
-
-        // DB에 없는 데이터 취합 : 입력값과 결과값의 차집합
-        matchIds.removeAll(existsMatchIds);
-
-        // DB에 없는 데이터 api로 조회
-        Set<Match> response = getMatch(matchIds);
-
-        matchInsertStrategy.insert(response);
-
-        // redis add
-
-        matches.addAll(response);
+        matchInsertStrategy.insert(matches);
 
         List<Participant> participants = new ArrayList<>();
-
         for (Match match : matches) {
             participants.add(match.getParticipant(player));
         }
@@ -126,15 +110,19 @@ public class SearchPlayerService {
         return participants;
     }
 
-    private Set<Match> findMatch(Collection<String> matchIds) {
-        // 추후 캐시 검색도 추가.
-        return matchRepository.findByIdInFetchParticipant(matchIds);
+    /**
+     * 캐시에서 검색, DB에서 검색 후 없는 매치를 api에서 검색해온다.
+     */
+    @Cacheable(value = "matches", key = "#matchId")
+    public Match getMatch(String matchId) {
+        return matchRepository.findByIdFetchParticipant(matchId)
+                .orElse(pubgAPI.match(matchId));
     }
 
     private Set<Match> getMatch(Collection<String> matchIds) {
         return matchIds.stream()
                 .parallel()
-                .map(pubgAPI::match)
+                .map(this::getMatch)
                 .collect(Collectors.toSet());
     }
 
