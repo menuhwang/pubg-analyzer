@@ -2,10 +2,10 @@
 <head th:replace="~{fragments/header :: header(${viewTitle})}"></head>
 <head>
     <style>
-        i.pa-match-calc-flag[data-flag="false"] {
+        .pa-stat[data-calc-flag="false"] i.pa-stat-calc-flag {
             color: lightgray !important;
         }
-        i.pa-match-calc-flag[data-flag="true"] {
+        .pa-stat[data-calc-flag="true"] i.pa-stat-calc-flag {
             color: green !important;
         }
 
@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div id="stats">
-                    <div th:each="stat : ${stats}" class="card mt-3 position-relative" th:data-result-kills="${stat.kills}" th:data-result-assists="${stat.assists}" th:data-result-damageDealt="${stat.damageDealt}">
+                    <div th:each="stat : ${stats}" class="card mt-3 position-relative pa-stat" role="button" th:id="${stat.id}" th:onclick="doClickStatCard([[${stat.id}]])" th:data-result-kills="${stat.kills}" th:data-result-assists="${stat.assists}" th:data-result-damageDealt="${stat.damageDealt}" data-calc-flag="false">
                         <div class="card-body">
                             <div class="row align-items-center">
                                 <div class="col d-flex flex-column">
@@ -75,7 +75,7 @@
                                 </div>
                             </div>
                         </div>
-                        <i class="pa-match-calc-flag fa-solid fa-check position-absolute top-0 end-0 m-2" data-flag="false" role="button"></i>
+                        <i class="pa-stat-calc-flag fa-solid fa-check position-absolute top-0 end-0 m-2"></i>
                     </div>
                 </div>
             </div>
@@ -139,28 +139,25 @@
             getDamageDealtAvg: () => (calcResult.damageDealt/calcResult.matches).toFixed(2),
         };
 
-        const flagButtons = document.querySelectorAll('i.pa-match-calc-flag');
+        function doClickStatCard(id) {
+            const target = document.getElementById(id);
+            const flag = target.getAttribute('data-calc-flag');
 
-        flagButtons.forEach(flagBtn => {
-            flagBtn.addEventListener('click', event => {
-                const flag = event.target.getAttribute('data-flag');
-                event.target.setAttribute('data-flag', flag === "false" ? "true" : "false");
-                const resultEle = event.target.parentElement;
-                if (flag === "false") {
-                    calcResult.matches++;
-                    calcResult.kills += Number(resultEle.getAttribute('data-result-kills'));
-                    calcResult.assists += Number(resultEle.getAttribute('data-result-assists'));
-                    calcResult.damageDealt += Number(resultEle.getAttribute('data-result-damageDealt'));
-                } else {
-                    calcResult.matches--;
-                    calcResult.kills -= Number(resultEle.getAttribute('data-result-kills'));
-                    calcResult.assists -= Number(resultEle.getAttribute('data-result-assists'));
-                    calcResult.damageDealt -= Number(resultEle.getAttribute('data-result-damageDealt'));
-                }
-                renderCalc();
-                console.log(calcResult);
-            })
-        })
+            target.setAttribute('data-calc-flag', flag === "false" ? "true" : "false");
+
+            if (flag === "false") {
+                calcResult.matches++;
+                calcResult.kills += Number(target.getAttribute('data-result-kills'));
+                calcResult.assists += Number(target.getAttribute('data-result-assists'));
+                calcResult.damageDealt += Number(target.getAttribute('data-result-damageDealt'));
+            } else {
+                calcResult.matches--;
+                calcResult.kills -= Number(target.getAttribute('data-result-kills'));
+                calcResult.assists -= Number(target.getAttribute('data-result-assists'));
+                calcResult.damageDealt -= Number(target.getAttribute('data-result-damageDealt'));
+            }
+            renderCalc();
+        }
 
         function renderCalc() {
             const matches = document.getElementById('matches-result-calc-matches');
