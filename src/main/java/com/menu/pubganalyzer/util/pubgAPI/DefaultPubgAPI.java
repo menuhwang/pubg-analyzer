@@ -4,6 +4,7 @@ import com.menu.pubganalyzer.domain.model.*;
 import com.menu.pubganalyzer.domain.model.enums.Shard;
 import com.menu.pubganalyzer.util.pubgAPI.exception.MatchNotFoundException;
 import com.menu.pubganalyzer.util.pubgAPI.exception.PlayerNotFoundException;
+import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -38,9 +39,9 @@ public class DefaultPubgAPI implements PubgAPI {
     }
 
     @Override
-    public Match match(String matchId) {
+    public com.menu.pubganalyzer.domain.model.Match match(String matchId) {
         String url = BASE_URL + "/shards/" + shard.name().toLowerCase() + "/matches/" + matchId;
-        Match match = null;
+        com.menu.pubganalyzer.domain.model.Match match = null;
         try {
             ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, DEFAULT_HTTP_ENTITY, Map.class);
 
@@ -56,7 +57,7 @@ public class DefaultPubgAPI implements PubgAPI {
                 return order1 - order2;
             });
 
-            match = Match.of(data);
+            match = com.menu.pubganalyzer.domain.model.Match.of(data);
 
             Set<Roster> rosters = new HashSet<>();
             Map<String, Participant> participants = new HashMap<>();
@@ -95,6 +96,19 @@ public class DefaultPubgAPI implements PubgAPI {
         }
 
         return match;
+    }
+
+    @Override
+    public MatchResponse match2(String matchId) {
+        String url = BASE_URL + "/shards/" + shard.name().toLowerCase() + "/matches/" + matchId;
+        MatchResponse matchResponse = null;
+        try {
+            ResponseEntity<MatchResponse> response = restTemplate.exchange(url, HttpMethod.GET, DEFAULT_HTTP_ENTITY, MatchResponse.class);
+            matchResponse = response.getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) throw new MatchNotFoundException(matchId);
+        }
+        return matchResponse;
     }
 
     @Override

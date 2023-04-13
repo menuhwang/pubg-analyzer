@@ -5,6 +5,7 @@ import com.menu.pubganalyzer.domain.model.Player;
 import com.menu.pubganalyzer.domain.model.enums.Shard;
 import com.menu.pubganalyzer.util.pubgAPI.exception.MatchNotFoundException;
 import com.menu.pubganalyzer.util.pubgAPI.exception.PlayerNotFoundException;
+import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,6 +43,12 @@ class PubgAPITest {
     }
 
     @Test
+    void match2() {
+        MatchResponse m = pubgAPI.match2(MATCH_ID);
+        assertEquals(MATCH_ID, m.getId());
+    }
+
+    @Test
     void match_not_found() {
         String wrongId = "wrong_match_id";
         Exception e = assertThrows(MatchNotFoundException.class, () -> pubgAPI.match(wrongId));
@@ -62,8 +69,25 @@ class PubgAPITest {
     }
 
     @Test
+    void matchParallel2() {
+        List<String> result = MATCH_IDS.stream()
+                .parallel()
+                .map(pubgAPI::match2)
+                .map(MatchResponse::getId)
+                .collect(Collectors.toList());
+
+        for (String id : result) {
+            assertTrue(MATCH_IDS.contains(id));
+        }
+    }
+
+    @Test
     void player() {
         Player player = pubgAPI.player(PLAYER_NICKNAME);
+
+        for (String matchId : player.getMatchIds()) {
+            System.out.println(matchId);
+        }
 
         assertEquals(PLAYER_NICKNAME, player.getName());
         assertFalse(player.getMatchIds().isEmpty());
