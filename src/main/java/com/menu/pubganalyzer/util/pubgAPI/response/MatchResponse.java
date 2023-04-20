@@ -52,6 +52,7 @@ public class MatchResponse {
         LocalDateTime createdAt;
         String name;
         String description;
+        @JsonProperty(value = "URL")
         String URL;
     }
 
