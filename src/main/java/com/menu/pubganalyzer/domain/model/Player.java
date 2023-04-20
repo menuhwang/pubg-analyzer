@@ -2,13 +2,13 @@ package com.menu.pubganalyzer.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.menu.pubganalyzer.domain.model.enums.Shard;
+import com.menu.pubganalyzer.util.pubgAPI.response.PlayersResponse;
 import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -42,20 +42,16 @@ public class Player {
         this.matchIds = matchIds;
     }
 
-    public static Player of(Map<String, Object> raw) {
-        String type = (String) raw.getOrDefault("type", null);
-        if (type == null || !type.equals("player")) throw new IllegalArgumentException("정상적인 유저 데이터를 입력해주세요.");
-
-        Map<String, String> attributes = (Map<String, String>) raw.get("attributes");
-        Set<String> matchIds = ((Map<String, List<Map<String, String>>>) ((Map<String, Object>) raw.get("relationships")).get("matches")).get("data").stream().map(m -> m.get("id")).collect(Collectors.toSet());
-
-        return Player.builder()
-                .id((String) raw.get("id"))
-                .name(attributes.get("name"))
-                .titleId(attributes.get("titleId"))
-                .shardId(Shard.valueOf(((String) attributes.get("shardId")).toUpperCase()))
-                .patchVersion(attributes.get("patchVersion"))
-                .matchIds(matchIds)
-                .build();
+    public static List<Player> of(PlayersResponse playersResponse) {
+        return playersResponse.getPlayers().stream()
+                .map(player -> Player.builder()
+                        .id(player.getId())
+                        .name(player.getAttributes().getName())
+                        .titleId(player.getAttributes().getTitleId())
+                        .shardId(Shard.valueOf((player.getAttributes().getShardId()).toUpperCase()))
+                        .patchVersion(player.getAttributes().getPatchVersion())
+                        .matchIds(player.getRelationships().getMatches().stream().map(PlayersResponse.Element::getId).collect(Collectors.toSet()))
+                        .build()
+                ).collect(Collectors.toList());
     }
 }

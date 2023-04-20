@@ -51,12 +51,12 @@ public class SearchPlayerService {
         if (optionalPlayer.isPresent()) {
             // 이미 등록된 유저라면, DB에서 Participant를 가져온다.
             player = optionalPlayer.get();
-            Page<Participant> participantPage = participantRepository.findByPlayerIdOrderByMatch_CreatedAtDesc(player.getId(), pageable);
+            Page<Participant> participantPage = participantRepository.findByPlayerIdOrderByRoster_Match_CreatedAtDesc(player.getId(), pageable);
             participants = participantPage.getContent();
         } else {
             // 새로 조회하는 유저라면, pubgAPI로 플레이어를 조회한다.
             log.info("새로운 유저 조회 Shard:{}, Nickname:{}", shard.name(), nickname);
-            player = pubgAPI.player(nickname);
+            player = Player.of(pubgAPI.player(List.of(nickname))).get(0);
             playerRepository.save(player);
             // 유저 매치 히스토리를 갱신한다.
             participants = renewHistory(player, matches -> eventPublisher.publishEvent(SaveMatchesEvent.of(matches)));
@@ -76,7 +76,7 @@ public class SearchPlayerService {
                 .orElseThrow(() -> new RuntimeException("등록된 유저가 없습니다."));
 
         pubgAPI.setShard(player.getShardId());
-        player = pubgAPI.player(nickname);
+        player = Player.of(pubgAPI.player(List.of(nickname))).get(0);
 
         renewHistory(player, matchRepository::saveAll);
 
@@ -101,8 +101,8 @@ public class SearchPlayerService {
         }
 
         participants.sort((p1, p2) -> {
-            Match m1 = p1.getMatch();
-            Match m2 = p2.getMatch();
+            Match m1 = p1.getRoster().getMatch();
+            Match m2 = p2.getRoster().getMatch();
             int order = m1.getCreatedAt().compareTo(m2.getCreatedAt());
             return order * -1;
         });
@@ -116,7 +116,7 @@ public class SearchPlayerService {
     @Cacheable(value = "matches", key = "#matchId")
     public Match getMatch(String matchId) {
         return matchRepository.findByIdFetchParticipant(matchId)
-                .orElse(pubgAPI.match(matchId));
+                .orElse(Match.of(pubgAPI.match(matchId)));
     }
 
     private Set<Match> getMatch(Collection<String> matchIds) {

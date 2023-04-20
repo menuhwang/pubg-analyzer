@@ -43,16 +43,16 @@
                                 <div class="col d-flex flex-column">
                                     <div>
                                         <span class="align-bottom fs-3" th:text="${'#' + stat.winPlace}"></span>
-                                        <span class="align-bottom fs-6" th:text="${'/ ' + stat.match.rosters.size()}"></span>
+                                        <span class="align-bottom fs-6" th:text="${'/ ' + stat.roster.match.rosters.size()}"></span>
                                     </div>
-                                    <span th:text="${stat.match.getCreatedOffset()}"
+                                    <span th:text="${stat.roster.match.getCreatedOffset()}"
                                           data-bs-toggle="tooltip" data-bs-placement="bottom"
                                           data-bs-custom-class="custom-tooltip"
-                                          th:data-bs-title="${stat.match.getZonedCreatedAt()}"></span>
+                                          th:data-bs-title="${stat.roster.match.getZonedCreatedAt()}"></span>
                                 </div>
                                 <div class="col d-flex flex-column">
-                                    <span th:text="${stat.match.mapName.getMapNameKor()}"></span>
-                                    <span th:text="${stat.match.getGameMode()}"></span>
+                                    <span th:text="${stat.roster.match.mapName.getMapNameKor()}"></span>
+                                    <span th:text="${stat.roster.match.getGameMode()}"></span>
                                 </div>
                                 <div class="col d-flex flex-column">
                                     <span>킬</span>

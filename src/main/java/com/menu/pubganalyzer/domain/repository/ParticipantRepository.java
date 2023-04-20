@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface ParticipantRepository extends JpaRepository<Participant, String> {
-    Page<Participant> findByPlayerIdOrderByMatch_CreatedAtDesc(String playerId, Pageable pageable);
+    Page<Participant> findByPlayerIdOrderByRoster_Match_CreatedAtDesc(String playerId, Pageable pageable);
 }

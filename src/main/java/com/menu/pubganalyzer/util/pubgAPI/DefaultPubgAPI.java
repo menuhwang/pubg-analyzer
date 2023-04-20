@@ -1,16 +1,14 @@
 package com.menu.pubganalyzer.util.pubgAPI;
 
-import com.menu.pubganalyzer.domain.model.*;
 import com.menu.pubganalyzer.domain.model.enums.Shard;
 import com.menu.pubganalyzer.util.pubgAPI.exception.MatchNotFoundException;
-import com.menu.pubganalyzer.util.pubgAPI.exception.PlayerNotFoundException;
 import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
+import com.menu.pubganalyzer.util.pubgAPI.response.PlayersResponse;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collection;
 
 public class DefaultPubgAPI implements PubgAPI {
     private final RestTemplate restTemplate = new RestTemplate();
@@ -39,67 +37,7 @@ public class DefaultPubgAPI implements PubgAPI {
     }
 
     @Override
-    public com.menu.pubganalyzer.domain.model.Match match(String matchId) {
-        String url = BASE_URL + "/shards/" + shard.name().toLowerCase() + "/matches/" + matchId;
-        com.menu.pubganalyzer.domain.model.Match match = null;
-        try {
-            ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, DEFAULT_HTTP_ENTITY, Map.class);
-
-            Map<String, Object> data = (LinkedHashMap) response.getBody().get("data");
-            List<Map<String, Object>> included = (ArrayList) response.getBody().get("included");
-            included.sort((in1, in2) -> {
-                String type1 = (String) in1.get("type");
-                String type2 = (String) in2.get("type");
-
-                int order1 = type1.equals("asset") ? 1 : type1.equals("participant") ? 2 : 3;
-                int order2 = type2.equals("asset") ? 1 : type2.equals("participant") ? 2 : 3;
-
-                return order1 - order2;
-            });
-
-            match = com.menu.pubganalyzer.domain.model.Match.of(data);
-
-            Set<Roster> rosters = new HashSet<>();
-            Map<String, Participant> participants = new HashMap<>();
-            List<Asset> assets = new ArrayList<>();
-
-            for (Map<String, Object> include : included) {
-                try {
-                    String type = (String) include.get("type");
-
-                    switch (type) {
-                        case "asset":
-                            assets.add(Asset.of(include, match));
-                            break;
-                        case "participant":
-                            Participant p = Participant.of(include, match);
-                            participants.put(p.getId(), p);
-                            break;
-                        case "roster":
-                            Roster r = Roster.of(include, match);
-                            for (String participantId : r.getParticipantIds())
-                                participants.get(participantId).setRoster(r);
-                            rosters.add(r);
-                            break;
-                        default :
-                            break;
-                    }
-                } catch (IllegalArgumentException ignore) {
-                }
-            }
-
-            match.setAsset(assets.get(0));
-            match.setParticipants(participants.values());
-            match.setRosters(rosters);
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode() == HttpStatus.NOT_FOUND) throw new MatchNotFoundException(matchId);
-        }
-
-        return match;
-    }
-
-    @Override
-    public MatchResponse match2(String matchId) {
+    public MatchResponse match(String matchId) {
         String url = BASE_URL + "/shards/" + shard.name().toLowerCase() + "/matches/" + matchId;
         MatchResponse matchResponse = null;
         try {
@@ -112,22 +50,7 @@ public class DefaultPubgAPI implements PubgAPI {
     }
 
     @Override
-    public Player player(String nickname) {
-        String url = BASE_URL + "/shards/" + shard.name().toLowerCase() + "/players?filter[playerNames]=" + nickname;
-
-        ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, AUTH_HTTP_ENTITY, Map.class);
-
-        List<Map<String, Object>> data = (ArrayList) response.getBody().get("data");
-
-        Player player = Player.of(data.get(0));
-
-        if (player.getMatchIds().size() == 0) throw new PlayerNotFoundException();
-
-        return player;
-    }
-
-    @Override
-    public Set<Player> player(Collection<String> nicknames) {
+    public PlayersResponse player(Collection<String> nicknames) {
         StringBuilder url = new StringBuilder(BASE_URL + "/shards/" + shard.name().toLowerCase() + "/players?filter[playerNames]=");
         for (String nickname : nicknames) {
             url.append(nickname);
@@ -136,10 +59,8 @@ public class DefaultPubgAPI implements PubgAPI {
 
         url.deleteCharAt(url.length() - 1);
 
-        ResponseEntity<Map> response = restTemplate.exchange(url.toString(), HttpMethod.GET, AUTH_HTTP_ENTITY, Map.class);
+        ResponseEntity<PlayersResponse> response = restTemplate.exchange(url.toString(), HttpMethod.GET, AUTH_HTTP_ENTITY, PlayersResponse.class);
 
-        List<Map<String, Object>> data = (ArrayList) response.getBody().get("data");
-
-        return data.stream().map(Player::of).collect(Collectors.toSet());
+        return response.getBody();
     }
 }

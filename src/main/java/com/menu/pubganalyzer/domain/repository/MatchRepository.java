@@ -10,12 +10,9 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface MatchRepository extends JpaRepository<Match, String> {
-    @Query("SELECT m FROM Match m join fetch m.participants join fetch m.rosters join fetch m.asset WHERE m.shardId = :shard AND m.id IN :ids")
+    @Query("SELECT m FROM Match m join fetch m.rosters join fetch m.asset WHERE m.shardId = :shard AND m.id IN :ids")
     Set<Match> findByShardIdAndIdIn(Shard shard, Collection<String> ids);
 
-    @Query("SELECT m FROM Match m join fetch m.participants join fetch m.rosters WHERE m.id = :id ORDER BY m.createdAt DESC")
+    @Query("SELECT m FROM Match m join fetch m.rosters r join fetch r.participants WHERE m.id = :id ORDER BY m.createdAt DESC")
     Optional<Match> findByIdFetchParticipant(String id);
-
-    @Query("SELECT m FROM Match m join fetch m.participants p join fetch m.rosters join fetch m.asset WHERE m.shardId = :shard AND p.playerId = :playerId  ")
-    Set<Match> findByShardIdAndPlayerId(Shard shard, String playerId);
 }

@@ -1,11 +1,8 @@
 package com.menu.pubganalyzer.util.pubgAPI;
 
-import com.menu.pubganalyzer.domain.model.Match;
-import com.menu.pubganalyzer.domain.model.Player;
-import com.menu.pubganalyzer.domain.model.enums.Shard;
 import com.menu.pubganalyzer.util.pubgAPI.exception.MatchNotFoundException;
-import com.menu.pubganalyzer.util.pubgAPI.exception.PlayerNotFoundException;
 import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
+import com.menu.pubganalyzer.util.pubgAPI.response.PlayersResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,13 +34,8 @@ class PubgAPITest {
 
     @Test
     void match() {
-        Match m = pubgAPI.match(MATCH_ID);
-        assertEquals(MATCH_ID, m.getId());
-    }
-
-    @Test
-    void match2() {
-        MatchResponse m = pubgAPI.match2(MATCH_ID);
+        MatchResponse m = pubgAPI.match(MATCH_ID);
+        for (MatchResponse.Element element : m.getIncluded()) System.out.println(element);
         assertEquals(MATCH_ID, m.getId());
     }
 
@@ -60,19 +51,6 @@ class PubgAPITest {
         List<String> result = MATCH_IDS.stream()
                 .parallel()
                 .map(pubgAPI::match)
-                .map(Match::getId)
-                .collect(Collectors.toList());
-
-        for (String id : result) {
-            assertTrue(MATCH_IDS.contains(id));
-        }
-    }
-
-    @Test
-    void matchParallel2() {
-        List<String> result = MATCH_IDS.stream()
-                .parallel()
-                .map(pubgAPI::match2)
                 .map(MatchResponse::getId)
                 .collect(Collectors.toList());
 
@@ -83,32 +61,11 @@ class PubgAPITest {
 
     @Test
     void player() {
-        Player player = pubgAPI.player(PLAYER_NICKNAME);
-
-        for (String matchId : player.getMatchIds()) {
-            System.out.println(matchId);
+        PlayersResponse players = pubgAPI.player(PLAYER_NICKNAMES);
+        for (PlayersResponse.Player player : players.getPlayers()) {
+            assertTrue(PLAYER_NICKNAMES.contains(player.getAttributes().getName()));
+            System.out.println(player.getMatchIds());
+            assertFalse(player.getRelationships().getMatches().isEmpty());
         }
-
-        assertEquals(PLAYER_NICKNAME, player.getName());
-        assertFalse(player.getMatchIds().isEmpty());
-    }
-
-    @Test
-    void multiPlayer() {
-        Set<Player> players = pubgAPI.player(PLAYER_NICKNAMES);
-
-        for (Player player : players) {
-            assertTrue(PLAYER_NICKNAMES.contains(player.getName()));
-            assertFalse(player.getMatchIds().isEmpty());
-        }
-    }
-
-    @Test
-    void player_wrong_shard() {
-        pubgAPI.setShard(Shard.KAKAO);
-
-        assertThrows(PlayerNotFoundException.class, () -> pubgAPI.player(PLAYER_NICKNAME));
-
-        pubgAPI.setShard(Shard.STEAM);
     }
 }

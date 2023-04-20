@@ -1,6 +1,7 @@
 package com.menu.pubganalyzer.util.pubgAPI.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.Delegate;
@@ -39,7 +40,7 @@ public class MatchResponse {
         String gameMode;
         String seasonState;
         Stat stats;
-        Float duration;
+        Integer duration;
         String titleId;
         String shardId;
         String tags;
@@ -49,11 +50,15 @@ public class MatchResponse {
         String actor;
         Boolean won;
         LocalDateTime createdAt;
+        String name;
+        String description;
+        String URL;
     }
 
     @Getter
     @ToString
     public static class Stat {
+        @JsonProperty(value = "DBNOs")
         Integer DBNOs;
         Integer assists;
         Integer boosts;
