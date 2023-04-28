@@ -6,7 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Entity
@@ -30,6 +32,7 @@ public class Roster {
     public void addParticipant(Participant participant) {
         this.participants.add(participant);
         participant.setRoster(this);
+        participant.setMatch(this.match);
     }
 
     public void setMatch(Match match) {
@@ -54,6 +57,12 @@ public class Roster {
                 .rank(roster.getAttributes().getStats().getRank())
                 .teamId(roster.getAttributes().getStats().getTeamId())
                 .build();
+    }
+
+    public Set<String> extractParticipantName() {
+        return this.participants.stream()
+                .map(Participant::getName)
+                .collect(Collectors.toSet());
     }
 
     @Override

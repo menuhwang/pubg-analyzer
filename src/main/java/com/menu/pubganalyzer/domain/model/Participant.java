@@ -13,6 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Getter
 @Entity
+@Table(indexes = {@Index(name = "name_match_id_index", columnList = "name, match_id")})
 public class Participant {
     @Id
     private String id;
@@ -44,12 +45,18 @@ public class Participant {
     private String playerId;
     @ManyToOne(fetch = FetchType.LAZY)
     private Roster roster;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Match match;
 
     protected Participant() {
     }
 
     public void setRoster(Roster roster) {
         this.roster = roster;
+    }
+
+    public void setMatch(Match match) {
+        this.match = match;
     }
 
 

@@ -1,2 +1,11 @@
 ###
-GET http://localhost:8080/shard/steam/matches/8a805d51-1333-4efa-a563-22940b4c67de
+GET http://localhost:8080/match/3686c313-756f-4ad2-aae8-94a6524df258/player/ss_barl
+
+###
+GET http://localhost:8080/match/3686c313-756f-4ad2-aae8-94a6524df258/player/LSWW1
+
+###
+GET http://localhost:8080/match/3686c313-756f-4ad2-aae8-94a6524df258/player/Mr_POLOO
+
+###
+GET http://localhost:8080/match/3686c313-756f-4ad2-aae8-94a6524df258/player/Patriot_Engineer

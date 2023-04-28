@@ -50,6 +50,7 @@ public class Match {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "match", cascade = {CascadeType.ALL})
     @OrderBy("rank")
+    @Builder.Default
     private Set<Roster> rosters = new HashSet<>();
 
     protected Match() {
@@ -128,6 +129,8 @@ public class Match {
             }
         });
 
+        m.setRosters(rosterMap.values());
+
         matchResponse.getIncluded().forEach(element -> {
             if (element.getType().equals("roster")) {
                 Roster roster = rosterMap.get(element.getId());
@@ -138,8 +141,6 @@ public class Match {
                 });
             }
         });
-
-        m.setRosters(rosterMap.values());
 
         return m;
     }

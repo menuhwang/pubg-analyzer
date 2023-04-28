@@ -4,21 +4,25 @@ import com.menu.pubganalyzer.domain.model.enums.Shard;
 import com.menu.pubganalyzer.util.pubgAPI.exception.MatchNotFoundException;
 import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.PlayersResponse;
+import com.menu.pubganalyzer.util.pubgAPI.response.TelemetryResponse;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collection;
+import java.util.List;
 
 public class DefaultPubgAPI implements PubgAPI {
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
     private static final String BASE_URL = "https://api.pubg.com";
     private static Shard shard = Shard.STEAM;
 
     private final HttpEntity DEFAULT_HTTP_ENTITY;
     private final HttpEntity AUTH_HTTP_ENTITY;
 
-    public DefaultPubgAPI(String token) {
+    public DefaultPubgAPI(String token, RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
         HttpHeaders defaultHeaders = new HttpHeaders();
         defaultHeaders.set("accept", "application/vnd.api+json");
 
@@ -62,5 +66,12 @@ public class DefaultPubgAPI implements PubgAPI {
         ResponseEntity<PlayersResponse> response = restTemplate.exchange(url.toString(), HttpMethod.GET, AUTH_HTTP_ENTITY, PlayersResponse.class);
 
         return response.getBody();
+    }
+
+    @Override
+    public List<TelemetryResponse> telemetry(String url) {
+        ParameterizedTypeReference<List<TelemetryResponse>> responseType = new ParameterizedTypeReference<>() {
+        };
+        return restTemplate.exchange(url, HttpMethod.GET, DEFAULT_HTTP_ENTITY, responseType).getBody();
     }
 }
