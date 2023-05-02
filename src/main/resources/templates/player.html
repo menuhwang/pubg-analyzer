@@ -71,7 +71,7 @@
                                     <span th:text="${stat.revives}"></span>
                                 </div>
                                 <div class="col-auto">
-                                    <a href="#" class="btn btn-primary my-auto"><i class="fa-solid fa-arrow-right"></i></a>
+                                    <a th:href="${'/analyzer/match/' + stat.match.id + '/player/' + player.name}" class="btn btn-primary my-auto"><i class="fa-solid fa-arrow-right"></i></a>
                                 </div>
                             </div>
                         </div>

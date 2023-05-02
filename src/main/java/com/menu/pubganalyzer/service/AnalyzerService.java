@@ -51,7 +51,7 @@ public class AnalyzerService {
 
         Analyzer analyzer = findLogs(match, team);
         analyzer.filterOfKillName(nickname);
-        return AnalyzerRes.of(analyzer);
+        return AnalyzerRes.of(analyzer, match.getCreatedAt());
     }
 
     @Cacheable(value = "analyze", key = "#match.id + '_' + #team.teamId")

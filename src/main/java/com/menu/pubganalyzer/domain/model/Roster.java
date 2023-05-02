@@ -65,6 +65,12 @@ public class Roster {
                 .collect(Collectors.toSet());
     }
 
+    public Set<String> extractParticipantNameWithout(String nickname) {
+        Set<String> participantNames = extractParticipantName();
+        participantNames.remove(nickname);
+        return participantNames;
+    }
+
     @Override
     public String toString() {
         return "Roster{" +

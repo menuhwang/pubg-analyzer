@@ -1,0 +1,131 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header(${viewTitle})}"></head>
+<body>
+    <nav th:replace="~{fragments/navbar :: navbar}"></nav>
+    <div class="container py-5 px-4">
+        <div class="vstack gap-4">
+            <div class="d-flex align-items-end">
+                <h1 th:text="${player}"></h1>
+                <div class="ms-auto">
+                    <div class="input-group">
+                        <label class="input-group-text" for="other-player">Member</label>
+                        <select class="form-select" id="other-player" onchange="if(this.value) location.href=this.value;">
+                            <option selected></option>
+                            <option th:each="name : ${member}" th:text="${name}" th:value="${'/analyzer/match/'+ matchId +'/player/' + name}"></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="border-bottom pb-2">매치</h4>
+                <div class="mb-4">
+                    <strong>결과</strong>
+                    <table class="table align-middle">
+                        <thead>
+                        <tr>
+                            <th>Kills</th>
+                            <th>Player</th>
+                            <th>Bot</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td th:text="${killTotal}"></td>
+                            <td th:text="${killPlayer}"></td>
+                            <td th:text="${killBot}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div th:if="${!killLog.isEmpty()}">
+                    <strong>킬 로그</strong>
+                    <table class="table align-middle">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Time</th>
+                            <th scope="col">Victim</th>
+                            <th scope="col">Weapon</th>
+                            <th scope="col">Bot</th>
+                        </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                        <tr th:each="log, logStat : ${killLog}">
+                            <th scope="row" th:text="${logStat.index + 1}"></th>
+                            <td th:text="${datetimeFormatter.offsetMinSec(matchCreatedAt, log.timestamp)}"></td>
+                            <td th:text="${log.victim.name}"></td>
+                            <td th:text="${log.killInfo.damageCauserName}"></td>
+                            <td><i th:if="${log.victim.accountId.startsWith('ai.')}" class="fa-solid fa-circle-check"></i></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div th:if="${!killLog.isEmpty()}">
+                <h4 class="border-bottom pb-2">분석</h4>
+                <div th:each="killLog : ${killLog}" class="card mb-2">
+                    <div class="card-header">
+                        <div class="d-flex">
+                            <strong th:text="${killLog.victim.name}"></strong>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="vstack gap-4">
+                            <div th:if="${memberDamageDealt.containsKey(killLog.victim.name)}">
+                                <h6>누적 데미지</h6>
+                                <table class="table align-middle">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 25%" th:text="${player}"></th>
+                                        <th style="width: 25%" th:each="name : ${member}" th:text="${name}"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td th:text="${#numbers.formatDecimal(memberDamageDealt.get(killLog.victim.name).getOrDefault(player, 0.0), 1, 1)}"></td>
+                                        <td th:each="name : ${member}" th:text="${#numbers.formatDecimal(memberDamageDealt.get(killLog.victim.name).getOrDefault(name, 0.0), 1, 1)}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div th:if="${victimDamageLog.containsKey(killLog.victim.name)}">
+                                <h6>데미지 로그</h6>
+                                <table class="table align-middle">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">Time</th>
+                                        <th scope="col">Attacker</th>
+                                        <th scope="col">Reason</th>
+                                        <th scope="col">Weapon</th>
+                                        <th scope="col">Damage</th>
+                                        <th scope="col">Health</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="table-group-divider">
+                                    <tr th:each="damageLog : ${victimDamageLog.get(killLog.victim.name)}">
+                                        <td th:text="${datetimeFormatter.offsetMinSecMill(matchCreatedAt, damageLog.timestamp)}"></td>
+                                        <td th:text="${damageLog.attacker.name}"></td>
+                                        <td th:text="${damageLog.damageReason}"></td>
+                                        <td th:text="${damageLog.damageCauserName}"></td>
+                                        <td th:text="${#numbers.formatDecimal(damageLog.damage, 1, 1)}"></td>
+                                        <td>
+                                            <span th:text="${#numbers.formatDecimal(damageLog.victim.health, 1, 1)}"></span>
+                                            <i class="fa-solid fa-arrow-right"></i>
+                                            <span th:text="${#numbers.formatDecimal(damageLog.victim.health - damageLog.damage, 1, 1)}"></span>
+                                         </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<th:block th:replace="~{fragments/footer :: footer}"></th:block>
+</body>
+</html>
