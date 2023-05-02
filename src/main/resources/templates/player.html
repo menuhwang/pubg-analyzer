@@ -2,11 +2,11 @@
 <head th:replace="~{fragments/header :: header(${viewTitle})}"></head>
 <head>
     <style>
-        .pa-stat[data-calc-flag="false"] i.pa-stat-calc-flag {
-            color: lightgray !important;
+        .pa-stat[data-calc-flag="false"] {
+            background-color: #ffffff;
         }
-        .pa-stat[data-calc-flag="true"] i.pa-stat-calc-flag {
-            color: green !important;
+        .pa-stat[data-calc-flag="true"] {
+            background-color: #e5f9ff;
         }
 
         .pa-renew-spinner[aria-hidden="true"] {
@@ -75,7 +75,6 @@
                                 </div>
                             </div>
                         </div>
-                        <i class="pa-stat-calc-flag fa-solid fa-check position-absolute top-0 end-0 m-2"></i>
                     </div>
                 </div>
             </div>
