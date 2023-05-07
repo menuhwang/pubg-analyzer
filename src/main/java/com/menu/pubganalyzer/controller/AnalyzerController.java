@@ -37,6 +37,7 @@ public class AnalyzerController {
         model.addAttribute("datetimeFormatter", DatetimeFormatter.getInstance());
         model.addAttribute("matchId", matchId);
         model.addAttribute("player", nickname);
+        model.addAttribute("shard", roster.getShardId());
         model.addAttribute("member", member);
         model.addAttribute("matchCreatedAt", analyzerRes.getMatchCreatedAt());
         model.addAttribute("killLog", analyzerRes.getKillLog());
