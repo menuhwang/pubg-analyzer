@@ -1,6 +1,9 @@
 package com.menu.pubganalyzer.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.menu.pubganalyzer.domain.model.enums.DamageCauserName;
+import com.menu.pubganalyzer.domain.model.enums.DamageReason;
+import com.menu.pubganalyzer.domain.model.enums.DamageTypeCategory;
 import com.menu.pubganalyzer.util.pubgAPI.response.TelemetryResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,10 +44,10 @@ public class LogPlayerTakeDamage implements Serializable {
     private Float victimHealth;
     private Integer victimRanking;
     private String victimAccountId;
-    private String damageTypeCategory; // enum
-    private String damageReason; // enum
+    private DamageTypeCategory damageTypeCategory;
+    private DamageReason damageReason;
     private Float damage;
-    private String damageCauserName; // enum
+    private DamageCauserName damageCauserName;
 
     public static LogPlayerTakeDamage of(TelemetryResponse telemetryResponse, String matchId) {
         TelemetryResponse.Characters attacker = telemetryResponse.getAttacker();
@@ -62,10 +65,10 @@ public class LogPlayerTakeDamage implements Serializable {
                 .victimHealth(telemetryResponse.getVictim().getHealth())
                 .victimRanking(telemetryResponse.getVictim().getRanking())
                 .victimAccountId(telemetryResponse.getVictim().getAccountId())
-                .damageTypeCategory(telemetryResponse.getDamageTypeCategory())
-                .damageReason(telemetryResponse.getDamageReason())
+                .damageTypeCategory(DamageTypeCategory.of(telemetryResponse.getDamageTypeCategory()))
+                .damageReason(DamageReason.of(telemetryResponse.getDamageReason()))
                 .damage(telemetryResponse.getDamage())
-                .damageCauserName(telemetryResponse.getDamageCauserName())
+                .damageCauserName(DamageCauserName.of(telemetryResponse.getDamageCauserName()))
                 .build();
     }
 }

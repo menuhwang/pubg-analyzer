@@ -1,6 +1,9 @@
 package com.menu.pubganalyzer.domain.dto;
 
 import com.menu.pubganalyzer.domain.model.LogPlayerKillV2;
+import com.menu.pubganalyzer.domain.model.enums.DamageCauserName;
+import com.menu.pubganalyzer.domain.model.enums.DamageReason;
+import com.menu.pubganalyzer.domain.model.enums.DamageTypeCategory;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -83,8 +86,8 @@ public class KillLogRes {
 
     @Getter
     public static class CharacterInfo {
-        String name;
-        String accountId;
+        private final String name;
+        private final String accountId;
 
         @Builder
         public CharacterInfo(String name, String accountId) {
@@ -95,13 +98,13 @@ public class KillLogRes {
 
     @Getter
     public static class DamageInfo {
-        private String damageReason; // enum
-        private String damageTypeCategory; // enum
-        private String damageCauserName; // enum
-        private Float distance;
+        private final DamageReason damageReason; // enum
+        private final DamageTypeCategory damageTypeCategory; // enum
+        private final DamageCauserName damageCauserName; // enum
+        private final Float distance;
 
         @Builder
-        public DamageInfo(String damageReason, String damageTypeCategory, String damageCauserName, Float distance) {
+        public DamageInfo(DamageReason damageReason, DamageTypeCategory damageTypeCategory, DamageCauserName damageCauserName, Float distance) {
             this.damageReason = damageReason;
             this.damageTypeCategory = damageTypeCategory;
             this.damageCauserName = damageCauserName;
