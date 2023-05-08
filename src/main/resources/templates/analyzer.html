@@ -56,7 +56,7 @@
                             <th scope="row" th:text="${logStat.index + 1}"></th>
                             <td th:text="${datetimeFormatter.offsetMinSec(matchCreatedAt, log.timestamp)}"></td>
                             <td th:text="${log.victim.name}"></td>
-                            <td th:text="${log.killInfo.damageCauserName}"></td>
+                            <td th:text="${log.killInfo.damageCauserName.kor}"></td>
                             <td><i th:if="${log.victim.accountId.startsWith('ai.')}" class="fa-solid fa-circle-check"></i></td>
                         </tr>
                         </tbody>
@@ -108,10 +108,11 @@
                                     <tr th:each="damageLog : ${victimDamageLog.get(killLog.victim.name)}">
                                         <td th:text="${datetimeFormatter.offsetMinSecMill(matchCreatedAt, damageLog.timestamp)}"></td>
                                         <td th:text="${damageLog.attacker.name}"></td>
-                                        <td th:text="${damageLog.damageReason}"></td>
-                                        <td th:text="${damageLog.damageCauserName}"></td>
+                                        <td th:text="${damageLog.damageReason.kor}"></td>
+                                        <td th:text="${damageLog.damageCauserName.kor}"></td>
                                         <td th:text="${#numbers.formatDecimal(damageLog.damage, 1, 1)}"></td>
-                                        <td>
+                                        <td th:if="${damageLog.damage == 0 && damageLog.victim.health == 0}" th:text="확킬"></td>
+                                        <td th:unless="${damageLog.damage == 0 && damageLog.victim.health == 0}">
                                             <span th:text="${#numbers.formatDecimal(damageLog.victim.health, 1, 1)}"></span>
                                             <i class="fa-solid fa-arrow-right"></i>
                                             <span th:text="${#numbers.formatDecimal(damageLog.victim.health - damageLog.damage, 1, 1)}"></span>

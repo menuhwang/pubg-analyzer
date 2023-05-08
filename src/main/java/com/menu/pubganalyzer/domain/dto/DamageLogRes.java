@@ -1,6 +1,9 @@
 package com.menu.pubganalyzer.domain.dto;
 
 import com.menu.pubganalyzer.domain.model.LogPlayerTakeDamage;
+import com.menu.pubganalyzer.domain.model.enums.DamageCauserName;
+import com.menu.pubganalyzer.domain.model.enums.DamageReason;
+import com.menu.pubganalyzer.domain.model.enums.DamageTypeCategory;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,13 +14,13 @@ public class DamageLogRes {
     private final LocalDateTime timestamp;
     private final CharacterInfo attacker;
     private final CharacterInfo victim;
-    private final String damageTypeCategory; // enum
-    private final String damageReason; // enum
+    private final DamageTypeCategory damageTypeCategory;
+    private final DamageReason damageReason;
     private final Float damage;
-    private final String damageCauserName; // enum
+    private final DamageCauserName damageCauserName;
 
     @Builder
-    public DamageLogRes(LocalDateTime timestamp, CharacterInfo attacker, CharacterInfo victim, String damageTypeCategory, String damageReason, Float damage, String damageCauserName) {
+    public DamageLogRes(LocalDateTime timestamp, CharacterInfo attacker, CharacterInfo victim, DamageTypeCategory damageTypeCategory, DamageReason damageReason, Float damage, DamageCauserName damageCauserName) {
         this.timestamp = timestamp;
         this.attacker = attacker;
         this.victim = victim;
