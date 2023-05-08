@@ -51,7 +51,7 @@ public class TelemetryResponse {
     String objectType;
     Location objectLocation;
     String objectTypeStatus;
-    List<String> objectTypeAdditionalInfo;
+    List<Object> objectTypeAdditionalInfo;
     Integer phase;
     Float elapsedTime;
     Integer fireWeaponStackCount;
