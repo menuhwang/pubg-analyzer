@@ -7,13 +7,11 @@ import com.menu.pubganalyzer.domain.repository.LogPlayerKillV2Repository;
 import com.menu.pubganalyzer.domain.repository.LogPlayerTakeDamageRepository;
 import com.menu.pubganalyzer.domain.repository.MatchRepository;
 import com.menu.pubganalyzer.domain.repository.ParticipantRepository;
-import com.menu.pubganalyzer.event.SaveTelemetryEvent;
+import com.menu.pubganalyzer.event.InsertTelemetryEvent;
 import com.menu.pubganalyzer.exception.MatchNotFoundException;
 import com.menu.pubganalyzer.exception.PlayerNotFoundException;
-import com.menu.pubganalyzer.exception.ServerException;
 import com.menu.pubganalyzer.util.pubgAPI.PubgAPI;
 import com.menu.pubganalyzer.util.pubgAPI.response.TelemetryResponse;
-import com.menu.pubganalyzer.util.telemetryFileManager.TelemetryFileManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -33,7 +31,6 @@ public class AnalyzerService {
             "Damage_BlueZone"
     );
     private final PubgAPI pubgAPI;
-    private final TelemetryFileManager telemetryFileManager;
     private final ParticipantRepository participantRepository;
     private final LogPlayerKillV2Repository logPlayerKillV2Repository;
     private final LogPlayerTakeDamageRepository logPlayerTakeDamageRepository;
@@ -61,9 +58,6 @@ public class AnalyzerService {
         // db 조회
         if (existTelemetry(matchId)) return findTelemetry(matchId, memberNames);
 
-        // file 검색
-        if (existsFileTelemetry(matchId)) return roadFileTelemetry(matchId, memberNames);
-
         // API 요청
         return requestTelemetry(match, memberNames);
     }
@@ -84,7 +78,7 @@ public class AnalyzerService {
             }
         }
 
-        eventPublisher.publishEvent(SaveTelemetryEvent.of(matchId, logPlayerKills, logPlayerTakeDamages));
+        eventPublisher.publishEvent(InsertTelemetryEvent.of(logPlayerKills, logPlayerTakeDamages));
 
         return Analyzer.analyzeOf(memberNames, logPlayerKills, logPlayerTakeDamages);
     }
@@ -99,25 +93,5 @@ public class AnalyzerService {
         List<String> victimNames = LogPlayerKillV2.extractVictimNames(logPlayerKills);
         List<LogPlayerTakeDamage> logPlayerTakeDamages = logPlayerTakeDamageRepository.findByAttackerNameInAndVictimNameInAndMatchId(memberNames, victimNames, matchId); // 나의 킬에 대한 팀원 전체의 데미지 로그 조회
         return Analyzer.of(logPlayerKills, logPlayerTakeDamages);
-    }
-
-    private boolean existsFileTelemetry(String matchId) {
-        Class<?>[] classes = {
-                LogPlayerKillV2.class,
-                LogPlayerTakeDamage.class
-        };
-
-        boolean result = true;
-
-        for (Class<?> clazz : classes) result &= telemetryFileManager.exists(matchId, clazz);
-
-        return result;
-    }
-
-    private Analyzer roadFileTelemetry(String matchId, Set<String> memberNames) {
-        List<LogPlayerKillV2> logPlayerKills = telemetryFileManager.read(matchId, LogPlayerKillV2.class).orElseThrow(ServerException::new);
-        List<LogPlayerTakeDamage> logPlayerTakeDamages = telemetryFileManager.read(matchId, LogPlayerTakeDamage.class).orElseThrow(ServerException::new);
-
-        return Analyzer.analyzeOf(memberNames, logPlayerKills, logPlayerTakeDamages);
     }
 }

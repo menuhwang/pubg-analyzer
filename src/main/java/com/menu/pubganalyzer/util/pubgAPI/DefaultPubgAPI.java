@@ -5,6 +5,8 @@ import com.menu.pubganalyzer.util.pubgAPI.exception.MatchNotFoundException;
 import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.PlayersResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.TelemetryResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
@@ -13,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Collection;
 import java.util.List;
 
+@Slf4j
 public class DefaultPubgAPI implements PubgAPI {
     private final RestTemplate restTemplate;
     private static final String BASE_URL = "https://api.pubg.com";
@@ -69,7 +72,9 @@ public class DefaultPubgAPI implements PubgAPI {
     }
 
     @Override
+    @Cacheable(cacheNames = "pubg_api_telemetry", key = "#url")
     public List<TelemetryResponse> telemetry(String url) {
+        log.info("Telemetry api 호출");
         ParameterizedTypeReference<List<TelemetryResponse>> responseType = new ParameterizedTypeReference<>() {
         };
         return restTemplate.exchange(url, HttpMethod.GET, DEFAULT_HTTP_ENTITY, responseType).getBody();
