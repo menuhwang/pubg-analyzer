@@ -32,7 +32,8 @@
                                 전적 갱신
                                 <span class="pa-renew-spinner spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                             </button>
-                            <button class="btn btn-outline-warning"><i class="fa-solid fa-bookmark"></i></button>
+                            <a th:if="${bookmarkState}" class="btn btn-warning d-flex align-items-center" role="button" th:href="${'/players/bookmark/delete?shard=' + player.shardId + '&nickname=' + player.name}"><i class="fa-solid fa-bookmark"></i></a>
+                            <a th:unless="${bookmarkState}" class="btn btn-outline-warning d-flex align-items-center" role="button" th:href="${'/players/bookmark/add?shard=' + player.shardId + '&nickname=' + player.name}"><i class="fa-solid fa-bookmark"></i></a>
                         </div>
                     </div>
                 </div>
