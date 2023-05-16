@@ -7,6 +7,6 @@ import java.util.Collection;
 import java.util.List;
 
 public interface LogPlayerKillV2Repository extends JpaRepository<LogPlayerKillV2, Integer> {
-    List<LogPlayerKillV2> findByKillerNameInAndMatchId(Collection<String> nicknames, String matchId);
+    List<LogPlayerKillV2> findByKillerNameInAndMatchIdOrderByTimestamp(Collection<String> nicknames, String matchId);
     boolean existsByMatchId(String matchId);
 }

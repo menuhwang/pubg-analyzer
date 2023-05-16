@@ -33,7 +33,6 @@ public class LogPlayerKillV2 implements Serializable {
     @JsonIgnore
     private Integer id;
     private String matchId;
-    @OrderBy
     private LocalDateTime timestamp;
     private Integer attackId;
     private Integer dBNOId;
