@@ -7,6 +7,6 @@ import java.util.Collection;
 import java.util.List;
 
 public interface LogPlayerTakeDamageRepository extends JpaRepository<LogPlayerTakeDamage, Integer> {
-    List<LogPlayerTakeDamage> findByAttackerNameInAndVictimNameInAndMatchId(Collection<String> nicknames, Collection<String> victims, String matchId);
+    List<LogPlayerTakeDamage> findByAttackerNameInAndVictimNameInAndMatchIdOrderByTimestamp(Collection<String> nicknames, Collection<String> victims, String matchId);
     boolean existsByMatchId(String matchId);
 }

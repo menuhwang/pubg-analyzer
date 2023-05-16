@@ -89,9 +89,9 @@ public class AnalyzerService {
     }
 
     private Analyzer findTelemetry(String matchId, Set<String> memberNames) {
-        List<LogPlayerKillV2> logPlayerKills = logPlayerKillV2Repository.findByKillerNameInAndMatchId(memberNames, matchId); // 팀 전체 킬 내역 조회
+        List<LogPlayerKillV2> logPlayerKills = logPlayerKillV2Repository.findByKillerNameInAndMatchIdOrderByTimestamp(memberNames, matchId); // 팀 전체 킬 내역 조회
         List<String> victimNames = LogPlayerKillV2.extractVictimNames(logPlayerKills);
-        List<LogPlayerTakeDamage> logPlayerTakeDamages = logPlayerTakeDamageRepository.findByAttackerNameInAndVictimNameInAndMatchId(memberNames, victimNames, matchId); // 나의 킬에 대한 팀원 전체의 데미지 로그 조회
+        List<LogPlayerTakeDamage> logPlayerTakeDamages = logPlayerTakeDamageRepository.findByAttackerNameInAndVictimNameInAndMatchIdOrderByTimestamp(memberNames, victimNames, matchId); // 나의 킬에 대한 팀원 전체의 데미지 로그 조회
         return Analyzer.of(logPlayerKills, logPlayerTakeDamages);
     }
 }
