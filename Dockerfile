@@ -10,5 +10,6 @@ ENTRYPOINT [                                                \
    "-Djava.security.egd=file:/dev/./urandom",              \
    "-Dsun.net.inetaddr.ttl=0",                             \
    "-Dcom.amazonaws.sdk.disableEc2Metadata=true",          \
+   "-Djava.net.preferIPv4Stack=true",          \
    "app.jar"              \
 ]
