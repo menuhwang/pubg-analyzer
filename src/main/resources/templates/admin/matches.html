@@ -1,0 +1,106 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header('Admin 페이지')}"></head>
+<body>
+<nav th:replace="~{fragments/admin/navbar :: navbar}"></nav>
+<div class="container-fluid p-5">
+    <div class="row g-4">
+        <!--sidebar:left-->
+        <aside class="col-md-3 col-xl-2">
+            <div th:replace="~{fragments/admin/sidebar :: sidebar}"></div>
+        </aside>
+        <div class="col-auto vstack gap-4">
+            <h1>매치 관리</h1>
+            <form class="row g-3">
+                <div class="col">
+                    <input type="text" class="form-control" placeholder="match id">
+                </div>
+                <div class="col-md-2">
+                    <div class="col-form-label text-md-end">Created At</div>
+                </div>
+                <div class="col-md-3 col-lg-2">
+                    <select class="form-select">
+                        <option selected>내림차순</option>
+                        <option>오름차순</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <div class="d-grid">
+                        <button class="btn btn-primary">검색</button>
+                    </div>
+                </div>
+            </form>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Match Id</th>
+                        <th scope="col">Created</th>
+                        <th scope="col"><input class="form-check-input total-check-input" type="checkbox" value=""></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>0100e830-dc0e-4ed6-976f-797793255060</td>
+                        <td>2023-05-10 12:24:10</td>
+                        <td><input class="form-check-input single-check-input" type="checkbox" value=""></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>01df4249-471b-473e-8e55-c63310726b1b</td>
+                        <td>2023-05-14 08:46:20</td>
+                        <td><input class="form-check-input single-check-input" type="checkbox" value=""></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3</th>
+                        <td>04b6508d-7e40-4eee-b658-8db09abdd4ed</td>
+                        <td>2023-04-16 07:13:17</td>
+                        <td><input class="form-check-input single-check-input" type="checkbox" value=""></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row g-3">
+                <div class="col"></div>
+                <div class="col-md-2">
+                    <div class="d-grid">
+                        <button class="btn btn-danger">선택 삭제</button>
+                    </div>
+                </div>
+            </div>
+            <nav>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item">
+                        <a class="page-link" href="#">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">Prev</a></li>
+                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="input-group">
+                <span class="input-group-text">Match Created At</span>
+                <select class="form-select" id="condition">
+                    <option selected>=</option>
+                    <option value="1"><</option>
+                    <option value="2"><=</option>
+                    <option value="3">></option>
+                    <option value="3">>=</option>
+                </select>
+                <input type="date" class="form-control">
+                <button class="btn btn-danger" type="submit">삭제</button>
+            </div>
+        </div>
+    </div>
+    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
+</div>
+</body>
+</html>
