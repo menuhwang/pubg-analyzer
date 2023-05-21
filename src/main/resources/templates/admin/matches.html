@@ -2,7 +2,7 @@
 <head th:replace="~{fragments/header :: header('Admin 페이지')}"></head>
 <body>
 <nav th:replace="~{fragments/admin/navbar :: navbar}"></nav>
-<div class="container-fluid p-5">
+<div class="container-fluid p-5 position-relative">
     <div class="row g-4">
         <!--sidebar:left-->
         <aside class="col-md-3 col-xl-2">
@@ -12,20 +12,20 @@
             <h1>매치 관리</h1>
             <form class="row g-3">
                 <div class="col">
-                    <input type="text" class="form-control" placeholder="match id">
+                    <input type="text" class="form-control" name="matchId" placeholder="match id" th:value="${matchId}">
                 </div>
                 <div class="col-md-2">
                     <div class="col-form-label text-md-end">Created At</div>
                 </div>
                 <div class="col-md-3 col-lg-2">
-                    <select class="form-select">
-                        <option selected>내림차순</option>
-                        <option>오름차순</option>
+                    <select name="sort" class="form-select">
+                        <option value="createdAt,desc" selected>내림차순</option>
+                        <option value="createdAt,asc">오름차순</option>
                     </select>
                 </div>
                 <div class="col-md-2">
                     <div class="d-grid">
-                        <button class="btn btn-primary">검색</button>
+                        <button class="btn btn-primary" type="submit">검색</button>
                     </div>
                 </div>
             </form>
@@ -36,27 +36,15 @@
                         <th scope="col">#</th>
                         <th scope="col">Match Id</th>
                         <th scope="col">Created</th>
-                        <th scope="col"><input class="form-check-input total-check-input" type="checkbox" value=""></th>
+                        <th scope="col"><input class="form-check-input whole-check-input" type="checkbox" value=""></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>0100e830-dc0e-4ed6-976f-797793255060</td>
-                        <td>2023-05-10 12:24:10</td>
-                        <td><input class="form-check-input single-check-input" type="checkbox" value=""></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>01df4249-471b-473e-8e55-c63310726b1b</td>
-                        <td>2023-05-14 08:46:20</td>
-                        <td><input class="form-check-input single-check-input" type="checkbox" value=""></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>04b6508d-7e40-4eee-b658-8db09abdd4ed</td>
-                        <td>2023-04-16 07:13:17</td>
-                        <td><input class="form-check-input single-check-input" type="checkbox" value=""></td>
+                    <tr th:each="match : ${page.content}">
+                        <th scope="row" th:text="${matchStat.index + 1}"></th>
+                        <td th:text="${match.id}"></td>
+                        <td th:text="${match.createdAt}"></td>
+                        <td><input class="form-check-input single-check-input" type="checkbox" th:value="${match.id}"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -65,21 +53,23 @@
                 <div class="col"></div>
                 <div class="col-md-2">
                     <div class="d-grid">
-                        <button class="btn btn-danger">선택 삭제</button>
+                        <button class="btn btn-danger delete-selected-btn">선택 삭제</button>
                     </div>
                 </div>
             </div>
             <nav>
                 <ul class="pagination justify-content-center">
                     <li class="page-item">
-                        <a class="page-link" href="#">
+                        <a class="page-link" th:href="${'?page=0&size=' + page.pageable.getPageSize() + '&sort=createdAt,' + page.getSort().getOrderFor('createdAt').getDirection()}">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                    <li class="page-item"><a class="page-link" href="#">Prev</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    <li th:if="${page.isFirst()}" class="page-item disabled"><a class="page-link">Prev</a></li>
+                    <li th:unless="${page.isFirst()}" class="page-item"><a class="page-link" th:href="${'?page=' + page.previousPageable().getPageNumber() + '&size=' + page.pageable.getPageSize() + '&sort=createdAt,' + page.getSort().getOrderFor('createdAt').getDirection()}">Prev</a></li>
+                    <li th:if="${page.isLast()}" class="page-item disabled"><a class="page-link">Next</a></li>
+                    <li th:unless="${page.isLast()}" class="page-item"><a class="page-link" th:href="${'?page=' + page.nextPageable().getPageNumber() + '&size=' + page.pageable.getPageSize() + '&sort=createdAt,' + page.getSort().getOrderFor('createdAt').getDirection()}">Next</a></li>
                     <li class="page-item">
-                        <a class="page-link" href="#">
+                        <a class="page-link" th:href="${'?page=' + page.totalPages + '&size=' + page.pageable.getPageSize() + '&sort=createdAt,' + page.getSort().getOrderFor('createdAt').getDirection()}">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
@@ -100,7 +90,61 @@
             </div>
         </div>
     </div>
+    <div class="delete-failed-alert toast align-items-center text-bg-warning border-0 sticky-bottom ms-md-auto" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                삭제 실패!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
     <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 </div>
+<script>
+    // Bootstrap Init
+    const toastOption = {
+        animation: true,
+        autohide: true,
+        delay: 5000
+    }
+    const toastElList = document.querySelectorAll('.toast')
+    const toastList = [...toastElList].map(toastEl => new bootstrap.Toast(toastEl, toastOption))
+</script>
+<script>
+    const wholeCheckInputChangeHandler = (e) => {
+        matchCheckInputs.forEach(ele => {
+            ele.checked = e.target.checked;
+        })
+    }
+
+    const fetchDeleteSelected = () => {
+        const matches = [];
+        matchCheckInputs.forEach(ele => {
+            if (ele.checked) matches.push(ele.value);
+        });
+        fetch('/api/admin/matches', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({matches})
+        }).then(response => {
+            if (!response.ok) {
+                deleteFailedAlert.show();
+            } else {
+                location.reload();
+            }
+        })
+    }
+
+    const wholeCheckInput = document.querySelector('.whole-check-input');
+    const matchCheckInputs = document.querySelectorAll('.single-check-input');
+    const deleteFailedAlert = bootstrap.Toast.getInstance(document.querySelector('.delete-failed-alert'));
+    const deleteSelectedBtn = document.querySelector('.delete-selected-btn');
+
+    wholeCheckInput.addEventListener('change', wholeCheckInputChangeHandler);
+    deleteSelectedBtn.addEventListener('click', fetchDeleteSelected);
+
+</script>
 </body>
 </html>
