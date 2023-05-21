@@ -69,7 +69,7 @@
                     <li th:if="${page.isLast()}" class="page-item disabled"><a class="page-link">Next</a></li>
                     <li th:unless="${page.isLast()}" class="page-item"><a class="page-link" th:href="${'?page=' + page.nextPageable().getPageNumber() + '&size=' + page.pageable.getPageSize() + '&sort=createdAt,' + page.getSort().getOrderFor('createdAt').getDirection()}">Next</a></li>
                     <li class="page-item">
-                        <a class="page-link" th:href="${'?page=' + page.totalPages + '&size=' + page.pageable.getPageSize() + '&sort=createdAt,' + page.getSort().getOrderFor('createdAt').getDirection()}">
+                        <a class="page-link" th:href="${'?page=' + (page.totalPages - 1) + '&size=' + page.pageable.getPageSize() + '&sort=createdAt,' + page.getSort().getOrderFor('createdAt').getDirection()}">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
