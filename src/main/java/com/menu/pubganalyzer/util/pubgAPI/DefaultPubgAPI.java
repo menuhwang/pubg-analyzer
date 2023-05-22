@@ -2,6 +2,7 @@ package com.menu.pubganalyzer.util.pubgAPI;
 
 import com.menu.pubganalyzer.domain.model.enums.Shard;
 import com.menu.pubganalyzer.util.pubgAPI.exception.MatchNotFoundException;
+import com.menu.pubganalyzer.util.pubgAPI.exception.PlayerNotFoundException;
 import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.PlayersResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.TelemetryResponse;
@@ -57,7 +58,7 @@ public class DefaultPubgAPI implements PubgAPI {
     }
 
     @Override
-    public PlayersResponse player(Collection<String> nicknames) {
+    public PlayersResponse player(Collection<String> nicknames) throws PlayerNotFoundException {
         StringBuilder url = new StringBuilder(BASE_URL + "/shards/" + shard.name().toLowerCase() + "/players?filter[playerNames]=");
         for (String nickname : nicknames) {
             url.append(nickname);
@@ -67,6 +68,8 @@ public class DefaultPubgAPI implements PubgAPI {
         url.deleteCharAt(url.length() - 1);
 
         ResponseEntity<PlayersResponse> response = restTemplate.exchange(url.toString(), HttpMethod.GET, AUTH_HTTP_ENTITY, PlayersResponse.class);
+
+        if (response.getStatusCode() == HttpStatus.NOT_FOUND) throw new PlayerNotFoundException();
 
         return response.getBody();
     }

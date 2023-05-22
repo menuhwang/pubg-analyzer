@@ -28,7 +28,7 @@
                     <div class="card-body">
                         <h1 class="mb-3" id="nickname" th:data-player-id="${player.id}" th:text="${player.name}"></h1>
                         <div class="d-flex">
-                            <button class="pa-renew-btn btn btn-primary me-2" th:data-player-nickname="${player.name}" onclick="renewPlayer(event)">
+                            <button class="pa-renew-btn btn btn-primary me-2" th:data-player-nickname="${player.name}" th:data-player-shard="${player.shardId}" onclick="renewPlayer(event)">
                                 전적 갱신
                                 <span class="pa-renew-spinner spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                             </button>
@@ -180,9 +180,10 @@
 
         function renewPlayer(event) {
             renewSpinnerToggle();
+            const shard = event.target.getAttribute('data-player-shard');
             const nickname = event.target.getAttribute('data-player-nickname');
 
-            fetch(`/api/players/${nickname}`, {method: 'PATCH'})
+            fetch(`/api/shard/${shard}/players/${nickname}`, {method: 'PATCH'})
                 .then(res => {
                     if (!res.ok) {
                         alert('갱신 실패.');
