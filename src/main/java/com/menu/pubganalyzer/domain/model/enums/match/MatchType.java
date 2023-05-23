@@ -3,6 +3,7 @@ package com.menu.pubganalyzer.domain.model.enums.match;
 public enum MatchType {
     AIROYALE("ai모드"),
     ARCADE("아케이드"),
+    COMPETITIVE("경쟁전"),
     CUSTOM("커스텀 매치"),
     EVENT("이벤트 매치"),
     OFFICIAL("오피셜 매치"),
