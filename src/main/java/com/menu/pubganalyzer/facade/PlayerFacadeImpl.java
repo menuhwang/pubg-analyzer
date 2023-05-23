@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -86,7 +87,10 @@ public class PlayerFacadeImpl implements PlayerFacade {
 
         Set<String> matchIds = player.getMatchIds();
 
-        Set<Match> matches = matchFacade.findById(matchIds);
+        Set<Match> matches = matchIds.stream()
+                .parallel()
+                .map(matchFacade::findById)
+                .collect(Collectors.toSet());
 
         matchInsertStrategy.insert(matches);
 
@@ -96,8 +100,8 @@ public class PlayerFacadeImpl implements PlayerFacade {
         }
 
         participants.sort((p1, p2) -> {
-            Match m1 = p1.getRoster().getMatch();
-            Match m2 = p2.getRoster().getMatch();
+            Match m1 = p1.getMatch();
+            Match m2 = p2.getMatch();
             int order = m1.getCreatedAt().compareTo(m2.getCreatedAt());
             return order * -1;
         });

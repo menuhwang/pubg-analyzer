@@ -9,6 +9,7 @@ import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -159,5 +160,18 @@ public class Match {
                 ", matchType=" + matchType +
                 ", createdAt=" + createdAt +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Match match = (Match) o;
+        return getId() != null && Objects.equals(getId(), match.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }
