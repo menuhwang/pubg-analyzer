@@ -27,7 +27,7 @@ public class SearchPlayerService {
 
     @Cacheable(value = "renew_players", key = "#nickname")
     public boolean renew(Shard shard, String nickname) {
-        playerFacade.renewSync(shard, nickname);
+        playerFacade.renewAsync(shard, nickname);
         return true;
     }
 }

@@ -9,7 +9,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Component
@@ -20,7 +22,11 @@ public class MatchEventListener {
     @Async("sqlExecutor")
     @EventListener
     public void saveMatches(SaveMatchesEvent event) {
-        Collection<Match> matches = event.getMatches();
+        Set<Match> matches = new HashSet<>(event.getMatches());
+
+        List<Match> exists = matchRepository.findAllById(Match.extractIds(matches));
+        exists.forEach(matches::remove);
+
         log.info("매치 DB insert 시작 matches size:{}", matches.size());
         long start = System.currentTimeMillis();
         matchRepository.saveAll(matches);
