@@ -37,5 +37,8 @@ dependencies {
 }
 
 tasks.named('test') {
+	if (project.hasProperty("util.pubg.api.token")) {
+		systemProperty "util.pubg.api.token", project.property("util.pubg.api.token")
+	}
 	useJUnitPlatform()
 }

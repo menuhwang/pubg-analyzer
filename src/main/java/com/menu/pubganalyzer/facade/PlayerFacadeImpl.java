@@ -81,15 +81,14 @@ public class PlayerFacadeImpl implements PlayerFacade {
     private List<Participant> renew(Shard shard, String nickname, MatchInsertStrategy matchInsertStrategy) throws PlayerNotFoundException {
         log.info("전적 갱신 Shard:{}, Nickname:{}", shard.name(), nickname);
 
-        pubgAPI.setShard(shard);
-        Player player = Player.of(pubgAPI.player(List.of(nickname))).get(0);
+        Player player = Player.of(pubgAPI.player(shard.name(), List.of(nickname))).get(0);
         playerRepository.findById(player.getId()).orElseGet(() -> playerRepository.saveAndFlush(player));
 
         Set<String> matchIds = player.getMatchIds();
 
         Set<Match> matches = matchIds.stream()
                 .parallel()
-                .map(matchFacade::findById)
+                .map(id -> matchFacade.findById(shard, id))
                 .collect(Collectors.toSet());
 
         matchInsertStrategy.insert(matches);

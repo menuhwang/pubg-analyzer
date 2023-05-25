@@ -42,9 +42,8 @@ jobs:
         with:
           arguments: |
             build 
-            -x 
-            test 
             --parallel
+            -Putil.pubg.api.token=${{ secrets.PUBG_TOKEN }}
 
       - name: Upload Gradle Build Artifact
         uses: actions/upload-artifact@v3.1.2

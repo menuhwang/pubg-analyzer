@@ -1,18 +1,15 @@
 package com.menu.pubganalyzer.util.pubgAPI;
 
-import com.menu.pubganalyzer.domain.model.LogPlayerKillV2;
-import com.menu.pubganalyzer.domain.model.LogPlayerTakeDamage;
-import com.menu.pubganalyzer.util.pubgAPI.exception.MatchNotFoundException;
+import com.menu.pubganalyzer.util.pubgAPI.exception.PubgAPIMatchNotFoundException;
+import com.menu.pubganalyzer.util.pubgAPI.exception.PubgAPIPlayerNotFoundException;
 import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.PlayersResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.TelemetryResponse;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,87 +17,112 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = {PubgAPIConfiguration.class})
 @ActiveProfiles("test")
+@TestClassOrder(ClassOrderer.OrderAnnotation.class)
 class PubgAPITest {
-    @Value("${util.pubg.api.test.data.match.id}")
-    private String MATCH_ID;
-
-    @Value("${util.pubg.api.test.data.match.ids}")
-    private List<String> MATCH_IDS;
-
-    @Value("${util.pubg.api.test.data.player.nickname}")
-    private String PLAYER_NICKNAME;
-
-    @Value("${util.pubg.api.test.data.player.nicknames}")
-    private List<String> PLAYER_NICKNAMES;
-
-    @Value("${util.pubg.api.test.data.telemetry.url}")
-    private String TELEMETRY_URL;
-
     @Autowired
     private PubgAPI pubgAPI;
 
-    @Test
-    void match() {
-        MatchResponse m = pubgAPI.match(MATCH_ID);
-        for (MatchResponse.Element element : m.getIncluded()) System.out.println(element);
-        assertEquals(MATCH_ID, m.getId());
-    }
+    private static final String SHARD = "steam";
+    private static final String PLAYER_NICKNAME = "WackyJacky101";
 
-    @Test
-    void match_not_found() {
-        String wrongId = "wrong_match_id";
-        Exception e = assertThrows(MatchNotFoundException.class, () -> pubgAPI.match(wrongId));
-        assertEquals(String.format(MatchNotFoundException.MESSAGE_PATTERN, wrongId), e.getMessage());
-    }
+    private static List<String> MATCH_IDS;
+    private static String TELEMETRY_URL;
 
-    @Test
-    void matchParallel() {
-        List<String> result = MATCH_IDS.stream()
-                .parallel()
-                .map(pubgAPI::match)
-                .map(MatchResponse::getId)
-                .collect(Collectors.toList());
-
-        for (String id : result) {
-            assertTrue(MATCH_IDS.contains(id));
-        }
-    }
-
-    @Test
-    void player() {
-        PlayersResponse players = pubgAPI.player(PLAYER_NICKNAMES);
-        for (PlayersResponse.Player player : players.getPlayers()) {
-            assertTrue(PLAYER_NICKNAMES.contains(player.getAttributes().getName()));
-            System.out.println(player.getMatchIds());
+    @Nested
+    @Order(1)
+    @DisplayName("플레이어 조회")
+    class PlayerTest {
+        @Test
+        @Order(1)
+        @DisplayName("플랫폼과 닉네임 리스트를 받아 PlayerResponse 객체를 반환한다.")
+        void player() {
+            PlayersResponse players = assertDoesNotThrow(() -> pubgAPI.player(SHARD, List.of(PLAYER_NICKNAME)));
+            assertTrue(players.getPlayers().size() > 0);
+            PlayersResponse.Player player = players.getPlayers().get(0);
+            assertEquals(PLAYER_NICKNAME, player.getAttributes().getName());
             assertFalse(player.getRelationships().getMatches().isEmpty());
-        }
-    }
-
-    @Test
-    void telemetry() {
-        List<TelemetryResponse> telemetry = pubgAPI.telemetry(TELEMETRY_URL);
-        System.out.println(telemetry.size());
-        int logPlayerKillV2 = 0;
-        int logPlayerTakeDamage = 0;
-
-        List<LogPlayerKillV2> logPlayerKillObj = new ArrayList<>();
-        List<LogPlayerTakeDamage> logPlayerTakeDamageObj = new ArrayList<>();
-        for (TelemetryResponse log : telemetry) {
-            try {
-                if (log.getType().equals("LogPlayerKillV2")) {
-                    logPlayerKillObj.add(LogPlayerKillV2.of(log, "dummy"));
-                    logPlayerKillV2++;
-                } else if (log.getType().equals("LogPlayerTakeDamage")) {
-                    logPlayerTakeDamageObj.add(LogPlayerTakeDamage.of(log, "dummy"));
-                    logPlayerTakeDamage++;
-                }
-            } catch (Exception e) {
-                System.out.println(log);
-                throw e;
+            MATCH_IDS = player.getMatchIds();
+            assertTrue(MATCH_IDS.size() > 0);
+            System.out.println("Match id");
+            for (int i = 0; i < MATCH_IDS.size(); i++) {
+                System.out.printf("%d:%s\n", i + 1, MATCH_IDS.get(i));
             }
         }
 
-        System.out.printf("logPlayerKillV2 : %d\n", logPlayerKillV2);
-        System.out.printf("logPlayerTakeDamage : %d\n", logPlayerTakeDamage);
+        @Test
+        @Order(2)
+        @DisplayName("조회 결과가 없는 경우 PubgAPIPlayerNotFoundException 예외를 반환한다.")
+        void player_not_found() {
+            String wrongNickname = "w";
+            Exception e = assertThrows(PubgAPIPlayerNotFoundException.class, () -> pubgAPI.player(SHARD, List.of(wrongNickname)));
+            assertEquals(PubgAPIPlayerNotFoundException.DEFAULT_MSG, e.getMessage());
+        }
+    }
+
+    @Nested
+    @Order(2)
+    @DisplayName("매치 조회")
+    class MatchTest {
+        @Test
+        @Order(1)
+        @DisplayName("플랫폼과 매치 id를 받아 MatchResponse 객체를 반환한다.")
+        void match() {
+            String matchId = MATCH_IDS.get(0);
+            MatchResponse m = pubgAPI.match(SHARD, matchId);
+            assertEquals(matchId, m.getId());
+            assertTrue(m.getIncluded().size() > 0);
+            List<MatchResponse.Element> elements = m.getIncluded();
+            System.out.println("Included");
+            for (int i = 0; i < elements.size(); i++) {
+                MatchResponse.Element element = elements.get(i);
+                System.out.printf("%d:%s\n", i + 1, element);
+                if (element.getType().equals("asset")) TELEMETRY_URL = element.getAttributes().getURL();
+            }
+        }
+
+        @Test
+        @Order(2)
+        @DisplayName("여러 매치 조회시 병렬 처리로 처리 시간을 단축한다.")
+        void matchParallel() {
+            long start = System.currentTimeMillis();
+            List<String> result = assertDoesNotThrow(() ->
+                    MATCH_IDS.stream()
+                            .parallel()
+                            .map(id -> pubgAPI.match(SHARD, id))
+                            .map(MatchResponse::getId)
+                            .collect(Collectors.toList())
+            );
+            long end = System.currentTimeMillis();
+
+            for (String id : result) {
+                assertTrue(MATCH_IDS.contains(id));
+            }
+
+            System.out.printf("match size:%d\n", MATCH_IDS.size());
+            System.out.printf("time:%dms\n", end - start);
+        }
+
+        @Test
+        @Order(3)
+        @DisplayName("잘못된 매치 id 조회시 PubgAPIMatchNotFoundException 예외를 반환한다.")
+        void match_not_found() {
+            String wrongId = "wrong_match_id";
+            Exception e = assertThrows(PubgAPIMatchNotFoundException.class, () -> pubgAPI.match(SHARD, wrongId));
+            assertEquals(String.format(PubgAPIMatchNotFoundException.MESSAGE_PATTERN, wrongId), e.getMessage());
+        }
+    }
+
+    @Nested
+    @Order(3)
+    @DisplayName("텔레메트리 조회")
+    class TelemetryTest {
+        @Test
+        @Order(31)
+        @DisplayName("텔레메트리 URL를 받아 TelemetryResponse 리스트를 반환한다.")
+        void telemetry() {
+            List<TelemetryResponse> telemetry = assertDoesNotThrow(() -> pubgAPI.telemetry(TELEMETRY_URL));
+            assertTrue(telemetry.size() > 0);
+            System.out.printf("telemetry size:%d\n", telemetry.size());
+        }
     }
 }
