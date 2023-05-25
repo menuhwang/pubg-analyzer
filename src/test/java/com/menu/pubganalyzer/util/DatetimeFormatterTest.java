@@ -35,7 +35,7 @@ class DatetimeFormatterTest {
 
         String offset = DatetimeFormatter.offsetMinSec(datetime1, datetime2);
 
-        assertEquals("5:30", offset);
+        assertEquals("05:30", offset);
     }
 
     @Test
