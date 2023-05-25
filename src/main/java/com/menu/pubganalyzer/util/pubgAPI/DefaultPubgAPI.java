@@ -1,8 +1,7 @@
 package com.menu.pubganalyzer.util.pubgAPI;
 
-import com.menu.pubganalyzer.domain.model.enums.Shard;
-import com.menu.pubganalyzer.util.pubgAPI.exception.MatchNotFoundException;
-import com.menu.pubganalyzer.util.pubgAPI.exception.PlayerNotFoundException;
+import com.menu.pubganalyzer.util.pubgAPI.exception.PubgAPIMatchNotFoundException;
+import com.menu.pubganalyzer.util.pubgAPI.exception.PubgAPIPlayerNotFoundException;
 import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.PlayersResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.TelemetryResponse;
@@ -20,7 +19,6 @@ import java.util.List;
 public class DefaultPubgAPI implements PubgAPI {
     private final RestTemplate restTemplate;
     private static final String BASE_URL = "https://api.pubg.com";
-    private static Shard shard = Shard.STEAM;
 
     private final HttpEntity DEFAULT_HTTP_ENTITY;
     private final HttpEntity AUTH_HTTP_ENTITY;
@@ -40,38 +38,36 @@ public class DefaultPubgAPI implements PubgAPI {
     }
 
     @Override
-    public void setShard(Shard s) {
-        shard = s;
-    }
-
-    @Override
-    public MatchResponse match(String matchId) {
-        String url = BASE_URL + "/shards/" + shard.name().toLowerCase() + "/matches/" + matchId;
+    public MatchResponse match(String shardId, String matchId) {
+        String url = BASE_URL + "/shards/" + shardId.toLowerCase() + "/matches/" + matchId;
         MatchResponse matchResponse = null;
         try {
             ResponseEntity<MatchResponse> response = restTemplate.exchange(url, HttpMethod.GET, DEFAULT_HTTP_ENTITY, MatchResponse.class);
             matchResponse = response.getBody();
         } catch (HttpClientErrorException e) {
-            if (e.getStatusCode() == HttpStatus.NOT_FOUND) throw new MatchNotFoundException(matchId);
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) throw new PubgAPIMatchNotFoundException(matchId);
         }
         return matchResponse;
     }
 
     @Override
-    public PlayersResponse player(Collection<String> nicknames) throws PlayerNotFoundException {
-        StringBuilder url = new StringBuilder(BASE_URL + "/shards/" + shard.name().toLowerCase() + "/players?filter[playerNames]=");
+    public PlayersResponse player(String shardId, Collection<String> nicknames) throws PubgAPIPlayerNotFoundException {
+        StringBuilder url = new StringBuilder(BASE_URL + "/shards/" + shardId.toLowerCase() + "/players?filter[playerNames]=");
         for (String nickname : nicknames) {
             url.append(nickname);
             url.append(",");
         }
-
         url.deleteCharAt(url.length() - 1);
 
-        ResponseEntity<PlayersResponse> response = restTemplate.exchange(url.toString(), HttpMethod.GET, AUTH_HTTP_ENTITY, PlayersResponse.class);
+        PlayersResponse playersResponse = null;
+        try {
+            ResponseEntity<PlayersResponse> response = restTemplate.exchange(url.toString(), HttpMethod.GET, AUTH_HTTP_ENTITY, PlayersResponse.class);
+            playersResponse = response.getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) throw new PubgAPIPlayerNotFoundException();
+        }
 
-        if (response.getStatusCode() == HttpStatus.NOT_FOUND) throw new PlayerNotFoundException();
-
-        return response.getBody();
+        return playersResponse;
     }
 
     @Override
