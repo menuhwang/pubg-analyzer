@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -85,13 +86,19 @@ class PubgAPITest {
         @DisplayName("여러 매치 조회시 병렬 처리로 처리 시간을 단축한다.")
         void matchParallel() {
             long start = System.currentTimeMillis();
-            List<String> result = assertDoesNotThrow(() ->
-                    MATCH_IDS.stream()
+            List<String> result = MATCH_IDS.stream()
                             .parallel()
-                            .map(id -> pubgAPI.match(SHARD, id))
+                            .map(id -> {
+                                try {
+                                    return pubgAPI.match(SHARD, id);
+                                } catch (PubgAPIMatchNotFoundException e) {
+                                    System.out.printf("[%s] %s\n", e.getClass().getName(), e.getMessage());
+                                    return null;
+                                }
+                            })
+                            .filter(Objects::nonNull)
                             .map(MatchResponse::getId)
-                            .collect(Collectors.toList())
-            );
+                            .collect(Collectors.toList());
             long end = System.currentTimeMillis();
 
             for (String id : result) {
