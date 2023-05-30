@@ -1,9 +1,6 @@
 package com.menu.pubganalyzer.support.cookie.bookmark;
 
-import com.google.gson.Gson;
 import lombok.EqualsAndHashCode;
-
-import java.util.List;
 
 @EqualsAndHashCode
 public class Bookmark {
@@ -31,11 +28,6 @@ public class Bookmark {
         bookmark.setPlayer(player);
         bookmark.setShard(shard);
         return bookmark;
-    }
-
-    public static String toJson(List<Bookmark> bookmarkList) {
-        Gson gson = new Gson();
-        return gson.toJson(bookmarkList);
     }
 
     @Override
