@@ -37,7 +37,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="stats">
+                <div th:if="${!stats.isEmpty()}" id="stats">
                     <div th:each="stat : ${stats}" class="card mt-3 position-relative pa-stat" role="button" th:id="${stat.id}" th:onclick="doClickStatCard([[${stat.id}]])" th:data-result-kills="${stat.kills}" th:data-result-assists="${stat.assists}" th:data-result-damageDealt="${stat.damageDealt}" data-calc-flag="false">
                         <div class="card-body">
                             <div class="row align-items-center">
@@ -78,10 +78,13 @@
                         </div>
                     </div>
                 </div>
+                <div th:unless="${!stats.isEmpty()}">
+                    전적 갱신이 필요합니다.
+                </div>
             </div>
             <!--sidebar:right-->
             <aside class="col-lg-3">
-                <div class="card" id="matches-result-calc" style="position: sticky; top: 50vh; transform: translateY(-50%)">
+                <div th:if="${!stats.isEmpty()}" class="card" id="matches-result-calc" style="position: sticky; top: 50vh; transform: translateY(-50%)">
                     <div class="card-header">합산</div>
                     <div class="card-body px-0 py-1">
                         <ul class="list-group list-group-flush">
