@@ -5,6 +5,9 @@ public enum CacheType {
     MATCHES("matches", 60, 10000),
     ANALYZE("analyze", 60, 10000),
     PUBG_API_TELEMETRY("pubg_api_telemetry", 60, 10000),
+    MATCH("match", 30 * 60, 2000),
+    PLAYER("player", 60, 20),
+    PARTICIPANT("participant", 30 * 60, 2000 * 20),
     ;
 
     private final String cacheName;
