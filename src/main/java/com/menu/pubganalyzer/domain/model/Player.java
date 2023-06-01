@@ -1,22 +1,24 @@
 package com.menu.pubganalyzer.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.menu.pubganalyzer.domain.model.enums.Shard;
 import com.menu.pubganalyzer.util.pubgAPI.response.PlayersResponse;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Getter
 @Entity
 @Table(indexes = {
         @Index(name = "player_name_shard_index", columnList = "name, shardId", unique = true),
 })
+@Builder
+@AllArgsConstructor
 public class Player {
     @Id
     private String id;
@@ -25,33 +27,68 @@ public class Player {
     @Enumerated(EnumType.STRING)
     private Shard shardId;
     private String patchVersion;
-    @Transient
-    @JsonIgnore
-    Set<String> matchIds = new HashSet<>();
+    @OneToMany(mappedBy = "player", fetch = FetchType.LAZY)
+    @Builder.Default
+    private Set<PlayerMatch> playerMatches = new HashSet<>();
 
     protected Player() {
     }
 
-    @Builder
-    private Player(String id, String name, String titleId, Shard shardId, String patchVersion, Set<String> matchIds) {
-        this.id = id;
-        this.name = name;
-        this.titleId = titleId;
-        this.shardId = shardId;
-        this.patchVersion = patchVersion;
-        this.matchIds = matchIds;
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Shard getShardId() {
+        return shardId;
+    }
+
+    public Set<PlayerMatch> getPlayerMatches() {
+        return playerMatches;
+    }
+
+    public Set<String> getMatchIds() {
+        return playerMatches.stream()
+                .map(PlayerMatch::getMatchId)
+                .collect(Collectors.toSet());
+    }
+
+    public void updateShard(Shard shard) {
+        if (shard == null) return;
+        this.shardId = shard;
+    }
+
+    public void addMatch(String matchId, LocalDateTime createdDateTime) {
+        PlayerMatch playerMatch = PlayerMatch.of(this, matchId, createdDateTime);
+        this.playerMatches.remove(playerMatch);
+        this.playerMatches.add(playerMatch);
+    }
+
+    public static Player temp(Shard shard, String nickname) {
+        return Player.builder()
+                .shardId(shard)
+                .name(nickname)
+                .build();
     }
 
     public static List<Player> of(PlayersResponse playersResponse) {
-        return playersResponse.getPlayers().stream()
-                .map(player -> Player.builder()
-                        .id(player.getId())
-                        .name(player.getAttributes().getName())
-                        .titleId(player.getAttributes().getTitleId())
-                        .shardId(Shard.valueOf((player.getAttributes().getShardId()).toUpperCase()))
-                        .patchVersion(player.getAttributes().getPatchVersion())
-                        .matchIds(player.getRelationships().getMatches().stream().map(PlayersResponse.Element::getId).collect(Collectors.toSet()))
-                        .build()
-                ).collect(Collectors.toList());
+        List<Player> result = new ArrayList<>();
+        for (PlayersResponse.Player psp : playersResponse.getPlayers()) {
+            Player player = Player.builder()
+                    .id(psp.getId())
+                    .name(psp.getAttributes().getName())
+                    .titleId(psp.getAttributes().getTitleId())
+                    .shardId(Shard.valueOf((psp.getAttributes().getShardId()).toUpperCase()))
+                    .patchVersion(psp.getAttributes().getPatchVersion())
+                    .build();
+            for (String matchId : psp.getMatchIds()) {
+                player.addMatch(matchId, psp.getAttributes().getCreatedAt());
+            }
+            result.add(player);
+        }
+        return result;
     }
 }
