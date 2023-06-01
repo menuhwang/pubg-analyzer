@@ -1,6 +1,5 @@
 package com.menu.pubganalyzer.controller.api;
 
-import com.menu.pubganalyzer.domain.model.enums.Shard;
 import com.menu.pubganalyzer.service.SearchPlayerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,7 @@ public class PlayerApiController {
 
     @PatchMapping("/{nickname}")
     public ResponseEntity<Void> renew(@PathVariable String shardId, @PathVariable String nickname) {
-        searchPlayerService.renew(Shard.valueOf(shardId), nickname);
+        searchPlayerService.updateMatchHistory(nickname);
         return ResponseEntity.ok().build();
     }
 }
