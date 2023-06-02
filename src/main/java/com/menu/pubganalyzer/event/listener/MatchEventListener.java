@@ -8,9 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -21,15 +21,19 @@ public class MatchEventListener {
 
     @Async("sqlExecutor")
     @EventListener
+    @Transactional
     public void saveMatches(SaveMatchesEvent event) {
         Set<Match> matches = new HashSet<>(event.getMatches());
 
-        List<Match> exists = matchRepository.findAllById(Match.extractIds(matches));
-        exists.forEach(matches::remove);
+        matches.removeIf(match -> matchRepository.findByIdShardLock(match.getId()).isPresent());
+
+        if (matches.isEmpty()) return;
 
         log.info("매치 DB insert 시작 matches size:{}", matches.size());
         long start = System.currentTimeMillis();
-        matchRepository.saveAll(matches);
+        for (Match match : matches) {
+            matchRepository.saveAndFlush(match);
+        }
         log.info("매치 DB insert 종료 matches size:{}, time:{}ms", matches.size(), System.currentTimeMillis() - start);
     }
 }

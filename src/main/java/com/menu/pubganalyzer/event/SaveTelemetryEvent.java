@@ -5,11 +5,11 @@ import com.menu.pubganalyzer.domain.model.LogPlayerTakeDamage;
 
 import java.util.List;
 
-public class InsertTelemetryEvent {
+public class SaveTelemetryEvent {
     private final List<LogPlayerKillV2> logPlayerKill;
     private final List<LogPlayerTakeDamage> logPlayerTakeDamages;
 
-    private InsertTelemetryEvent(List<LogPlayerKillV2> logPlayerKill, List<LogPlayerTakeDamage> logPlayerTakeDamages) {
+    private SaveTelemetryEvent(List<LogPlayerKillV2> logPlayerKill, List<LogPlayerTakeDamage> logPlayerTakeDamages) {
         this.logPlayerKill = logPlayerKill;
         this.logPlayerTakeDamages = logPlayerTakeDamages;
     }
@@ -22,7 +22,7 @@ public class InsertTelemetryEvent {
         return logPlayerTakeDamages;
     }
 
-    public static InsertTelemetryEvent of(List<LogPlayerKillV2> logPlayerKill, List<LogPlayerTakeDamage> logPlayerTakeDamages) {
-        return new InsertTelemetryEvent(logPlayerKill, logPlayerTakeDamages);
+    public static SaveTelemetryEvent of(List<LogPlayerKillV2> logPlayerKill, List<LogPlayerTakeDamage> logPlayerTakeDamages) {
+        return new SaveTelemetryEvent(logPlayerKill, logPlayerTakeDamages);
     }
 }

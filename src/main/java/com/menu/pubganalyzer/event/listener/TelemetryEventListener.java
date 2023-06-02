@@ -4,14 +4,12 @@ import com.menu.pubganalyzer.domain.model.LogPlayerKillV2;
 import com.menu.pubganalyzer.domain.model.LogPlayerTakeDamage;
 import com.menu.pubganalyzer.domain.repository.LogPlayerKillV2Repository;
 import com.menu.pubganalyzer.domain.repository.LogPlayerTakeDamageRepository;
-import com.menu.pubganalyzer.event.InsertTelemetryEvent;
+import com.menu.pubganalyzer.event.SaveTelemetryEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,15 +22,9 @@ public class TelemetryEventListener {
 
     @Async("sqlExecutor")
     @EventListener
-    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
-    public void saveTelemetry(InsertTelemetryEvent event) {
+    public void saveTelemetry(SaveTelemetryEvent event) {
         List<LogPlayerKillV2> logPlayerKills = event.getLogPlayerKill();
         List<LogPlayerTakeDamage> logPlayerTakeDamages = event.getLogPlayerTakeDamages();
-        String matchId = logPlayerKills.get(0).getMatchId();
-
-        if (logPlayerKillV2Repository.existsByMatchId(matchId) || logPlayerTakeDamageRepository.existsByMatchId(matchId)) {
-            return;
-        }
 
         log.info("Telemetry:LogPlayerKill DB insert 시작 size:{}", logPlayerKills.size());
         long start = System.currentTimeMillis();

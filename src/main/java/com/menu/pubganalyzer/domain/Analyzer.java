@@ -25,6 +25,10 @@ public class Analyzer {
         return new Analyzer(logPlayerKills, logPlayerTakeDamages).analyze();
     }
 
+    public static Analyzer of(Telemetry telemetry) {
+        return new Analyzer(telemetry.getLogPlayerKills(), telemetry.getLogPlayerTakeDamages()).analyze();
+    }
+
     public static Analyzer analyzeOf(Set<String> memberNames, List<LogPlayerKillV2> logPlayerKills, List<LogPlayerTakeDamage> logPlayerTakeDamages) {
         logPlayerKills = logPlayerKills.stream()
                 .filter(log -> log.getKillerName() != null && memberNames.contains(log.getKillerName()))

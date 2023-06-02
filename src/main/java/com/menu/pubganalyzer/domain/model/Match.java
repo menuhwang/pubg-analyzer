@@ -5,6 +5,7 @@ import com.menu.pubganalyzer.domain.model.enums.match.GameMode;
 import com.menu.pubganalyzer.domain.model.enums.match.MapName;
 import com.menu.pubganalyzer.domain.model.enums.match.MatchType;
 import com.menu.pubganalyzer.domain.model.enums.match.SeasonState;
+import com.menu.pubganalyzer.exception.ParticipantNotFoundException;
 import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,16 +19,15 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Getter
 @Builder
 @AllArgsConstructor
-@Entity
-@Table(name = "matches",
+@Entity(name = "matches")
+@Table(
         indexes = {
-        @Index(name = "match_id_shard_index", columnList = "id, shardId")
-})
+                @Index(name = "match_id_shard_index", columnList = "id, shardId")
+        })
 public class Match {
     @Id
     private String id;
@@ -64,10 +64,17 @@ public class Match {
     public Participant getParticipant(Player player) {
         for (Roster roster : this.getRosters()) {
             for (Participant participant : roster.getParticipants()) {
-                if (participant.getPlayerId().equals(player.getId())) return participant;
+                if (participant.getName().equals(player.getName())) return participant;
             }
         }
-        throw new RuntimeException("해당 참가자를 찾을 수 없습니다.");
+        throw new ParticipantNotFoundException();
+    }
+
+    public Participant getParticipant(String playerName) {
+        Player temp = Player.builder()
+                .name(playerName)
+                .build();
+        return getParticipant(temp);
     }
 
     public String getZonedCreatedAt() {
@@ -89,12 +96,6 @@ public class Match {
     public void setRosters(Collection<Roster> rosters) {
         rosters.forEach(roster -> roster.setMatch(this));
         this.rosters = new HashSet<>(rosters);
-    }
-
-    public static Set<String> extractIds(Collection<Match> matches) {
-        return matches.stream()
-                .map(Match::getId)
-                .collect(Collectors.toSet());
     }
 
     public static Match of(MatchResponse matchResponse) {

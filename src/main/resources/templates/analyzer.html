@@ -6,7 +6,7 @@
         <div class="vstack gap-4">
             <div class="d-flex align-items-end">
                 <a class="h1 text-decoration-none text-dark" role="button" th:href="${'/players?shard=' + shard + '&nickname=' + player}" th:text="${player}"></a>
-                <div class="ms-auto">
+                <div th:if="${!member.isEmpty()}" class="ms-auto">
                     <div class="input-group">
                         <label class="input-group-text" for="other-player">Member</label>
                         <select class="form-select" id="other-player" onchange="if(this.value) location.href=this.value;">

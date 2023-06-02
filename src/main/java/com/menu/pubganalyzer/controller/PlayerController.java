@@ -8,6 +8,7 @@ import com.menu.pubganalyzer.support.cookie.bookmark.BookmarkCookie;
 import com.menu.pubganalyzer.support.cookie.bookmark.BookmarkCookieParameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,7 +29,7 @@ public class PlayerController {
             @BookmarkCookie BookmarkCookieParameter bookmarkCookieParameter,
             SearchPlayerReq req,
             Model model,
-            @PageableDefault(size = 20) Pageable pageable) {
+            @PageableDefault(size = 20, sort = "createdDateTime", direction = Sort.Direction.DESC) Pageable pageable) {
         SearchPlayer searchPlayer = searchPlayerService.searchPlayer(req, pageable);
 
         model.addAttribute("viewTitle", req.getNickname());
