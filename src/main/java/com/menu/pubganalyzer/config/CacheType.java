@@ -8,6 +8,8 @@ public enum CacheType {
     MATCH("match", 30 * 60, 2000),
     PLAYER("player", 60, 20),
     PARTICIPANT("participant", 30 * 60, 2000 * 20),
+    TELEMETRY("telemetry", 30 * 60, 2000),
+    ROSTER_TELEMETRY("roster_telemetry", 30 * 60, 2000 * 20),
     ;
 
     private final String cacheName;
