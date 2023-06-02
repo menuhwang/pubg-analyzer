@@ -1,9 +1,6 @@
 package com.menu.pubganalyzer.config;
 
 public enum CacheType {
-    RENEW_PLAYERS("renew_players", 10 * 60, 1024),
-    MATCHES("matches", 60, 10000),
-    ANALYZE("analyze", 60, 10000),
     PUBG_API_TELEMETRY("pubg_api_telemetry", 60, 10000),
     MATCH("match", 30 * 60, 2000),
     PLAYER("player", 60, 20),
