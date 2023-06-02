@@ -51,14 +51,14 @@ public class SearchPlayerService {
         }
 
         Page<PlayerMatch> playerMatches = playerMatchRepository.findByPlayer(player, pageable);
-        final String playerId = player.getId();
+        final String playerName = player.getName();
 
         List<String> matchIds = playerMatches.stream()
                 .map(PlayerMatch::getMatchId)
                 .collect(Collectors.toList());
 
         List<Participant> participants = matchIds.stream()
-                .map(matchId -> participantDAO.findByMatchIdAndPlayerId(matchId, playerId))
+                .map(matchId -> participantDAO.findByMatchIdAndPlayerName(matchId, playerName))
                 .collect(Collectors.toList());
 
         return SearchPlayer.of(player, new PageImpl<>(participants, playerMatches.getPageable(), playerMatches.getTotalElements()));

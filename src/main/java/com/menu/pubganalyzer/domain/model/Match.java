@@ -64,15 +64,15 @@ public class Match {
     public Participant getParticipant(Player player) {
         for (Roster roster : this.getRosters()) {
             for (Participant participant : roster.getParticipants()) {
-                if (participant.getPlayerId().equals(player.getId())) return participant;
+                if (participant.getName().equals(player.getName())) return participant;
             }
         }
         throw new ParticipantNotFoundException();
     }
 
-    public Participant getParticipant(String playerId) {
+    public Participant getParticipant(String playerName) {
         Player temp = Player.builder()
-                .id(playerId)
+                .name(playerName)
                 .build();
         return getParticipant(temp);
     }

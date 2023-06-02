@@ -24,15 +24,15 @@ public class ParticipantDAOImpl implements ParticipantDAO {
     }
 
     @Override
-    public Participant findByMatchIdAndPlayerId(String matchId, String playerId) {
-        String participantKey = matchId + "_" + playerId;
+    public Participant findByMatchIdAndPlayerName(String matchId, String playerName) {
+        String participantKey = matchId + "_" + playerName;
         Participant participant = participantCache.get(participantKey, Participant.class);
         if (participant != null) return participant;
         Match match = matchCache.get(matchId, Match.class);
         if (match != null) {
-            participant = match.getParticipant(playerId);
+            participant = match.getParticipant(playerName);
         } else {
-            participant = participantRepository.findByMatchIdAndPlayerId(matchId, playerId)
+            participant = participantRepository.findByMatchIdAndPlayerName(matchId, playerName)
                     .orElseThrow(ParticipantNotFoundException::new);
         }
         participantCache.put(participantKey, participant);
