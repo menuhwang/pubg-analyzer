@@ -16,6 +16,10 @@ public class UpdateMatchHistoryEvent {
         return new UpdateMatchHistoryEvent(player);
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
     public Set<PlayerMatch> getPlayerMatches() {
         return player.getPlayerMatches();
     }
