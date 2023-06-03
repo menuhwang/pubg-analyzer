@@ -9,7 +9,8 @@ import java.util.Objects;
 
 @Entity(name = "player_match")
 @Table(indexes = {
-        @Index(name = "created_date_time_index", columnList = "createdDateTime")
+        @Index(name = "created_date_time_index", columnList = "createdDateTime"),
+        @Index(name = "player_match_index", columnList = "player_id,matchId", unique = true)
 })
 public class PlayerMatch {
     @Id

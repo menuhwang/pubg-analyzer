@@ -1,10 +1,14 @@
 package com.menu.pubganalyzer.event.listener;
 
+import com.menu.pubganalyzer.domain.model.PlayerMatch;
 import com.menu.pubganalyzer.domain.repository.PlayerMatchRepository;
 import com.menu.pubganalyzer.event.UpdateMatchHistoryEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -13,6 +17,9 @@ public class PlayerEventListener {
 
     @EventListener
     public void updateMatchHistory(UpdateMatchHistoryEvent event) {
-        playerMatchRepository.saveAll(event.getPlayerMatches());
+        Set<PlayerMatch> exists = playerMatchRepository.findByPlayer(event.getPlayer());
+        Set<PlayerMatch> playerMatches = new HashSet<>(event.getPlayerMatches());
+        playerMatches.removeAll(exists);
+        playerMatchRepository.saveAll(playerMatches);
     }
 }
