@@ -43,9 +43,12 @@ public class LogPlayerTakeDamage implements Serializable {
     private Float victimHealth;
     private Integer victimRanking;
     private String victimAccountId;
+    @Enumerated(EnumType.STRING)
     private DamageTypeCategory damageTypeCategory;
+    @Enumerated(EnumType.STRING)
     private DamageReason damageReason;
     private Float damage;
+    @Enumerated(EnumType.STRING)
     private DamageCauserName damageCauserName;
 
     public static LogPlayerTakeDamage of(TelemetryResponse telemetryResponse, String matchId) {

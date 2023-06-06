@@ -1,7 +1,11 @@
 package com.menu.pubganalyzer.domain.model.enums;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public enum DamageTypeCategory {
     NOT_FOUND("Not_Found", "Not Found"),
+    EMPTY("", ""),
     DAMAGE_BLIZZARD("Damage_Blizzard", "Blizzard Damage"),
     DAMAGE_BLUEZONE("Damage_BlueZone", "Bluezone Damage"),
     DAMAGE_BLUEZONEGRENADE("Damage_BlueZoneGrenade", "Bluezone Grenade Damage"),
@@ -57,6 +61,7 @@ public enum DamageTypeCategory {
         for (DamageTypeCategory damageTypeCategory : values()) {
             if (damageTypeCategory.label.equals(label)) return damageTypeCategory;
         }
+        log.warn("DamageTypeCategory not found [{}]", label);
         return NOT_FOUND;
     }
 }

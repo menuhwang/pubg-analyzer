@@ -40,20 +40,29 @@ public class LogPlayerKillV2 implements Serializable {
     private String victimAccountId;
     private String dBNOName;
     private String dBNOAccountId;
+    @Enumerated(EnumType.STRING)
     private DamageReason dBNODamageReason;
+    @Enumerated(EnumType.STRING)
     private DamageTypeCategory dBNODamageTypeCategory;
+    @Enumerated(EnumType.STRING)
     private DamageCauserName dBNODamageCauserName;
     private Float dBNODistance;
     private String finisherName;
     private String finisherAccountId;
+    @Enumerated(EnumType.STRING)
     private DamageReason finisherDamageReason;
+    @Enumerated(EnumType.STRING)
     private DamageTypeCategory finisherDamageTypeCategory;
+    @Enumerated(EnumType.STRING)
     private DamageCauserName finisherDamageCauserName;
     private Float finisherDistance;
     private String killerName;
     private String killerAccountId;
+    @Enumerated(EnumType.STRING)
     private DamageReason killerDamageReason;
+    @Enumerated(EnumType.STRING)
     private DamageTypeCategory killerDamageTypeCategory;
+    @Enumerated(EnumType.STRING)
     private DamageCauserName killerDamageCauserName;
     private Float killerDistance;
     private Boolean suicide;

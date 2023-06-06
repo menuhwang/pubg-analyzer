@@ -1,7 +1,11 @@
 package com.menu.pubganalyzer.domain.model.enums;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public enum DamageCauserName {
     NOT_FOUND("Not_Found", "Not Found", ""),
+    EMPTY("", "", ""),
     AIPAWN_BASE_FEMALE_C("AIPawn_Base_Female_C", "AI Player", ""),
     AIPAWN_BASE_MALE_C("AIPawn_Base_Male_C", "AI Player", ""),
     AIRBOAT_V2_C("AirBoat_V2_C", "Airboat", ""),
@@ -155,6 +159,7 @@ public enum DamageCauserName {
     WEAPDP28_C("WeapDP28_C", "DP-28", "DP-28"),
     WEAPDESERTEAGLE_C("WeapDesertEagle_C", "Deagle", "Deagle"),
     WEAPDUNCANSHK416_C("WeapDuncansHK416_C", "M416", "M416"),
+    WeapFamasG2_C("WeapFamasG2_C", "Famas", "Famas"),
     WEAPFNFAL_C("WeapFNFal_C", "SLR", "SLR"),
     WEAPG18_C("WeapG18_C", "P18C", "P18C"),
     WEAPG36C_C("WeapG36C_C", "G36C", "G36C"),
@@ -230,7 +235,7 @@ public enum DamageCauserName {
         for (DamageCauserName damageCauserName : VALUES) {
             if (damageCauserName.label.equals(label)) return damageCauserName;
         }
-
+        log.warn("DamageCauserName not found [{}]", label);
         return NOT_FOUND;
     }
 }
