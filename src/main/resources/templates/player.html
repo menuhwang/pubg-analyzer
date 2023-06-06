@@ -155,9 +155,18 @@
             assists: 0,
             damageDealt: 0,
             getPoint: () => calcResult.kills + calcResult.assists,
-            getKillsAvg: () => (calcResult.kills/calcResult.matches).toFixed(2),
-            getAssistsAvg: () => (calcResult.assists/calcResult.matches).toFixed(2),
-            getDamageDealtAvg: () => (calcResult.damageDealt/calcResult.matches).toFixed(2),
+            getKillsAvg: () => {
+                if (calcResult.matches === 0) return 0;
+                return (calcResult.kills / calcResult.matches).toFixed(2);
+            },
+            getAssistsAvg: () => {
+                if (calcResult.matches === 0) return 0;
+                return (calcResult.assists / calcResult.matches).toFixed(2);
+            },
+            getDamageDealtAvg: () => {
+                if (calcResult.matches === 0) return 0;
+                return (calcResult.damageDealt / calcResult.matches).toFixed(2);
+            },
         };
 
         function doClickStatCard(id) {
