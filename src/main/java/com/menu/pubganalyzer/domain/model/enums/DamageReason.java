@@ -1,7 +1,11 @@
 package com.menu.pubganalyzer.domain.model.enums;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public enum DamageReason {
     NOT_FOUND("Not_Found", "Not Found"),
+    EMPTY("", ""),
     ARMSHOT("ArmShot", "팔"),
     HEADSHOT("HeadShot", "헤드샷"),
     LEGSHOT("LegShot", "다리"),
@@ -29,7 +33,7 @@ public enum DamageReason {
         for (DamageReason damageReason : values()) {
             if (damageReason.label.equals(label)) return damageReason;
         }
-
+        log.warn("DamageReason not found [{}]", label);
         return NOT_FOUND;
     }
 }

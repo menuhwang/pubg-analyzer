@@ -52,6 +52,7 @@ public class DefaultPubgAPI implements PubgAPI {
 
     @Override
     public PlayersResponse player(String shardId, Collection<String> nicknames) throws PubgAPIPlayerNotFoundException {
+        log.info("Player api 호출 players:{}", nicknames);
         StringBuilder url = new StringBuilder(BASE_URL + "/shards/" + shardId.toLowerCase() + "/players?filter[playerNames]=");
         for (String nickname : nicknames) {
             url.append(nickname);
@@ -63,7 +64,19 @@ public class DefaultPubgAPI implements PubgAPI {
         try {
             ResponseEntity<PlayersResponse> response = restTemplate.exchange(url.toString(), HttpMethod.GET, AUTH_HTTP_ENTITY, PlayersResponse.class);
             playersResponse = response.getBody();
+            log.info("rate limit remaining:{}", response.getHeaders().get("X-Ratelimit-Remaining"));
         } catch (HttpClientErrorException e) {
+            switch (e.getStatusCode()) {
+                case NOT_FOUND:
+                    throw new PubgAPIPlayerNotFoundException();
+                case TOO_MANY_REQUESTS:
+                    log.warn("you have exceeded the number of available requests");
+                    break;
+                default:
+                    log.warn("you need to handle exception");
+                    log.error("{}", e.getMessage(), e);
+                    break;
+            }
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) throw new PubgAPIPlayerNotFoundException();
         }
 

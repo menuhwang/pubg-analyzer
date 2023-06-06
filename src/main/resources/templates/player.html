@@ -22,7 +22,7 @@
     <div class="container-fluid py-5 px-4">
         <div class="row g-4">
             <!--sidebar:left-->
-            <aside class="col-lg-3"></aside>
+            <aside class="col-lg-2"></aside>
             <div class="col-md-8 col-lg-6 vstack gap-4">
                 <div class="card">
                     <div class="card-body">
@@ -53,7 +53,7 @@
                                 </div>
                                 <div class="col d-flex flex-column">
                                     <span th:text="${stat.roster.match.mapName.getMapNameKor()}"></span>
-                                    <span th:text="${stat.roster.match.getGameMode()}"></span>
+                                    <span th:text="${stat.roster.match.gameMode.title}"></span>
                                 </div>
                                 <div class="col d-flex flex-column">
                                     <span>킬</span>
@@ -77,13 +77,31 @@
                             </div>
                         </div>
                     </div>
+                    <nav>
+                        <ul class="pagination justify-content-center mt-3">
+                            <li class="page-item">
+                                <a class="page-link" th:href="${'?shard=' + player.shardId + '&nickname=' + player.name + '&page=0&size=' + stats.getSize()}">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li th:if="${stats.isFirst()}" class="page-item disabled"><a class="page-link">Prev</a></li>
+                            <li th:unless="${stats.isFirst()}" class="page-item"><a class="page-link" th:href="${'?shard=' + player.shardId + '&nickname=' + player.name + '&page=' + stats.previousPageable().getPageNumber() + '&size=' + stats.getSize()}">Prev</a></li>
+                            <li th:if="${stats.isLast()}" class="page-item disabled"><a class="page-link">Next</a></li>
+                            <li th:unless="${stats.isLast()}" class="page-item"><a class="page-link" th:href="${'?shard=' + player.shardId + '&nickname=' + player.name + '&page=' + stats.nextPageable().getPageNumber() + '&size=' + stats.getSize()}">Next</a></li>
+                            <li class="page-item">
+                                <a class="page-link" th:href="${'?shard=' + player.shardId + '&nickname=' + player.name + '&page=' + (stats.totalPages - 1) + '&size=' + stats.getSize()}">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
                 <div th:unless="${!stats.isEmpty()}">
                     전적 갱신이 필요합니다.
                 </div>
             </div>
             <!--sidebar:right-->
-            <aside class="col-lg-3">
+            <aside class="col-lg-2">
                 <div th:if="${!stats.isEmpty()}" class="card" id="matches-result-calc" style="position: sticky; top: 50vh; transform: translateY(-50%)">
                     <div class="card-header">합산</div>
                     <div class="card-body px-0 py-1">
@@ -137,9 +155,18 @@
             assists: 0,
             damageDealt: 0,
             getPoint: () => calcResult.kills + calcResult.assists,
-            getKillsAvg: () => (calcResult.kills/calcResult.matches).toFixed(2),
-            getAssistsAvg: () => (calcResult.assists/calcResult.matches).toFixed(2),
-            getDamageDealtAvg: () => (calcResult.damageDealt/calcResult.matches).toFixed(2),
+            getKillsAvg: () => {
+                if (calcResult.matches === 0) return 0;
+                return (calcResult.kills / calcResult.matches).toFixed(2);
+            },
+            getAssistsAvg: () => {
+                if (calcResult.matches === 0) return 0;
+                return (calcResult.assists / calcResult.matches).toFixed(2);
+            },
+            getDamageDealtAvg: () => {
+                if (calcResult.matches === 0) return 0;
+                return (calcResult.damageDealt / calcResult.matches).toFixed(2);
+            },
         };
 
         function doClickStatCard(id) {
