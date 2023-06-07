@@ -75,15 +75,6 @@
                     </li>
                 </ul>
             </nav>
-
-            <div class="input-group">
-                <span class="input-group-text">Match Created At</span>
-                <select class="form-select" id="condition">
-                    <option th:each="condition : ${deleteConditionOption}" th:value="${condition.name()}" th:text="${condition.getOperator()}"></option>
-                </select>
-                <input type="date" class="form-control" id="createdAt">
-                <button class="btn btn-danger delete-conditional-btn">삭제</button>
-            </div>
         </div>
     </div>
     <div class="delete-failed-alert toast align-items-center text-bg-warning border-0 sticky-bottom ms-md-auto" role="alert" aria-live="assertive" aria-atomic="true">
