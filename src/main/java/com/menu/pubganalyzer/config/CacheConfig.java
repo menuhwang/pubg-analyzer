@@ -1,6 +1,7 @@
 package com.menu.pubganalyzer.config;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
+import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCache;
@@ -27,5 +28,30 @@ public class CacheConfig {
                 ).collect(Collectors.toList());
         cacheManager.setCaches(caches);
         return cacheManager;
+    }
+
+    @Bean
+    public Cache playerCache(CacheManager cacheManager) {
+        return cacheManager.getCache(CacheType.PLAYER.getCacheName());
+    }
+
+    @Bean
+    public Cache participantCache(CacheManager cacheManager) {
+        return cacheManager.getCache(CacheType.PARTICIPANT.getCacheName());
+    }
+
+    @Bean
+    public Cache matchCache(CacheManager cacheManager) {
+        return cacheManager.getCache(CacheType.MATCH.getCacheName());
+    }
+
+    @Bean
+    public Cache telemetryCache(CacheManager cacheManager) {
+        return cacheManager.getCache(CacheType.TELEMETRY.getCacheName());
+    }
+
+    @Bean
+    public Cache rosterTelemetryCache(CacheManager cacheManager) {
+        return cacheManager.getCache(CacheType.ROSTER_TELEMETRY.getCacheName());
     }
 }
