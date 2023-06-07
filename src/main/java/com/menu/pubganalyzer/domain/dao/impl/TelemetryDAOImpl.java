@@ -1,6 +1,5 @@
 package com.menu.pubganalyzer.domain.dao.impl;
 
-import com.menu.pubganalyzer.config.CacheType;
 import com.menu.pubganalyzer.domain.Telemetry;
 import com.menu.pubganalyzer.domain.dao.TelemetryDAO;
 import com.menu.pubganalyzer.domain.model.LogPlayerKillV2;
@@ -12,8 +11,8 @@ import com.menu.pubganalyzer.domain.repository.LogPlayerTakeDamageRepository;
 import com.menu.pubganalyzer.event.publisher.TelemetryEventPublisher;
 import com.menu.pubganalyzer.util.pubgAPI.PubgAPI;
 import com.menu.pubganalyzer.util.pubgAPI.response.TelemetryResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -21,6 +20,7 @@ import java.util.List;
 import static org.springframework.cache.Cache.ValueWrapper;
 
 @Component
+@RequiredArgsConstructor
 public class TelemetryDAOImpl implements TelemetryDAO {
     private final LogPlayerKillV2Repository logPlayerKillV2Repository;
     private final LogPlayerTakeDamageRepository logPlayerTakeDamageRepository;
@@ -28,20 +28,6 @@ public class TelemetryDAOImpl implements TelemetryDAO {
     private final TelemetryEventPublisher telemetryEventPublisher;
     private final Cache telemetryCache;
     private final Cache rosterTelemetryCache;
-
-    public TelemetryDAOImpl(
-            LogPlayerKillV2Repository logPlayerKillV2Repository,
-            LogPlayerTakeDamageRepository logPlayerTakeDamageRepository,
-            PubgAPI pubgAPI,
-            TelemetryEventPublisher telemetryEventPublisher,
-            CacheManager cacheManager) {
-        this.logPlayerKillV2Repository = logPlayerKillV2Repository;
-        this.logPlayerTakeDamageRepository = logPlayerTakeDamageRepository;
-        this.pubgAPI = pubgAPI;
-        this.telemetryEventPublisher = telemetryEventPublisher;
-        this.telemetryCache = cacheManager.getCache(CacheType.TELEMETRY.getCacheName());
-        this.rosterTelemetryCache = cacheManager.getCache(CacheType.ROSTER_TELEMETRY.getCacheName());
-    }
 
     @Override
     public Telemetry findByMatchId(Match match) {

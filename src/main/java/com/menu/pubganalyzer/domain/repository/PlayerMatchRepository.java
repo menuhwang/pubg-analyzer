@@ -11,4 +11,5 @@ import java.util.Set;
 public interface PlayerMatchRepository extends JpaRepository<PlayerMatch, Long> {
     Page<PlayerMatch> findByPlayer(Player player, Pageable pageable);
     Set<PlayerMatch> findByPlayer(Player player);
+    void deleteByMatchId(String matchId);
 }

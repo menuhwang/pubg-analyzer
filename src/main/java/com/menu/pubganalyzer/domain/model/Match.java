@@ -46,7 +46,7 @@ public class Match {
     private MatchType matchType;
     private LocalDateTime createdAt;
 
-    @OneToOne(cascade = {CascadeType.ALL})
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private Asset asset;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "match", cascade = {CascadeType.ALL})
@@ -96,6 +96,16 @@ public class Match {
     public void setRosters(Collection<Roster> rosters) {
         rosters.forEach(roster -> roster.setMatch(this));
         this.rosters = new HashSet<>(rosters);
+    }
+
+    public Set<String> extractPlayerNames() {
+        Set<String> names = new HashSet<>();
+        for (Roster roster : rosters) {
+            for (Participant participant : roster.getParticipants()) {
+                names.add(participant.getName());
+            }
+        }
+        return names;
     }
 
     public static Match of(MatchResponse matchResponse) {
