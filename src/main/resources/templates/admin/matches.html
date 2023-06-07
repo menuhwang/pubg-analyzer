@@ -10,6 +10,14 @@
         </aside>
         <div class="col-auto vstack gap-4">
             <h1>매치 관리</h1>
+            <div class="card">
+                <div class="card-body">
+                    <div>
+                        <span>전체 매치 :</span>
+                        <span th:text="${page.getTotalElements()}"></span>
+                    </div>
+                </div>
+            </div>
             <form class="row g-3">
                 <div class="col">
                     <input type="text" class="form-control" name="matchId" placeholder="match id" th:value="${matchId}">
@@ -41,7 +49,7 @@
                     </thead>
                     <tbody>
                     <tr th:each="match : ${page.content}">
-                        <th scope="row" th:text="${matchStat.index + 1}"></th>
+                        <th scope="row" th:text="${page.size * page.number + matchStat.index + 1}"></th>
                         <td th:text="${match.id}"></td>
                         <td th:text="${match.createdAt}"></td>
                         <td><input class="form-check-input single-check-input" type="checkbox" th:value="${match.id}"></td>
