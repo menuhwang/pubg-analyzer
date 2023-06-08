@@ -30,7 +30,7 @@
                         <div class="d-flex">
                             <button class="pa-renew-btn btn btn-primary me-2" th:data-player-nickname="${player.name}" th:data-player-shard="${player.shardId}" onclick="renewPlayer(event)">
                                 전적 갱신
-                                <span class="pa-renew-spinner spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                <span class="spinner-border spinner-border-sm" role="status" style="display: none"></span>
                             </button>
                             <a th:if="${bookmarkState}" class="btn btn-warning d-flex align-items-center" role="button" th:href="${'/players/bookmark/delete?shard=' + player.shardId + '&nickname=' + player.name}"><i class="fa-solid fa-bookmark"></i></a>
                             <a th:unless="${bookmarkState}" class="btn btn-outline-warning d-flex align-items-center" role="button" th:href="${'/players/bookmark/add?shard=' + player.shardId + '&nickname=' + player.name}"><i class="fa-solid fa-bookmark"></i></a>
@@ -72,7 +72,10 @@
                                     <span th:text="${stat.revives}"></span>
                                 </div>
                                 <div class="col-auto">
-                                    <a th:href="${'/analyzer/match/' + stat.match.id + '/player/' + player.name}" class="btn btn-primary my-auto"><i class="fa-solid fa-arrow-right"></i></a>
+                                    <button th:href="${'/analyzer/match/' + stat.match.id + '/player/' + player.name}" class="btn btn-primary my-auto pa-analyze-btn">
+                                        <i class="fa-solid fa-arrow-right"></i>
+                                        <span class="spinner-border spinner-border-sm" role="status" style="display: none"></span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -208,6 +211,17 @@
 
         document.getElementById('selected-stats-init-btn').addEventListener('click', doInitSelectedStatCards);
 
+        function doClickAnalyzeBtn(event) {
+            event.cancelBubble = true;
+            const target = event.currentTarget;
+            target.getElementsByTagName('i')[0].style.display = 'none';
+            spinnerToggle(target);
+            location.href = target.getAttribute('href');
+        }
+
+        document.querySelectorAll('.pa-stat .pa-analyze-btn')
+            .forEach(ele => ele.addEventListener('click', (event) => doClickAnalyzeBtn(event)));
+
         function renderCalc() {
             const matches = document.getElementById('matches-result-calc-matches');
             const kills = document.getElementById('matches-result-calc-kills');
@@ -228,7 +242,7 @@
         }
 
         function renewPlayer(event) {
-            renewSpinnerToggle();
+            spinnerToggle(event.target);
             const shard = event.target.getAttribute('data-player-shard');
             const nickname = event.target.getAttribute('data-player-nickname');
 
@@ -236,12 +250,12 @@
                 .then(res => {
                     if (!res.ok) {
                         alert('갱신 실패.');
-                        renewSpinnerToggle();
+                        spinnerToggle(event.target);
                         return;
                     }
                     location.reload();
                 }).catch(res => {
-                    renewSpinnerToggle();
+                    spinnerToggle(event.target);
                     alert('갱신 실패.');
             })
         }
@@ -254,6 +268,16 @@
 
             renewBtn.disabled = status === "true";
             renewSpinner.setAttribute('aria-hidden', status === "false" ? "true" : "false");
+        }
+
+        function spinnerToggle(btnElement) {
+            const btn = btnElement;
+            const spinner = btn.getElementsByClassName('spinner-border spinner-border-sm')[0];
+
+            const display = spinner.style.display;
+
+            btn.disabled = display === 'none' ? 'true' : 'false';
+            spinner.style.display = display === 'none' ? 'inline-flex' : 'none';
         }
     </script>
 </body>
