@@ -23,7 +23,7 @@ public interface MatchRepository extends JpaRepository<Match, String> {
 
     Page<Match> findByIdContains(String id, Pageable pageable);
 
-    @Query("SELECT m FROM matches m join fetch m.rosters r join fetch r.participants WHERE m.id = :id ORDER BY m.createdAt DESC")
+    @Query("SELECT m FROM matches m join fetch m.rosters r join fetch r.participants join fetch m.asset WHERE m.id = :id ORDER BY m.createdAt DESC")
     Optional<Match> findByIdFetchParticipant(String id);
 
     @Lock(LockModeType.PESSIMISTIC_READ)
