@@ -103,7 +103,12 @@
             <!--sidebar:right-->
             <aside class="col-lg-2">
                 <div th:if="${!stats.isEmpty()}" class="card" id="matches-result-calc" style="position: sticky; top: 50vh; transform: translateY(-50%)">
-                    <div class="card-header">합산</div>
+                    <div class="card-header">
+                        <span>합산</span>
+                        <span class="float-end text-muted">
+                            <a id="selected-stats-init-btn" class="text-reset" role="button">초기화</a>
+                        </span>
+                    </div>
                     <div class="card-body px-0 py-1">
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item d-flex justify-content-between align-items-start">
@@ -124,7 +129,7 @@
                             </li>
                             <li class="list-group-item d-flex justify-content-between align-items-start">
                                 <div>데미지 합산</div>
-                                <div id="matches-result-calc-damage">0</div>
+                                <div id="matches-result-calc-damage">0.00</div>
                             </li>
                             <li class="list-group-item d-flex justify-content-between align-items-start">
                                 <div>킬 avg.</div>
@@ -188,6 +193,20 @@
             }
             renderCalc();
         }
+
+        function doInitSelectedStatCards() {
+            const statCards = document.querySelectorAll('.pa-stat');
+            for (let statCard of statCards) {
+                statCard.setAttribute('data-calc-flag', 'false');
+            }
+            calcResult.matches = 0;
+            calcResult.kills = 0;
+            calcResult.assists = 0;
+            calcResult.damageDealt = 0;
+            renderCalc();
+        }
+
+        document.getElementById('selected-stats-init-btn').addEventListener('click', doInitSelectedStatCards);
 
         function renderCalc() {
             const matches = document.getElementById('matches-result-calc-matches');
