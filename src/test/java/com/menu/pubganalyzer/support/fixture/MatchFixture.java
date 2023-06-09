@@ -3,11 +3,12 @@ package com.menu.pubganalyzer.support.fixture;
 import com.menu.pubganalyzer.domain.model.Match;
 import com.menu.pubganalyzer.domain.model.Participant;
 import com.menu.pubganalyzer.domain.model.Roster;
+import com.menu.pubganalyzer.support.fixture.pubgapi.PlayerResponseFixture;
 
 import java.util.Set;
 
 public class MatchFixture {
-    public static final String PLAYER_NAME = "test-participant";
+    public static final String PLAYER_NAME = PlayerResponseFixture.PLAYER_NAME;
     public static final String MATCH_ID = "test-match";
 
     public static final Participant PARTICIPANT = Participant.builder()

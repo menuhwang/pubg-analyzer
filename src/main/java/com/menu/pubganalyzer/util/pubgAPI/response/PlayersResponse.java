@@ -1,7 +1,6 @@
 package com.menu.pubganalyzer.util.pubgAPI.response;
 
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.Delegate;
 
 import java.time.LocalDateTime;
@@ -9,6 +8,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString
 public class PlayersResponse {
     private List<Player> data;
@@ -18,6 +20,9 @@ public class PlayersResponse {
     }
 
     @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     @ToString
     public static class Player {
         String type;
@@ -34,6 +39,9 @@ public class PlayersResponse {
     }
 
     @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     @ToString
     public static class Attribute {
         String name;
@@ -46,6 +54,9 @@ public class PlayersResponse {
     }
 
     @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     @ToString
     public static class Relationship {
         Included assets;
@@ -53,6 +64,9 @@ public class PlayersResponse {
     }
 
     @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     @ToString
     public static class Included {
         @Delegate

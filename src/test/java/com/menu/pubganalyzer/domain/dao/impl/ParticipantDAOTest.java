@@ -6,6 +6,7 @@ import com.menu.pubganalyzer.domain.model.Participant;
 import com.menu.pubganalyzer.domain.repository.ParticipantRepository;
 import com.menu.pubganalyzer.exception.ParticipantNotFoundException;
 import com.menu.pubganalyzer.support.fixture.MatchFixture;
+import com.menu.pubganalyzer.support.fixture.PlayerFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -28,7 +29,7 @@ class ParticipantDAOTest {
 
     private final ParticipantDAO participantDAO = new ParticipantDAOImpl(participantRepository, matchCache, participantCache);
 
-    private static final String PLAYER_NAME = MatchFixture.PLAYER_NAME;
+    private static final String PLAYER_NAME = PlayerFixture.PLAYER_NAME;
     private static final String MATCH_ID = MatchFixture.MATCH_ID;
     private static final Participant PARTICIPANT = MatchFixture.PARTICIPANT;
     private static final Match MATCH = MatchFixture.MATCH;
