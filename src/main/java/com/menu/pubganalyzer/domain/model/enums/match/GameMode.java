@@ -61,7 +61,7 @@ public enum GameMode {
         return title;
     }
 
-    private String getTag() {
+    public String getTag() {
         return tag;
     }
 }

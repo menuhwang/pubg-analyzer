@@ -2,14 +2,16 @@ package com.menu.pubganalyzer.util.pubgAPI.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.Delegate;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class MatchResponse {
@@ -19,6 +21,9 @@ public class MatchResponse {
     private List<Element> included;
 
     @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     @ToString
     public static class Data {
         String type;
@@ -35,6 +40,9 @@ public class MatchResponse {
     }
 
     @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     @ToString
     public static class Attribute {
         String gameMode;
@@ -88,6 +96,9 @@ public class MatchResponse {
     }
 
     @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     @ToString
     public static class Relationship {
         Included rosters;
@@ -97,6 +108,9 @@ public class MatchResponse {
     }
 
     @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     @ToString
     public static class Included {
         @Delegate
