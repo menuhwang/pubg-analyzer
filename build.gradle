@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.7.5'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 	id 'java'
+	id 'jacoco'
 }
 
 group = 'com.menu'
@@ -36,9 +37,38 @@ dependencies {
 	implementation 'com.github.ben-manes.caffeine:caffeine'
 }
 
+jacoco {
+	toolVersion = '0.8.8'
+}
+
+jacocoTestReport {
+	dependsOn test
+	reports {
+		html.enabled true
+		xml.enabled true
+	}
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(
+					dir: it,
+					includes: [
+							'com/menu/pubganalyzer/domain/dao/impl/*',
+							'com/menu/pubganalyzer/event/*',
+							'com/menu/pubganalyzer/util/*',
+							'com/menu/pubganalyzer/service/*',
+							'com/menu/pubganalyzer/controller/*',
+					],
+					excludes: [
+					])
+		}))
+	}
+}
+
+
 tasks.named('test') {
 	if (project.hasProperty("util.pubg.api.token")) {
 		systemProperty "util.pubg.api.token", project.property("util.pubg.api.token")
 	}
 	useJUnitPlatform()
+	finalizedBy 'jacocoTestReport'
 }
