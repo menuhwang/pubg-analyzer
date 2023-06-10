@@ -53,7 +53,7 @@ jacocoTestReport {
 					dir: it,
 					includes: [
 							'com/menu/pubganalyzer/domain/dao/impl/*',
-							'com/menu/pubganalyzer/event/*',
+							'com/menu/pubganalyzer/event/*/*',
 							'com/menu/pubganalyzer/util/*',
 							'com/menu/pubganalyzer/service/*',
 							'com/menu/pubganalyzer/controller/*',
