@@ -118,6 +118,9 @@ public class MatchResponse {
     }
 
     @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     @ToString
     public static class Element {
         String type;

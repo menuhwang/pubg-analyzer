@@ -13,6 +13,7 @@ import java.util.List;
 public class MatchResponseFixture {
     public static final String MATCH_ID = "test-match";
     public static final String MATCH_SHARD = Shard.STEAM.name();
+    public static final String MATCH_ASSET_URL = "test-telemetry-url";
 
     private static final MatchResponse.Attribute RES_ATTRIBUTE = MatchResponse.Attribute.builder()
             .gameMode(GameMode.DUO.getTag())
@@ -30,8 +31,21 @@ public class MatchResponseFixture {
             .data(List.of())
             .build();
 
+    private static final MatchResponse.Attribute RES_ASSET_ELEMENT_ATTRIBUTE = MatchResponse.Attribute.builder()
+            .name("test-asset")
+            .description("")
+            .URL(MATCH_ASSET_URL)
+            .createdAt(LocalDateTime.now())
+            .build();
+
+    private static final MatchResponse.Element RES_ASSET_ELEMENT = MatchResponse.Element.builder()
+            .id("test-asset-id")
+            .type("asset")
+            .attributes(RES_ASSET_ELEMENT_ATTRIBUTE)
+            .build();
+
     private static final MatchResponse.Included RES_ASSET = MatchResponse.Included.builder()
-            .data(List.of())
+            .data(List.of(RES_ASSET_ELEMENT))
             .build();
 
     private static final MatchResponse.Included RES_PARTICIPANTS = MatchResponse.Included.builder()
@@ -57,6 +71,6 @@ public class MatchResponseFixture {
 
     public static final MatchResponse MATCH_RESPONSE = MatchResponse.builder()
             .data(RES_DATA)
-            .included(List.of())
+            .included(List.of(RES_ASSET_ELEMENT))
             .build();
 }

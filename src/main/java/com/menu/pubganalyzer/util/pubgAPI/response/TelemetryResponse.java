@@ -1,13 +1,15 @@
 package com.menu.pubganalyzer.util.pubgAPI.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString
 public class TelemetryResponse {
     @JsonProperty(value = "_D")
@@ -93,6 +95,9 @@ public class TelemetryResponse {
     Integer fireCount;
 
     @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     @ToString
     public static class Characters {
         String name;
@@ -132,6 +137,9 @@ public class TelemetryResponse {
     }
 
     @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     @ToString
     public static class DamageInfo {
         String damageReason;

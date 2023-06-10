@@ -22,7 +22,9 @@ public class MatchFixture {
             .name(PLAYER_NAME)
             .build();
 
-    public static final Roster ROSTER = Roster.builder().build();
+    public static final Roster ROSTER = Roster.builder()
+            .id("test-roster-id")
+            .build();
 
     public static final Match MATCH = Match.of(MatchResponseFixture.MATCH_RESPONSE);
 
