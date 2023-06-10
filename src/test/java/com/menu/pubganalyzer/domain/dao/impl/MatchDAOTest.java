@@ -7,6 +7,7 @@ import com.menu.pubganalyzer.exception.MatchNotFoundException;
 import com.menu.pubganalyzer.support.fixture.MatchFixture;
 import com.menu.pubganalyzer.support.fixture.pubgapi.MatchResponseFixture;
 import com.menu.pubganalyzer.util.pubgAPI.PubgAPI;
+import com.menu.pubganalyzer.util.pubgAPI.exception.PubgAPIMatchNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -84,6 +85,24 @@ class MatchDAOTest {
         verify(matchRepository).findByIdFetchParticipant(anyString());
         verify(pubgAPI).match(anyString(), anyString());
         verify(matchCache).put(anyString(), any(Match.class));
+    }
+
+    @Test
+    @DisplayName("api 요청 PubgAPIMatchNotFoundException 발생 : MatchNotFoundException 발생한다.")
+    void findById_when_fetch_match_api_throw_pubgAPIMatchNotFoundException() {
+        given(matchCache.get(MATCH_ID, Match.class))
+                .willReturn(null);
+        given(matchRepository.findByIdFetchParticipant(MATCH_ID))
+                .willReturn(Optional.empty());
+        given(pubgAPI.match(MatchFixture.MATCH_SHARD, MATCH_ID))
+                .willThrow(new PubgAPIMatchNotFoundException(MATCH_ID));
+
+        assertThrows(MatchNotFoundException.class, () -> matchDAO.findById(MATCH_ID));
+
+        verify(matchCache).get(anyString(), ArgumentMatchers.<Class<Match>>any());
+        verify(matchRepository).findByIdFetchParticipant(anyString());
+        verify(pubgAPI).match(anyString(), anyString());
+        verify(matchCache, never()).put(anyString(), any(Match.class));
     }
 
     @Test
