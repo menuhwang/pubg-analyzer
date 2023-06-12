@@ -33,6 +33,11 @@ public class GlobalExceptionHandler {
         return errorResponse(throwable, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(Exception.class)
+    public String exceptionHandler() {
+        return "error/error";
+    }
+
     private ResponseEntity<ApiResult<?>> errorResponse(Throwable throwable, HttpStatus status) {
         return ResponseEntity.status(status)
                 .body(ApiResultUtil.error(status.value(), throwable.getMessage()));
