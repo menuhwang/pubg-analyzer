@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration scan="true" scanPeriod="30 seconds">
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%d{yyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%thread] %C#%M:%L - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>./log/logback.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>./log/%d{yyyyMMdd}/logback.log</fileNamePattern>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d{yyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%thread] %C#%M:%L - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="ERROR_ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <file>./log/logback-error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>./log/%d{yyyyMMdd}/logback-error.log</fileNamePattern>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d{yyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%thread] %C#%M:%L - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ERROR_ROLLING_FILE"/>
+    </root>
+    <logger name="com.menu.pubganalyzer" level="DEBUG">
+        <appender-ref ref="ROLLING_FILE"/>
+    </logger>
+</configuration>

@@ -1,6 +1,9 @@
 FROM openjdk:11.0-slim
 WORKDIR /app
 COPY ./*-SNAPSHOT.jar ./app.jar
+RUN mkdir log
+
+VOLUME /app/log
 
 EXPOSE 8080
 

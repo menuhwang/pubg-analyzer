@@ -242,22 +242,22 @@
         }
 
         function renewPlayer(event) {
-            spinnerToggle(event.target);
-            const shard = event.target.getAttribute('data-player-shard');
-            const nickname = event.target.getAttribute('data-player-nickname');
+            const btn = event.currentTarget;
+            spinnerToggle(btn);
+            const shard = btn.getAttribute('data-player-shard');
+            const nickname = btn.getAttribute('data-player-nickname');
 
             fetch(`/api/shard/${shard}/players/${nickname}`, {method: 'PATCH'})
-                .then(res => {
-                    if (!res.ok) {
-                        alert('갱신 실패.');
-                        spinnerToggle(event.target);
-                        return;
+                .then(res => res.json())
+                .then(body => {
+                    if (body.success) {
+                        location.reload();
+                    } else {
+                        const msg = body.result.message;
+                        alert(msg ? msg : '갱신 실패');
                     }
-                    location.reload();
-                }).catch(res => {
-                    spinnerToggle(event.target);
-                    alert('갱신 실패.');
-            })
+                    spinnerToggle(btn);
+                })
         }
 
         function renewSpinnerToggle() {
@@ -276,7 +276,7 @@
 
             const display = spinner.style.display;
 
-            btn.disabled = display === 'none' ? 'true' : 'false';
+            btn.disabled = !btn.disabled;
             spinner.style.display = display === 'none' ? 'inline-flex' : 'none';
         }
     </script>

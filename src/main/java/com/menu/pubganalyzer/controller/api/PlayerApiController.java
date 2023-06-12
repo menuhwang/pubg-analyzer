@@ -1,6 +1,8 @@
 package com.menu.pubganalyzer.controller.api;
 
 import com.menu.pubganalyzer.service.SearchPlayerService;
+import com.menu.pubganalyzer.support.apiResult.ApiResult;
+import com.menu.pubganalyzer.support.apiResult.ApiResultUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -15,8 +17,8 @@ public class PlayerApiController {
     private final SearchPlayerService searchPlayerService;
 
     @PatchMapping("/{nickname}")
-    public ResponseEntity<Void> renew(@PathVariable String shardId, @PathVariable String nickname) {
+    public ResponseEntity<ApiResult<Void>> renew(@PathVariable String shardId, @PathVariable String nickname) {
         searchPlayerService.updateMatchHistory(nickname);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(ApiResultUtil.success());
     }
 }
