@@ -77,7 +77,6 @@ public class DefaultPubgAPI implements PubgAPI {
                     log.error("{}", e.getMessage(), e);
                     break;
             }
-            if (e.getStatusCode() == HttpStatus.NOT_FOUND) throw new PubgAPIPlayerNotFoundException();
         }
 
         return playersResponse;

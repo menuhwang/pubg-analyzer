@@ -3,6 +3,10 @@ package com.menu.pubganalyzer.support.apiResult;
 import java.util.Map;
 
 public class ApiResultUtil {
+    public static ApiResult<Void> success() {
+        return new ApiResult<>(200, true, null);
+    }
+
     public static <T> ApiResult<T> success(T result) {
         return new ApiResult<>(200, true, result);
     }
@@ -17,5 +21,9 @@ public class ApiResultUtil {
 
     public static ApiResult<Map<String, String>> success(int status, String message) {
         return new ApiResult<>(status, true, Map.of("message", message));
+    }
+
+    public static ApiResult<Map<String, String>> error(int status, String message) {
+        return new ApiResult<>(status, false, Map.of("message", message));
     }
 }
