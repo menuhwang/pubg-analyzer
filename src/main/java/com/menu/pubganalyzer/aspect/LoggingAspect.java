@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 public class LoggingAspect {
     private static final String REQUEST_LOG = "REQUEST [{}] {}";
     private static final String RESPONSE_LOG = "RESPONSE [{}] {} {}ms";
-    private static final String QUERY_PATH_PATTERN = "%s/%s";
+    private static final String QUERY_PATH_PATTERN = "%s?%s";
 
     @Around("within(com.menu.pubganalyzer.controller..*)")
     public Object controllerLogging(ProceedingJoinPoint pjp) throws Throwable {
@@ -29,6 +29,14 @@ public class LoggingAspect {
         Object result = pjp.proceed();
         long end = System.currentTimeMillis();
         log.info(RESPONSE_LOG, method, requestPath, end - start);
+        return result;
+    }
+
+    @Around("bean(pubgAPI)")
+    public Object pubgAPIExecutionTimeLogging(ProceedingJoinPoint pjp) throws Throwable {
+        long start = System.currentTimeMillis();
+        Object result = pjp.proceed();
+        log.debug("{}#{} :: {}ms", pjp.getSignature().getDeclaringType().getSimpleName(), pjp.getSignature().getName(), System.currentTimeMillis() - start);
         return result;
     }
 

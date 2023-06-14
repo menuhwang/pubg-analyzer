@@ -2,7 +2,7 @@
 <configuration scan="true" scanPeriod="30 seconds">
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>[%d{yyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%thread] %C#%M:%L - %msg%n</pattern>
+            <pattern>[%d{yyy-MM-dd HH:mm:ss.SSS}] %-5level [%thread] %-40logger{36} -- %msg%n</pattern>
         </encoder>
     </appender>
     <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -12,7 +12,7 @@
             <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
         <encoder>
-            <pattern>[%d{yyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%thread] %C#%M:%L - %msg%n</pattern>
+            <pattern>[%d{yyy-MM-dd HH:mm:ss.SSS}] %-5level [%thread] %-40logger{36} -- %msg%n</pattern>
         </encoder>
     </appender>
     <appender name="ERROR_ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
