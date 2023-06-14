@@ -4,6 +4,9 @@
 # 🔗 Site
    - 홈페이지
 
+# 📍 ERD
+   ![ERD](./assets/erd.png)
+
 # 📄 Page
 
 ## Home
