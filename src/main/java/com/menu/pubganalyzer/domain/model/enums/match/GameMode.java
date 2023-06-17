@@ -40,6 +40,7 @@ public enum GameMode {
     LAB_TPP("lab-tpp", "실험실"),
     LAB_FPP("lab-fpp", "실험실 1인칭"),
     TDM("tdm", "팀 데스매치"),
+    BLUEBALL("blueball", "존 태그"),
     ;
 
     private final String tag;
