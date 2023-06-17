@@ -1,5 +1,8 @@
 package com.menu.pubganalyzer.util.pubgAPI.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.Delegate;
 
@@ -15,6 +18,7 @@ import java.util.stream.Collectors;
 public class PlayersResponse {
     private List<Player> data;
 
+    @JsonIgnore
     public List<Player> getPlayers() {
         return data;
     }
@@ -24,6 +28,7 @@ public class PlayersResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     @ToString
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Player {
         String type;
         String id;
@@ -31,6 +36,7 @@ public class PlayersResponse {
         Relationship relationships;
         Link links;
 
+        @JsonIgnore
         public List<String> getMatchIds() {
             return relationships.getMatches().stream()
                     .map(Element::getId)
@@ -43,6 +49,7 @@ public class PlayersResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     @ToString
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Attribute {
         String name;
         String shardId;
@@ -68,6 +75,7 @@ public class PlayersResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     @ToString
+    @JsonIgnoreProperties({"empty"})
     public static class Included {
         @Delegate
         List<Element> data;
