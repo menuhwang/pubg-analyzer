@@ -36,4 +36,9 @@ public class AdminController {
         model.addAttribute("matchId", matchId);
         return "admin/matches";
     }
+
+    @GetMapping("/fetch-api")
+    public String fetch() {
+        return "admin/fetch-api";
+    }
 }
