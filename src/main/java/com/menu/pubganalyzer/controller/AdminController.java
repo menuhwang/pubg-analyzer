@@ -2,6 +2,7 @@ package com.menu.pubganalyzer.controller;
 
 import com.menu.pubganalyzer.domain.dto.MatchRes;
 import com.menu.pubganalyzer.domain.model.enums.DeleteCondition;
+import com.menu.pubganalyzer.domain.model.enums.Shard;
 import com.menu.pubganalyzer.service.MatchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -35,5 +39,11 @@ public class AdminController {
         model.addAttribute("page", page);
         model.addAttribute("matchId", matchId);
         return "admin/matches";
+    }
+
+    @GetMapping("/fetch-api")
+    public String fetch(Model model) {
+        model.addAttribute("shards", Arrays.stream(Shard.values()).map(Shard::name).collect(Collectors.toList()));
+        return "admin/fetch-api";
     }
 }

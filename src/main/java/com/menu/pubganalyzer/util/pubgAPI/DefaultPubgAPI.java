@@ -45,7 +45,14 @@ public class DefaultPubgAPI implements PubgAPI {
             ResponseEntity<MatchResponse> response = restTemplate.exchange(url, HttpMethod.GET, DEFAULT_HTTP_ENTITY, MatchResponse.class);
             matchResponse = response.getBody();
         } catch (HttpClientErrorException e) {
-            if (e.getStatusCode() == HttpStatus.NOT_FOUND) throw new PubgAPIMatchNotFoundException(matchId);
+            switch (e.getStatusCode()) {
+                case NOT_FOUND:
+                    throw new PubgAPIMatchNotFoundException(matchId);
+                default:
+                    log.warn("you need to handle exception");
+                    log.error("{}", e.getMessage(), e);
+                    break;
+            }
         }
         return matchResponse;
     }
