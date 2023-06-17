@@ -1,5 +1,6 @@
 package com.menu.pubganalyzer.util.pubgAPI.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -14,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties({"empty"})
 public class MatchResponse {
     @Delegate
     private Data data;
@@ -44,6 +46,7 @@ public class MatchResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     @ToString
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public static class Attribute {
         String gameMode;
         String seasonState;
@@ -66,6 +69,7 @@ public class MatchResponse {
 
     @Getter
     @ToString
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public static class Stat {
         @JsonProperty(value = "DBNOs")
         Integer DBNOs;
@@ -100,6 +104,7 @@ public class MatchResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     @ToString
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public static class Relationship {
         Included rosters;
         Included assets;
@@ -112,6 +117,7 @@ public class MatchResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     @ToString
+    @JsonIgnoreProperties({"empty"})
     public static class Included {
         @Delegate
         List<Element> data;
@@ -122,6 +128,7 @@ public class MatchResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     @ToString
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public static class Element {
         String type;
         String id;
