@@ -27,11 +27,11 @@
                     <div class="tab-pane fade show active" id="player-tab-pane" role="tabpanel" aria-labelledby="player-tab" tabindex="0">
                         <h2>Request</h2>
                         <div class="row mb-3">
-                            <label class="col-2 col-form-label" for="shard-select">플랫폼</label>
+                            <label class="col-2 col-form-label" for="player-shard-select">플랫폼</label>
                             <div class="col-2">
-                                <select class="form-select" id="shard-select">
-                                    <option>Steam</option>
-                                    <option>Kakao</option>
+                                <select class="form-select" id="player-shard-select">
+                                    <option th:if="${shard == 'STEAM'}" selected th:each="shard : ${shards}" th:value="${shard}" th:text="${shard}"></option>
+                                    <option th:unless="${shard == 'STEAM'}" th:each="shard : ${shards}" th:value="${shard}" th:text="${shard}"></option>
                                 </select>
                             </div>
                             <label class="col-2 col-form-label" for="nickname-input">닉네임</label>
@@ -48,6 +48,13 @@
                     <div class="tab-pane fade" id="match-tab-pane" role="tabpanel" aria-labelledby="match-tab" tabindex="0">
                         <h2>Request</h2>
                         <div class="row mb-3">
+                            <label class="col-2 col-form-label" for="match-shard-select">플랫폼</label>
+                            <div class="col-2">
+                                <select class="form-select" id="match-shard-select">
+                                    <option th:if="${shard == 'STEAM'}" selected th:each="shard : ${shards}" th:value="${shard}" th:text="${shard}"></option>
+                                    <option th:unless="${shard == 'STEAM'}" th:each="shard : ${shards}" th:value="${shard}" th:text="${shard}"></option>
+                                </select>
+                            </div>
                             <label class="col-2 col-form-label" for="match-input">매치 ID</label>
                             <div class="col">
                                 <input class="form-control" type="text" id="match-input">
