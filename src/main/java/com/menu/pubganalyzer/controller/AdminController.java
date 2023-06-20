@@ -1,11 +1,10 @@
 package com.menu.pubganalyzer.controller;
 
 import com.menu.pubganalyzer.domain.dto.MatchRes;
-import com.menu.pubganalyzer.domain.model.enums.DeleteCondition;
+import com.menu.pubganalyzer.domain.dto.PageDTO;
 import com.menu.pubganalyzer.domain.model.enums.Shard;
 import com.menu.pubganalyzer.service.MatchService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -22,6 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("/admin")
 public class AdminController {
+    private static final String BASE_HREF_PATTERN = "?matchId=%s&sort=%s&";
     private final MatchService matchService;
 
     @GetMapping
@@ -34,9 +34,10 @@ public class AdminController {
             Model model,
             @RequestParam(defaultValue = "") String matchId,
             @PageableDefault(size = 20, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<MatchRes> page = matchService.findById(matchId, pageable).map(MatchRes::of);
-        model.addAttribute("deleteConditionOption", DeleteCondition.values());
+        PageDTO<MatchRes> page = PageDTO.of(matchService.findById(matchId, pageable).map(MatchRes::of), 10);
+
         model.addAttribute("page", page);
+        model.addAttribute("href", String.format(BASE_HREF_PATTERN, matchId, "createdAt," + pageable.getSort().getOrderFor("createdAt").getDirection().name()));
         model.addAttribute("matchId", matchId);
         return "admin/matches";
     }

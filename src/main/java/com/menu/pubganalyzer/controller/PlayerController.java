@@ -1,7 +1,9 @@
 package com.menu.pubganalyzer.controller;
 
 import com.menu.pubganalyzer.domain.SearchPlayer;
+import com.menu.pubganalyzer.domain.dto.PageDTO;
 import com.menu.pubganalyzer.domain.dto.SearchPlayerReq;
+import com.menu.pubganalyzer.domain.model.Player;
 import com.menu.pubganalyzer.service.SearchPlayerService;
 import com.menu.pubganalyzer.support.cookie.bookmark.Bookmark;
 import com.menu.pubganalyzer.support.cookie.bookmark.BookmarkCookie;
@@ -22,6 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/players")
 @RequiredArgsConstructor
 public class PlayerController {
+    private static final String BASE_HREF_PATTERN = "?shard=%s&nickname=%s&";
+
     private final SearchPlayerService searchPlayerService;
 
     @GetMapping()
@@ -31,10 +35,12 @@ public class PlayerController {
             Model model,
             @PageableDefault(size = 20, sort = "createdDateTime", direction = Sort.Direction.DESC) Pageable pageable) {
         SearchPlayer searchPlayer = searchPlayerService.searchPlayer(req, pageable);
+        Player player = searchPlayer.getPlayer();
 
         model.addAttribute("viewTitle", req.getNickname());
-        model.addAttribute("player", searchPlayer.getPlayer());
-        model.addAttribute("stats", searchPlayer.getParticipants());
+        model.addAttribute("player", player);
+        model.addAttribute("stats", PageDTO.of(searchPlayer.getParticipants()));
+        model.addAttribute("href", String.format(BASE_HREF_PATTERN, player.getShardId().name(), player.getName()));
         model.addAttribute("bookmarkState", bookmarkCookieParameter.getBookmarks().contains(Bookmark.of(req.getNickname(), req.getShard().name())));
 
         return "player";
