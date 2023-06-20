@@ -18,7 +18,6 @@ import com.menu.pubganalyzer.exception.PlayerNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,15 +52,9 @@ public class SearchPlayerService {
         Page<PlayerMatch> playerMatches = playerMatchRepository.findByPlayer(player, pageable);
         final String playerName = player.getName();
 
-        List<String> matchIds = playerMatches.stream()
-                .map(PlayerMatch::getMatchId)
-                .collect(Collectors.toList());
+        Page<Participant> participants = playerMatches.map(playerMatch -> participantDAO.findByMatchIdAndPlayerName(playerMatch.getMatchId(), playerName));
 
-        List<Participant> participants = matchIds.stream()
-                .map(matchId -> participantDAO.findByMatchIdAndPlayerName(matchId, playerName))
-                .collect(Collectors.toList());
-
-        return SearchPlayer.of(player, new PageImpl<>(participants, playerMatches.getPageable(), playerMatches.getTotalElements()));
+        return SearchPlayer.of(player, participants);
     }
 
     public void updateMatchHistory(String nickname) {
