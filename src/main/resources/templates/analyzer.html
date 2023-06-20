@@ -1,130 +1,574 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/header :: header(${viewTitle})}"></head>
-<body>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
+    <style>
+        .card {
+            border: 0;
+            border-radius: var(--bs-border-radius-xl);
+            box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.03);
+        }
+
+        .card-header {
+            padding: 0 2.25rem;
+            border: 0;
+            background-color: transparent;
+        }
+
+        .card-body {
+            padding: 0 2.25rem;
+        }
+    </style>
+</head>
+<body class="bg-light">
     <nav th:replace="~{fragments/navbar :: navbar}"></nav>
-    <div class="container py-5 px-4">
-        <div class="vstack gap-4">
-            <div class="d-flex align-items-end">
-                <a class="h1 text-decoration-none text-dark" role="button" th:href="${'/players?shard=' + shard + '&nickname=' + player}" th:text="${player}"></a>
-                <div th:if="${!member.isEmpty()}" class="ms-auto">
-                    <div class="input-group">
-                        <label class="input-group-text" for="other-player">Member</label>
-                        <select class="form-select" id="other-player" onchange="if(this.value) location.href=this.value;">
-                            <option selected></option>
-                            <option th:each="name : ${member}" th:text="${name}" th:value="${'/analyzer/match/'+ matchId +'/player/' + name}"></option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <h4 class="border-bottom pb-2">매치</h4>
-                <div class="mb-4">
-                    <strong>결과</strong>
-                    <table class="table align-middle">
-                        <thead>
-                        <tr>
-                            <th>Kills</th>
-                            <th>Player</th>
-                            <th>Bot</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td th:text="${killTotal}"></td>
-                            <td th:text="${killPlayer}"></td>
-                            <td th:text="${killBot}"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div th:if="${!killLog.isEmpty()}">
-                    <strong>킬 로그</strong>
-                    <table class="table align-middle">
-                        <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Time</th>
-                            <th scope="col">Victim</th>
-                            <th scope="col">Weapon</th>
-                            <th scope="col">Bot</th>
-                        </tr>
-                        </thead>
-                        <tbody class="table-group-divider">
-                        <tr th:each="log, logStat : ${killLog}">
-                            <th scope="row" th:text="${logStat.index + 1}"></th>
-                            <td th:text="${datetimeFormatter.offsetMinSec(matchCreatedAt, log.timestamp)}"></td>
-                            <td th:text="${log.victim.name}"></td>
-                            <td th:text="${log.killInfo.damageCauserName.kor}"></td>
-                            <td><i th:if="${log.victim.accountId.startsWith('ai.')}" class="fa-solid fa-circle-check"></i></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div th:if="${!killLog.isEmpty()}">
-                <h4 class="border-bottom pb-2">분석</h4>
-                <div th:each="killLog : ${killLog}" class="card mb-2">
-                    <div class="card-header">
-                        <div class="d-flex">
-                            <strong th:text="${killLog.victim.name}"></strong>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="vstack gap-4">
-                            <div th:if="${memberDamageDealt.containsKey(killLog.victim.name)}">
-                                <h6>누적 데미지</h6>
-                                <table class="table align-middle">
-                                    <thead>
-                                    <tr>
-                                        <th style="width: 25%" th:text="${player}"></th>
-                                        <th style="width: 25%" th:each="name : ${member}" th:text="${name}"></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td th:text="${#numbers.formatDecimal(memberDamageDealt.get(killLog.victim.name).getOrDefault(player, 0.0), 1, 1)}"></td>
-                                        <td th:each="name : ${member}" th:text="${#numbers.formatDecimal(memberDamageDealt.get(killLog.victim.name).getOrDefault(name, 0.0), 1, 1)}"></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+    <div class="container-fluid py-md-4">
+        <div class="row g-4">
+            <!--sidebar:left-->
+            <aside class="col-lg-2"></aside>
+            <div class="col-lg-8">
+                <h3 class="fw-bold mb-4">WackyJacky101</h3>
+                <div class="content vstack gap-4">
+                    <!-- 정보 -->
+                    <div class="vstack gap-4">
+                        <!-- 매치 -->
+                        <div class="row g-4">
+                            <!-- 매치 정보 -->
+                            <div class="col-md-6">
+                                <div class="card mb-4 h-100">
+                                    <div class="card-header pt-4">
+                                        <h4 class="card-title fw-bold">매치 정보</h4>
+                                    </div>
+                                    <div class="card-body py-4">
+                                        <div class="d-flex">
+                                            <div>맵</div>
+                                            <div class="ms-auto fw-bold">사녹</div>
+                                        </div>
+                                        <hr>
+                                        <div class="d-flex">
+                                            <div>모드</div>
+                                            <div class="ms-auto fw-bold">스쿼드</div>
+                                        </div>
+                                        <hr>
+                                        <div class="d-flex">
+                                            <div>시작 시간</div>
+                                            <div class="ms-auto fw-bold">2023-06-15 20:35</div>
+                                        </div>
+                                        <hr>
+                                        <div class="d-flex">
+                                            <div>플레이 시간</div>
+                                            <div class="ms-auto fw-bold">28:24</div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div th:if="${victimDamageLog.containsKey(killLog.victim.name)}">
-                                <h6>데미지 로그</h6>
-                                <table class="table align-middle">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col">Time</th>
-                                        <th scope="col">Attacker</th>
-                                        <th scope="col">Reason</th>
-                                        <th scope="col">Weapon</th>
-                                        <th scope="col">Damage</th>
-                                        <th scope="col">Health</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody class="table-group-divider">
-                                    <tr th:each="damageLog : ${victimDamageLog.get(killLog.victim.name)}">
-                                        <td th:text="${datetimeFormatter.offsetMinSecMill(matchCreatedAt, damageLog.timestamp)}"></td>
-                                        <td th:text="${damageLog.attacker.name}"></td>
-                                        <td th:text="${damageLog.damageReason.kor}"></td>
-                                        <td th:text="${damageLog.damageCauserName.kor}"></td>
-                                        <td th:text="${#numbers.formatDecimal(damageLog.damage, 1, 1)}"></td>
-                                        <td th:if="${damageLog.damage == 0 && damageLog.victim.health == 0}" th:text="확킬"></td>
-                                        <td th:unless="${damageLog.damage == 0 && damageLog.victim.health == 0}">
-                                            <span th:text="${#numbers.formatDecimal(damageLog.victim.health, 1, 1)}"></span>
-                                            <i class="fa-solid fa-arrow-right"></i>
-                                            <span th:text="${#numbers.formatDecimal(damageLog.victim.health - damageLog.damage, 1, 1)}"></span>
-                                         </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                            <!-- 매치 결과 -->
+                            <div class="col-md-6">
+                                <div class="card mb-4 h-100">
+                                    <div class="card-header pt-4">
+                                        <h4 class="card-title fw-bold">매치 결과</h4>
+                                    </div>
+                                    <div class="card-body py-4">
+                                        <div class="d-flex">
+                                            <div>랭킹</div>
+                                            <div class="ms-auto">
+                                                <span class="fw-bold">1</span>
+                                                <span class="text-muted">/</span>
+                                                <span class="text-muted">25</span>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="d-flex">
+                                            <div>킬</div>
+                                            <div class="ms-auto fw-bold">9</div>
+                                        </div>
+                                        <hr>
+                                        <div class="d-flex">
+                                            <div>어시스트</div>
+                                            <div class="ms-auto fw-bold">1</div>
+                                        </div>
+                                        <hr>
+                                        <div class="d-flex">
+                                            <div>데미지</div>
+                                            <div class="ms-auto fw-bold">332.45</div>
+                                        </div>
+                                        <hr>
+                                        <div class="d-flex">
+                                            <div>팀원 부활</div>
+                                            <div class="ms-auto fw-bold">0</div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <!-- 킬 목록 -->
+                        <div class="row">
+                            <div class="col">
+                                <div class="card">
+                                    <div class="card-header pt-4">
+                                        <h4 class="card-title fw-bold">킬 목록</h4>
+                                    </div>
+                                    <div class="card-body py-4">
+                                        <div class="table-responsive">
+                                            <table class="table align-middle">
+                                                <thead>
+                                                <tr>
+                                                    <th>킬</th>
+                                                    <th>플레이어</th>
+                                                    <th>봇</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td>9</td>
+                                                    <td>8</td>
+                                                    <td>1</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table align-middle">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">Time</th>
+                                                    <th scope="col">Victim</th>
+                                                    <th scope="col">Weapon</th>
+                                                    <th scope="col">Bot</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody class="table-group-divider">
+                                                <tr>
+                                                    <th scope="row">1</th>
+                                                    <td>1:00</td>
+                                                    <td>aaaaaaa1</td>
+                                                    <td>M416</td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">2</th>
+                                                    <td>1:30</td>
+                                                    <td>aaaaaaa2</td>
+                                                    <td>M416</td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">3</th>
+                                                    <td>2:00</td>
+                                                    <td>aaaaaaa3</td>
+                                                    <td>M416</td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">4</th>
+                                                    <td>2:30</td>
+                                                    <td>aaaaaaa1</td>
+                                                    <td>M416</td>
+                                                    <td></td>
+                                                </tr>
+
+                                                <tr>
+                                                    <th scope="row">5</th>
+                                                    <td>1:30</td>
+                                                    <td>aaaaaaa2</td>
+                                                    <td>M416</td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">6</th>
+                                                    <td>2:00</td>
+                                                    <td>aaaaaaa3</td>
+                                                    <td>M416</td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">7</th>
+                                                    <td>2:30</td>
+                                                    <td>aaaaaaa1</td>
+                                                    <td>M416</td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">8</th>
+                                                    <td>2:30</td>
+                                                    <td>aaaaaaa1</td>
+                                                    <td>M416</td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">9</th>
+                                                    <td>2:30</td>
+                                                    <td>aaaaaaa1</td>
+                                                    <td>M416</td>
+                                                    <td><i class="fa-solid fa-circle-check"></i></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 분석 -->
+                    <div class="vstack gap-4">
+                        <!-- 분석 그래프 -->
+                        <div class="row g-4">
+                            <!-- 페이즈 데미지 차트:원형 차트 -->
+                            <div class="col-md-6">
+                                <div class="card mb-4 h-100">
+                                    <div class="card-header pt-4">
+                                        <h4 class="card-title fw-bold">페이즈 별 데미지</h4>
+                                    </div>
+                                    <div class="card-body py-4">
+                                        <canvas id="phaseDamageChart"></canvas>
+                                        <script>
+                                            const phaseDamageChart = document.getElementById('phaseDamageChart');
+
+                                            new Chart(phaseDamageChart, {
+                                                type: 'doughnut',
+                                                data: {
+                                                    labels: ['0 페이즈', '1 페이즈', '2 페이즈', '3 페이즈', '4 페이즈', '5 페이즈', '6 페이즈', '7 페이즈', '8 페이즈', '9 페이즈'],
+                                                    datasets: [{
+                                                        data: [0, 50, 100, 0, 30, 0, 0, 0, 150],
+                                                    }]
+                                                },
+                                                options: {
+                                                    plugins: {
+                                                        legend: {
+                                                            display: false,
+                                                        },
+                                                    },
+                                                }
+                                            })
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 킬 데미지 기여 차트:막대 차트 -->
+                            <div class="col-md-6">
+                                <div class="card mb-4 h-100">
+                                    <div class="card-header pt-4">
+                                        <h4 class="card-title fw-bold">킬 데미지 기여도</h4>
+                                    </div>
+                                    <div class="card-body py-4">
+                                        <div class="h-100">
+                                            <canvas id="contributeDamageChart"></canvas>
+                                        </div>
+                                        <script>
+                                            const contributeDamageChart = document.getElementById('contributeDamageChart');
+
+                                            new Chart(contributeDamageChart, {
+                                                type: 'bar',
+                                                data: {
+                                                    labels: ['aaaaaa1', 'aaaaaa1', 'aaaaaa1', 'aaaaaa1', 'aaaaaa1', 'aaaaaa1', 'aaaaaa1', 'aaaaaa1', 'aaaaaa1'],
+                                                    datasets: [{
+                                                        label: 'WackyJacky101',
+                                                        data: [70, 100, 30, 70, 90, 100, 50, 60, 100],
+                                                        barPercentage: .5,
+                                                        categoryPercentage: .5,
+                                                        borderRadius: Number.MAX_VALUE,
+                                                    }, {
+                                                        label: 'Member1',
+                                                        data: [30, 0, 90, 20, 10, 20, 20, 80, 90],
+                                                        barPercentage: .5,
+                                                        categoryPercentage: .5,
+                                                        borderRadius: Number.MAX_VALUE,
+                                                    }]
+                                                },
+                                                options: {
+                                                    aspectRatio: 1,
+                                                    interaction: {
+                                                        intersect: false,
+                                                        mode: 'index',
+                                                    },
+                                                    cornerRadius: 15,
+                                                    plugins: {
+                                                        legend: {
+                                                            display: false,
+                                                        },
+                                                    },
+                                                    scales: {
+                                                        y: {
+                                                            gridLines: {
+                                                                display: false
+                                                            },
+                                                            ticks: {
+                                                                stepSize: 20
+                                                            },
+                                                            stacked: true,
+                                                        },
+                                                        x: {
+                                                            gridLines: {
+                                                                color: "transparent"
+                                                            },
+                                                            stacked: true,
+                                                        }
+                                                    }
+                                                }
+                                            })
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 킬 데미지 분석 아코디언 -->
+                        <div class="row">
+                            <div class="col">
+                                <div class="accordion" id="kills-accordion">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="aaaaa1-heading">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#aaaaa1-collapse" aria-expanded="false" aria-controls="aaaaa1-collapse">
+                                                aaaaa1
+                                            </button>
+                                        </h2>
+                                        <div id="aaaaa1-collapse" class="accordion-collapse collapse" aria-labelledby="aaaaa1-heading" data-bs-parent="#kills-accordion">
+                                            <div class="accordion-body">
+                                                <div class="table-responsive">
+                                                    <table class="table align-middle">
+                                                        <thead>
+                                                        <tr>
+                                                            <th scope="col">Time</th>
+                                                            <th scope="col">Attacker</th>
+                                                            <th scope="col">Reason</th>
+                                                            <th scope="col">Weapon</th>
+                                                            <th scope="col">Damage</th>
+                                                            <th scope="col">Health</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody class="table-group-divider">
+                                                        <tr>
+                                                            <td>17:14.32</td>
+                                                            <td>Zucchini__</td>
+                                                            <td>몸통</td>
+                                                            <td>M416</td>
+                                                            <td>18.0</td>
+
+                                                            <td>
+                                                                <span>64.9</span>
+                                                                <i class="fa-solid fa-arrow-right"></i>
+                                                                <span>46.9</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>17:14.132</td>
+                                                            <td>Zucchini__</td>
+                                                            <td>몸통</td>
+                                                            <td>M416</td>
+                                                            <td>18.0</td>
+
+                                                            <td>
+                                                                <span>46.9</span>
+                                                                <i class="fa-solid fa-arrow-right"></i>
+                                                                <span>28.9</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>17:14.200</td>
+                                                            <td>Zucchini__</td>
+                                                            <td>몸통</td>
+                                                            <td>M416</td>
+                                                            <td>18.0</td>
+
+                                                            <td>
+                                                                <span>28.9</span>
+                                                                <i class="fa-solid fa-arrow-right"></i>
+                                                                <span>10.9</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>17:14.298</td>
+                                                            <td>Zucchini__</td>
+                                                            <td>몸통</td>
+                                                            <td>M416</td>
+                                                            <td>10.9</td>
+
+                                                            <td>
+                                                                <span>10.9</span>
+                                                                <i class="fa-solid fa-arrow-right"></i>
+                                                                <span>0.0</span>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="aaaaa2-heading">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#aaaaa2-collapse" aria-expanded="false" aria-controls="aaaaa2-collapse">
+                                                aaaaa2
+                                            </button>
+                                        </h2>
+                                        <div id="aaaaa2-collapse" class="accordion-collapse collapse" aria-labelledby="aaaaa2-heading" data-bs-parent="#kills-accordion">
+                                            <div class="accordion-body">
+                                                <div class="table-responsive">
+                                                    <table class="table align-middle">
+                                                        <thead>
+                                                        <tr>
+                                                            <th scope="col">Time</th>
+                                                            <th scope="col">Attacker</th>
+                                                            <th scope="col">Reason</th>
+                                                            <th scope="col">Weapon</th>
+                                                            <th scope="col">Damage</th>
+                                                            <th scope="col">Health</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody class="table-group-divider">
+                                                        <tr>
+                                                            <td>17:14.32</td>
+                                                            <td>Zucchini__</td>
+                                                            <td>몸통</td>
+                                                            <td>M416</td>
+                                                            <td>18.0</td>
+
+                                                            <td>
+                                                                <span>64.9</span>
+                                                                <i class="fa-solid fa-arrow-right"></i>
+                                                                <span>46.9</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>17:14.132</td>
+                                                            <td>Zucchini__</td>
+                                                            <td>몸통</td>
+                                                            <td>M416</td>
+                                                            <td>18.0</td>
+
+                                                            <td>
+                                                                <span>46.9</span>
+                                                                <i class="fa-solid fa-arrow-right"></i>
+                                                                <span>28.9</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>17:14.200</td>
+                                                            <td>Zucchini__</td>
+                                                            <td>몸통</td>
+                                                            <td>M416</td>
+                                                            <td>18.0</td>
+
+                                                            <td>
+                                                                <span>28.9</span>
+                                                                <i class="fa-solid fa-arrow-right"></i>
+                                                                <span>10.9</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>17:14.298</td>
+                                                            <td>Zucchini__</td>
+                                                            <td>몸통</td>
+                                                            <td>M416</td>
+                                                            <td>10.9</td>
+
+                                                            <td>
+                                                                <span>10.9</span>
+                                                                <i class="fa-solid fa-arrow-right"></i>
+                                                                <span>0.0</span>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 전체 데미지 아코디언 -->
+                        <div class="row">
+                            <div class="col">
+                                <div class="accordion" id="damages-accordion">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="damages-heading">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#damages-collapse" aria-expanded="false" aria-controls="damages-collapse">
+                                                전체 데미지 로그
+                                            </button>
+                                        </h2>
+                                        <div id="damages-collapse" class="accordion-collapse collapse" aria-labelledby="damages-heading" data-bs-parent="#damages-accordion">
+                                            <div class="accordion-body">
+                                                <div class="table-responsive">
+                                                    <table class="table align-middle">
+                                                        <thead>
+                                                        <tr>
+                                                            <th scope="col">Time</th>
+                                                            <th scope="col">Attacker</th>
+                                                            <th scope="col">Reason</th>
+                                                            <th scope="col">Weapon</th>
+                                                            <th scope="col">Damage</th>
+                                                            <th scope="col">Health</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody class="table-group-divider">
+                                                        <tr>
+                                                            <td>17:14.32</td>
+                                                            <td>Zucchini__</td>
+                                                            <td>몸통</td>
+                                                            <td>M416</td>
+                                                            <td>18.0</td>
+
+                                                            <td>
+                                                                <span>64.9</span>
+                                                                <i class="fa-solid fa-arrow-right"></i>
+                                                                <span>46.9</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>17:14.132</td>
+                                                            <td>Zucchini__</td>
+                                                            <td>몸통</td>
+                                                            <td>M416</td>
+                                                            <td>18.0</td>
+
+                                                            <td>
+                                                                <span>46.9</span>
+                                                                <i class="fa-solid fa-arrow-right"></i>
+                                                                <span>28.9</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>17:14.200</td>
+                                                            <td>Zucchini__</td>
+                                                            <td>몸통</td>
+                                                            <td>M416</td>
+                                                            <td>18.0</td>
+
+                                                            <td>
+                                                                <span>28.9</span>
+                                                                <i class="fa-solid fa-arrow-right"></i>
+                                                                <span>10.9</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>17:14.298</td>
+                                                            <td>Zucchini__</td>
+                                                            <td>몸통</td>
+                                                            <td>M416</td>
+                                                            <td>10.9</td>
+
+                                                            <td>
+                                                                <span>10.9</span>
+                                                                <i class="fa-solid fa-arrow-right"></i>
+                                                                <span>0.0</span>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+            <!--sidebar:right-->
+            <aside class="col-lg-2"></aside>
         </div>
     </div>
 <th:block th:replace="~{fragments/footer :: footer}"></th:block>
