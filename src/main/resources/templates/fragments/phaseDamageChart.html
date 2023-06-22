@@ -1,0 +1,25 @@
+<th:block th:fragment="init(phaseDamageChart)">
+    <canvas id="phaseDamageChart"></canvas>
+    <script>
+        const phaseDamageChart = document.getElementById('phaseDamageChart');
+
+        new Chart(phaseDamageChart, {
+            type: 'doughnut',
+            data: {
+                labels: ['0 페이즈', '1 페이즈', '2 페이즈', '3 페이즈', '4 페이즈', '5 페이즈', '6 페이즈', '7 페이즈', '8 페이즈', '9 페이즈'],
+                datasets: [
+                    {
+                        data: [[${phaseDamageChart.datasets.data}]]
+                    }
+                ]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                },
+            }
+        })
+    </script>
+</th:block>
