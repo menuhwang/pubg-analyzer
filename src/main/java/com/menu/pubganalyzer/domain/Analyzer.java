@@ -11,70 +11,91 @@ import java.util.stream.Collectors;
 @Getter
 @ToString
 public class Analyzer {
-    private final List<LogPlayerKillV2> logPlayerKills;
-    private final List<LogPlayerTakeDamage> logPlayerTakeDamages;
+    private List<LogPlayerKillV2> logPlayerKills;
+    private List<LogPlayerTakeDamage> logPlayerTakeDamages;
     private Map<String, Map<String, Float>> victimPlayerDamageDealt;
     private Map<String, List<LogPlayerTakeDamage>> victimDamageLog;
+    private final Set<String> victimNames;
+    private final Map<String, Integer> count = new HashMap<>();
 
     private Analyzer(Collection<LogPlayerKillV2> logPlayerKills, Collection<LogPlayerTakeDamage> logPlayerTakeDamages) {
         this.logPlayerKills = new ArrayList<>(logPlayerKills);
         this.logPlayerTakeDamages = new ArrayList<>(logPlayerTakeDamages);
+        this.victimNames = LogPlayerKillV2.extractVictimNames(logPlayerKills);
+        count.put("player", 0);
+        count.put("bot", 0);
     }
 
     public static Analyzer of(Collection<LogPlayerKillV2> logPlayerKills, Collection<LogPlayerTakeDamage> logPlayerTakeDamages) {
         return new Analyzer(logPlayerKills, logPlayerTakeDamages).analyze();
     }
 
-    public static Analyzer of(Telemetry telemetry) {
-        return new Analyzer(telemetry.getLogPlayerKills(), telemetry.getLogPlayerTakeDamages()).analyze();
-    }
-
-    public static Analyzer analyzeOf(Set<String> memberNames, List<LogPlayerKillV2> logPlayerKills, List<LogPlayerTakeDamage> logPlayerTakeDamages) {
-        logPlayerKills = logPlayerKills.stream()
-                .filter(log -> log.getKillerName() != null && memberNames.contains(log.getKillerName()))
-                .collect(Collectors.toList());
-
-        List<String> victimNames = LogPlayerKillV2.extractVictimNames(logPlayerKills);
-
-        logPlayerTakeDamages = logPlayerTakeDamages.stream()
-                .filter(log -> victimNames.contains(log.getVictimName()) && memberNames.contains(log.getAttackerName()))
-                .collect(Collectors.toList());
-
-        return Analyzer.of(logPlayerKills, logPlayerTakeDamages);
+    public static Analyzer of(Telemetry telemetry, String killer) {
+        return new Analyzer(telemetry.getLogPlayerKills(), telemetry.getLogPlayerTakeDamages())
+                .analyze()
+                .filterByKiller(killer);
     }
 
     private Analyzer analyze() {
-        victimPlayerDamageDealt = new HashMap<>();
-        victimDamageLog = new HashMap<>();
-        for (LogPlayerTakeDamage log : logPlayerTakeDamages) {
-            String vitim = log.getVictimName();
-            String attacker = log.getAttackerName();
-
-            List<LogPlayerTakeDamage> victimDamageLogValue = victimDamageLog.getOrDefault(vitim, new ArrayList<>());
-            victimDamageLogValue.add(log);
-            victimDamageLog.put(vitim, victimDamageLogValue);
-
-            Map<String, Float> attackerDamageDealt = victimPlayerDamageDealt.getOrDefault(vitim, new HashMap<>());
-            float damageDealt = attackerDamageDealt.getOrDefault(attacker, 0F);
-            damageDealt += log.getDamage();
-            attackerDamageDealt.put(attacker, damageDealt);
-            victimPlayerDamageDealt.put(vitim, attackerDamageDealt);
-        }
+        damagesGroupByVictim();
+        calculateDamageDealt();
 
         return this;
     }
 
-    public Analyzer filterOfKiller(String nickname) {
+    private void damagesGroupByVictim() {
+        if (victimDamageLog == null) victimDamageLog = new HashMap<>();
+
+        for (LogPlayerTakeDamage logPlayerTakeDamage : logPlayerTakeDamages) {
+            if (!victimNames.contains(logPlayerTakeDamage.getVictimName())) continue;
+
+            String vitim = logPlayerTakeDamage.getVictimName();
+
+            List<LogPlayerTakeDamage> victimDamageLogValue = victimDamageLog.getOrDefault(vitim, new ArrayList<>());
+            victimDamageLogValue.add(logPlayerTakeDamage);
+            victimDamageLog.put(vitim, victimDamageLogValue);
+        }
+    }
+
+    private void calculateDamageDealt() {
+        if (victimPlayerDamageDealt == null) victimPlayerDamageDealt = new HashMap<>();
+
+        for (LogPlayerTakeDamage logPlayerTakeDamage : logPlayerTakeDamages) {
+            if (!victimNames.contains(logPlayerTakeDamage.getVictimName())) continue;
+
+            String vitim = logPlayerTakeDamage.getVictimName();
+            String attacker = logPlayerTakeDamage.getAttackerName();
+
+            Map<String, Float> attackerDamageDealt = victimPlayerDamageDealt.getOrDefault(vitim, new HashMap<>());
+            float damageDealt = attackerDamageDealt.getOrDefault(attacker, 0F);
+            damageDealt += logPlayerTakeDamage.getDamage();
+            attackerDamageDealt.put(attacker, damageDealt);
+            victimPlayerDamageDealt.put(vitim, attackerDamageDealt);
+        }
+    }
+
+
+    public Analyzer filterByKiller(String nickname) {
         List<LogPlayerKillV2> filteredLogPlayerKills = this.logPlayerKills.stream()
                 .filter(log -> log.getKillerName() != null && log.getKillerName().equals(nickname))
                 .collect(Collectors.toList());
 
-        Set<String> victims = new HashSet<>(LogPlayerKillV2.extractVictimNames(filteredLogPlayerKills));
-
         List<LogPlayerTakeDamage> filteredLogPlayerTakeDamages = this.logPlayerTakeDamages.stream()
-                .filter(logPlayerTakeDamage -> victims.contains(logPlayerTakeDamage.getVictimName()))
+                .filter(logPlayerTakeDamage -> nickname.equals(logPlayerTakeDamage.getAttackerName()))
                 .collect(Collectors.toList());
 
-        return Analyzer.of(filteredLogPlayerKills, filteredLogPlayerTakeDamages);
+        this.logPlayerKills = filteredLogPlayerKills;
+        this.logPlayerTakeDamages = filteredLogPlayerTakeDamages;
+
+        countKillsPlayerBot();
+
+        return this;
+    }
+
+    private void countKillsPlayerBot() {
+        for (LogPlayerKillV2 logPlayerKill : logPlayerKills) {
+            String victimType = logPlayerKill.getVictimAccountId().startsWith("ai") ? "bot" : "player";
+            count.put(victimType, count.get(victimType) + 1);
+        }
     }
 }

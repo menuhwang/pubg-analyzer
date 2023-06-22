@@ -11,10 +11,11 @@ public class PageDTO<T> extends PageImpl<T> {
 
     private PageDTO(Page<T> page, int displayPagesNum) {
         super(page.getContent(), page.getPageable(), page.getTotalElements());
+        boolean isPaged = page.getPageable().isPaged();
         this.displayPagesNum = displayPagesNum;
-        int currentPageNum = page.getPageable().getPageNumber();
-        this.paginationStartNum = (currentPageNum / displayPagesNum) * displayPagesNum + 1;
-        this.paginationEndNum = Math.min(paginationStartNum + displayPagesNum - 1, page.getTotalPages()); // 끝 페이지 번호
+        int currentPageNum = isPaged ? page.getPageable().getPageNumber() : 0;
+        this.paginationStartNum = isPaged ? (currentPageNum / displayPagesNum) * displayPagesNum + 1 : 0;
+        this.paginationEndNum = isPaged ? Math.min(paginationStartNum + displayPagesNum - 1, page.getTotalPages()) : 0;
     }
 
     public static <T> PageDTO<T> of(Page<T> page) {
