@@ -73,6 +73,10 @@ public class TelemetryResponseFixture {
             .ranking(1)
             .build();
 
+    private static final TelemetryResponse.Common RES_COMMON = TelemetryResponse.Common.builder()
+            .isGame(1.0F)
+            .build();
+
     public static final TelemetryResponse RES_LOG_PLAYER_TAKE_DAMAGE = TelemetryResponse.builder()
             .type("LogPlayerTakeDamage")
             .timestamp(LocalDateTime.now())
@@ -83,6 +87,7 @@ public class TelemetryResponseFixture {
             .damageReason("HeadShot")
             .damage(60F)
             .damageCauserName("WeapAUG_C")
+            .common(RES_COMMON)
             .build();
 
     public static final List<TelemetryResponse> TELEMETRY_RESPONSES = List.of(RES_LOG_PLAYER_KILL, RES_LOG_PLAYER_TAKE_DAMAGE);
