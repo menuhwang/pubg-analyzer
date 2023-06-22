@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -25,6 +26,7 @@ import java.time.LocalDateTime;
                 @Index(columnList = "attackerName, victimName, matchId", name = "attackerName_victimName_matchId_index")
         }
 )
+@Where(clause = "attacker_name != victim_name")
 public class LogPlayerTakeDamage implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,6 +52,7 @@ public class LogPlayerTakeDamage implements Serializable {
     private Float damage;
     @Enumerated(EnumType.STRING)
     private DamageCauserName damageCauserName;
+    private Integer phase;
 
     public static LogPlayerTakeDamage of(TelemetryResponse telemetryResponse, String matchId) {
         TelemetryResponse.Characters attacker = telemetryResponse.getAttacker();
@@ -71,6 +74,7 @@ public class LogPlayerTakeDamage implements Serializable {
                 .damageReason(DamageReason.of(telemetryResponse.getDamageReason()))
                 .damage(telemetryResponse.getDamage())
                 .damageCauserName(DamageCauserName.of(telemetryResponse.getDamageCauserName()))
+                .phase(telemetryResponse.getCommon().getIsGame().intValue())
                 .build();
     }
 }
