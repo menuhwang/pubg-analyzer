@@ -1,6 +1,9 @@
 package com.menu.pubganalyzer.util;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 public class DatetimeFormatter {
@@ -17,6 +20,12 @@ public class DatetimeFormatter {
         long offset = offset(dateTime1, dateTime2);
 
         return String.format("%02d:%02d.%d", offset / 1000 / 60, offset / 1000 % 60, offset % 1000);
+    }
+
+    public static String UTCtoKST(LocalDateTime localDateTime) {
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, ZoneId.of("UTC"));
+        ZonedDateTime createdAtKor = zonedDateTime.withZoneSameInstant(ZoneId.of("Asia/Seoul"));
+        return createdAtKor.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     protected static long offset(LocalDateTime datetime1, LocalDateTime datetime2) {
