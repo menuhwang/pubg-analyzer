@@ -131,6 +131,9 @@ public class TelemetryResponse {
      * isGame = 2.5 -> Second bluezone shrinks
      **/
     @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     @ToString
     public static class Common {
         Float isGame;
