@@ -1,0 +1,37 @@
+<nav th:fragment="pagination(pageDTO)">
+    <ul class="pagination justify-content-center mt-3">
+        <!-- 이전 버튼 -->
+        <li th:if="${pageDTO.hasPrevious()}" class="page-item">
+            <a class="page-link" th:href="${href + 'page=' + pageDTO.getPreviousPageNum() + '&size=' + pageDTO.getSize()}">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li th:unless="${pageDTO.hasPrevious()}" class="page-item disabled">
+            <a class="page-link">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+
+        <th:block th:each="num : ${#numbers.sequence(pageDTO.getPaginationStartNum(), pageDTO.getPaginationEndNum())}">
+            <li th:if="${num == pageDTO.getNumber() + 1}" class="page-item active">
+                <a class="page-link" th:text="${num}" th:href="${href + 'page=' + (num - 1) + '&size=' + pageDTO.getSize()}"></a>
+            </li>
+            <li th:unless="${num == pageDTO.getNumber() + 1}" class="page-item">
+                <a class="page-link" th:text="${num}" th:href="${href + 'page=' + (num - 1) + '&size=' + pageDTO.getSize()}"></a>
+            </li>
+        </th:block>
+
+
+        <!-- 다음 버튼 -->
+        <li th:if="${pageDTO.hasNext()}" class="page-item">
+            <a class="page-link" th:href="${href + 'page=' + pageDTO.getNextPageNum() + '&size=' + pageDTO.getSize()}">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        <li th:unless="${pageDTO.hasNext()}" class="page-item disabled">
+            <a class="page-link">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>

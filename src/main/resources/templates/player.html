@@ -72,7 +72,7 @@
                                     <span th:text="${stat.revives}"></span>
                                 </div>
                                 <div class="col-auto">
-                                    <button th:href="${'/analyzer/match/' + stat.match.id + '/player/' + player.name}" class="btn btn-primary my-auto pa-analyze-btn">
+                                    <button th:href="${'/report/match/' + stat.match.id + '/player/' + player.name}" class="btn btn-primary my-auto pa-analyze-btn">
                                         <i class="fa-solid fa-arrow-right"></i>
                                         <span class="spinner-border spinner-border-sm" role="status" style="display: none"></span>
                                     </button>
@@ -80,24 +80,7 @@
                             </div>
                         </div>
                     </div>
-                    <nav>
-                        <ul class="pagination justify-content-center mt-3">
-                            <li class="page-item">
-                                <a class="page-link" th:href="${'?shard=' + player.shardId + '&nickname=' + player.name + '&page=0&size=' + stats.getSize()}">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            <li th:if="${stats.isFirst()}" class="page-item disabled"><a class="page-link">Prev</a></li>
-                            <li th:unless="${stats.isFirst()}" class="page-item"><a class="page-link" th:href="${'?shard=' + player.shardId + '&nickname=' + player.name + '&page=' + stats.previousPageable().getPageNumber() + '&size=' + stats.getSize()}">Prev</a></li>
-                            <li th:if="${stats.isLast()}" class="page-item disabled"><a class="page-link">Next</a></li>
-                            <li th:unless="${stats.isLast()}" class="page-item"><a class="page-link" th:href="${'?shard=' + player.shardId + '&nickname=' + player.name + '&page=' + stats.nextPageable().getPageNumber() + '&size=' + stats.getSize()}">Next</a></li>
-                            <li class="page-item">
-                                <a class="page-link" th:href="${'?shard=' + player.shardId + '&nickname=' + player.name + '&page=' + (stats.totalPages - 1) + '&size=' + stats.getSize()}">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
+                    <nav th:replace="~{fragments/pagination :: pagination(${stats})}"></nav>
                 </div>
                 <div th:unless="${!stats.isEmpty()}">
                     전적 갱신이 필요합니다.

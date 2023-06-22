@@ -19,7 +19,9 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Telemetry {
     private static final Set<String> DAMAGE_TYPE_FILER = Set.of(
-            "Damage_BlueZone"
+            "Damage_BlueZone",
+            "Damage_Groggy",
+            "Damage_Instant_Fall"
     );
     @Builder.Default
     private List<LogPlayerKillV2> logPlayerKills = new ArrayList<>();
@@ -31,7 +33,7 @@ public class Telemetry {
         for (TelemetryResponse log : telemetryResponses) {
             if (log.getType().equals("LogPlayerKillV2")) {
                 telemetry.logPlayerKills.add(LogPlayerKillV2.of(log, matchId));
-            } else if (log.getType().equals("LogPlayerTakeDamage") && !DAMAGE_TYPE_FILER.contains(log.getDamageTypeCategory())) {
+            } else if (log.getType().equals("LogPlayerTakeDamage") && !isIgnoredLogPlayerTakeDamage(log)) {
                 telemetry.logPlayerTakeDamages.add(LogPlayerTakeDamage.of(log, matchId));
             }
         }
@@ -43,6 +45,14 @@ public class Telemetry {
         rosterTelemetry.logPlayerKills.addAll(telemetry.getLogPlayerKillsGroupByRoster(roster));
         rosterTelemetry.logPlayerTakeDamages.addAll(telemetry.getLogPlayerTakeDamagesGroupByRoster(roster));
         return rosterTelemetry;
+    }
+
+    private static boolean isIgnoredLogPlayerTakeDamage(TelemetryResponse telemetryResponse) {
+        if (telemetryResponse.getAttacker() == null || telemetryResponse.getVictim() == null) return false;
+
+        return DAMAGE_TYPE_FILER.contains(telemetryResponse.getDamageTypeCategory())
+                || telemetryResponse.getAttacker().getName()
+                .equals(telemetryResponse.getVictim().getName());
     }
 
     private List<LogPlayerKillV2> getLogPlayerKillsGroupByRoster(Roster roster) {

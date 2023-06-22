@@ -6,6 +6,7 @@ import com.menu.pubganalyzer.exception.PlayerNotFoundException;
 import com.menu.pubganalyzer.support.apiResult.ApiResult;
 import com.menu.pubganalyzer.support.apiResult.ApiResultUtil;
 import com.menu.pubganalyzer.util.pubgAPI.exception.PubgAPIPlayerNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+@Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(value = {
@@ -34,7 +36,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public String exceptionHandler() {
+    public String exceptionHandler(Exception e) {
+        log.error("{}", e.getMessage(), e);
         return "error/error";
     }
 

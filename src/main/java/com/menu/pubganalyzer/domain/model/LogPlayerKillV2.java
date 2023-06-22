@@ -11,7 +11,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
@@ -106,9 +106,9 @@ public class LogPlayerKillV2 implements Serializable {
                 .build();
     }
 
-    public static List<String> extractVictimNames(Collection<LogPlayerKillV2> logPlayerKills) {
+    public static Set<String> extractVictimNames(Collection<LogPlayerKillV2> logPlayerKills) {
         return logPlayerKills.stream()
                 .map(LogPlayerKillV2::getVictimName)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 }

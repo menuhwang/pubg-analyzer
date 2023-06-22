@@ -18,9 +18,10 @@ public class DamageLogRes {
     private final DamageReason damageReason;
     private final Float damage;
     private final DamageCauserName damageCauserName;
+    private final Integer phase;
 
     @Builder
-    public DamageLogRes(LocalDateTime timestamp, CharacterInfo attacker, CharacterInfo victim, DamageTypeCategory damageTypeCategory, DamageReason damageReason, Float damage, DamageCauserName damageCauserName) {
+    public DamageLogRes(LocalDateTime timestamp, CharacterInfo attacker, CharacterInfo victim, DamageTypeCategory damageTypeCategory, DamageReason damageReason, Float damage, DamageCauserName damageCauserName, Integer phase) {
         this.timestamp = timestamp;
         this.attacker = attacker;
         this.victim = victim;
@@ -28,6 +29,7 @@ public class DamageLogRes {
         this.damageReason = damageReason;
         this.damage = damage;
         this.damageCauserName = damageCauserName;
+        this.phase = phase;
     }
 
     public static DamageLogRes of(LogPlayerTakeDamage logPlayerTakeDamage) {
@@ -55,6 +57,7 @@ public class DamageLogRes {
                 .damageReason(logPlayerTakeDamage.getDamageReason())
                 .damage(logPlayerTakeDamage.getDamage())
                 .damageCauserName(logPlayerTakeDamage.getDamageCauserName())
+                .phase(logPlayerTakeDamage.getPhase())
                 .build();
     }
 

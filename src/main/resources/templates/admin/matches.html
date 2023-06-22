@@ -65,24 +65,7 @@
                     </div>
                 </div>
             </div>
-            <nav>
-                <ul class="pagination justify-content-center">
-                    <li class="page-item">
-                        <a class="page-link" th:href="${'?page=0&size=' + page.pageable.getPageSize() + '&sort=createdAt,' + page.getSort().getOrderFor('createdAt').getDirection()}">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    <li th:if="${page.isFirst()}" class="page-item disabled"><a class="page-link">Prev</a></li>
-                    <li th:unless="${page.isFirst()}" class="page-item"><a class="page-link" th:href="${'?page=' + page.previousPageable().getPageNumber() + '&size=' + page.pageable.getPageSize() + '&sort=createdAt,' + page.getSort().getOrderFor('createdAt').getDirection()}">Prev</a></li>
-                    <li th:if="${page.isLast()}" class="page-item disabled"><a class="page-link">Next</a></li>
-                    <li th:unless="${page.isLast()}" class="page-item"><a class="page-link" th:href="${'?page=' + page.nextPageable().getPageNumber() + '&size=' + page.pageable.getPageSize() + '&sort=createdAt,' + page.getSort().getOrderFor('createdAt').getDirection()}">Next</a></li>
-                    <li class="page-item">
-                        <a class="page-link" th:href="${'?page=' + (page.totalPages - 1) + '&size=' + page.pageable.getPageSize() + '&sort=createdAt,' + page.getSort().getOrderFor('createdAt').getDirection()}">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+            <nav th:replace="~{fragments/pagination :: pagination(${page})}"></nav>
         </div>
     </div>
     <div class="delete-failed-alert toast align-items-center text-bg-warning border-0 sticky-bottom ms-md-auto" role="alert" aria-live="assertive" aria-atomic="true">
