@@ -6,6 +6,9 @@ import com.menu.pubganalyzer.domain.dao.MatchDAO;
 import com.menu.pubganalyzer.domain.dao.ParticipantDAO;
 import com.menu.pubganalyzer.domain.dao.TelemetryDAO;
 import com.menu.pubganalyzer.domain.dto.AnalyzerRes;
+import com.menu.pubganalyzer.domain.dto.MatchInfoRes;
+import com.menu.pubganalyzer.domain.dto.MatchResultRes;
+import com.menu.pubganalyzer.domain.dto.ReportRes;
 import com.menu.pubganalyzer.domain.model.Match;
 import com.menu.pubganalyzer.domain.model.Participant;
 import com.menu.pubganalyzer.domain.model.Roster;
@@ -17,21 +20,25 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AnalyzerService {
+public class ReportService {
     private final MatchDAO matchDAO;
     private final ParticipantDAO participantDAO;
     private final TelemetryDAO telemetryDAO;
 
     @Transactional
-    public AnalyzerRes analyze(String matchId, String nickname) {
+    public ReportRes report(String matchId, String nickname) {
         Match match = matchDAO.findById(matchId);
         Participant participant = participantDAO.findByMatchIdAndPlayerName(match.getId(), nickname);
 
         Roster roster = participant.getRoster();
 
         Telemetry rosterTelemetry = telemetryDAO.findByMatchAndRoster(match, roster);
-        Analyzer analyzer = Analyzer.of(rosterTelemetry)
-                .filterOfKiller(nickname);
-        return AnalyzerRes.of(analyzer, match.getCreatedAt());
+        Analyzer analyzer = Analyzer.of(rosterTelemetry, nickname);
+
+        return ReportRes.of(
+                MatchInfoRes.of(match),
+                MatchResultRes.of(match, participant),
+                AnalyzerRes.of(analyzer)
+        );
     }
 }
