@@ -56,9 +56,11 @@
             <!--sidebar:left-->
             <aside class="col-lg-2"></aside>
             <div class="col-lg-8">
-                <div class="d-flex mb-4">
-                    <a class="h3 m-0 text-decoration-none text-dark fw-bold" role="button" th:href="${'/players?shard=' + shard + '&nickname=' + player}">[[${player}]]</a>
-                    <div  th:if="${!member.isEmpty()}" class="ms-auto">
+                <div class="row mb-4 g-4">
+                    <div class="col">
+                        <a class="h3 m-0 text-decoration-none text-dark fw-bold" role="button" th:href="${'/players?shard=' + shard + '&nickname=' + player}">[[${player}]]</a>
+                    </div>
+                    <div th:if="${!member.isEmpty()}" class="col-md-4">
                         <div class="input-group">
                             <label class="input-group-text" for="other-player">Member</label>
                             <select class="form-select" id="other-player" onchange="if(this.value) location.href=this.value;">
