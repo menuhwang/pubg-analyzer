@@ -15,11 +15,17 @@
         .pa-renew-spinner[aria-hidden="false"] {
             display: inline-flex;
         }
+
+        .card {
+            border: 0;
+            border-radius: var(--bs-border-radius-xl);
+            box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.03);
+        }
     </style>
 </head>
-<body>
+<body class="bg-light">
     <nav th:replace="~{fragments/navbar :: navbar}"></nav>
-    <div class="container-fluid py-5 px-4">
+    <div class="container-fluid py-md-5">
         <div class="row g-4">
             <!--sidebar:left-->
             <aside class="col-lg-2"></aside>
@@ -41,37 +47,71 @@
                     <div th:each="stat : ${stats}" class="card mt-3 position-relative pa-stat" role="button" th:id="${stat.id}" th:onclick="doClickStatCard([[${stat.id}]])" th:data-result-kills="${stat.kills}" th:data-result-assists="${stat.assists}" th:data-result-damageDealt="${stat.damageDealt}" data-calc-flag="false">
                         <div class="card-body">
                             <div class="row align-items-center">
-                                <div class="col d-flex flex-column">
-                                    <div>
-                                        <span class="align-bottom fs-3" th:text="${'#' + stat.winPlace}"></span>
-                                        <span class="align-bottom fs-6" th:text="${'/ ' + stat.roster.match.rosters.size()}"></span>
+                                <div class="col-12 col-md">
+                                    <div class="row">
+                                        <div class="col-auto col-md-12">
+                                            <span class="align-bottom h3 fw-bold" th:text="${'#' + stat.winPlace}"></span>
+                                            <span class="align-bottom text-muted" th:text="${'/ ' + stat.roster.match.rosters.size()}"></span>
+                                        </div>
+                                        <div class="col-auto ms-auto col-md-12 ms-md-0">
+                                            <span th:text="${stat.roster.match.getCreatedOffset()}"
+                                                  data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                                  data-bs-custom-class="custom-tooltip"
+                                                  th:data-bs-title="${stat.roster.match.getZonedCreatedAt()}"></span>
+                                        </div>
                                     </div>
-                                    <span th:text="${stat.roster.match.getCreatedOffset()}"
-                                          data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                          data-bs-custom-class="custom-tooltip"
-                                          th:data-bs-title="${stat.roster.match.getZonedCreatedAt()}"></span>
                                 </div>
-                                <div class="col d-flex flex-column">
-                                    <span th:text="${stat.roster.match.mapName.getMapNameKor()}"></span>
-                                    <span th:text="${stat.roster.match.gameMode.title}"></span>
+                                <div class="col-md">
+                                    <div class="row mb-3 mb-md-0">
+                                        <div class="col-auto col-md-12">
+                                            <div th:text="${stat.roster.match.mapName.getMapNameKor()}"></div>
+                                        </div>
+                                        <div class="col-auto ms-auto col-md-12 ms-md-0">
+                                            <div th:text="${stat.roster.match.gameMode.title}"></div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col d-flex flex-column">
-                                    <span>킬</span>
-                                    <span th:text="${stat.kills}"></span>
+                                <div class="col-md">
+                                    <div class="row mb-1 mb-md-0">
+                                        <div class="col col-md-12">
+                                            <div>킬</div>
+                                        </div>
+                                        <div class="col col-md-12">
+                                            <div th:text="${stat.kills}"></div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col d-flex flex-column">
-                                    <span>어시스트</span>
-                                    <span th:text="${stat.assists}"></span>
+                                <div class="col-md">
+                                    <div class="row mb-1 mb-md-0">
+                                        <div class="col col-md-12">
+                                            <div>어시스트</div>
+                                        </div>
+                                        <div class="col col-md-12">
+                                            <div th:text="${stat.assists}"></div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col d-flex flex-column">
-                                    <span>데미지</span>
-                                    <span th:text="${stat.damageDealt}"></span>
+                                <div class="col-md">
+                                    <div class="row mb-1 mb-md-0">
+                                        <div class="col col-md-12">
+                                            <div>데미지</div>
+                                        </div>
+                                        <div class="col col-md-12">
+                                            <div th:text="${stat.damageDealt}"></div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col d-flex flex-column">
-                                    <span>부활</span>
-                                    <span th:text="${stat.revives}"></span>
+                                <div class="col-md">
+                                    <div class="row mb-1 mb-md-0">
+                                        <div class="col col-md-12">
+                                            <div>부활</div>
+                                        </div>
+                                        <div class="col col-md-12">
+                                            <div th:text="${stat.revives}"></div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-auto">
+                                <div class="ms-auto col-auto">
                                     <button th:href="${'/report/match/' + stat.match.id + '/player/' + player.name}" class="btn btn-primary my-auto pa-analyze-btn">
                                         <i class="fa-solid fa-arrow-right"></i>
                                         <span class="spinner-border spinner-border-sm" role="status" style="display: none"></span>
@@ -88,7 +128,7 @@
             </div>
             <!--sidebar:right-->
             <aside class="col-lg-2">
-                <div th:if="${!stats.isEmpty()}" class="card" id="matches-result-calc" style="position: sticky; top: 50vh; transform: translateY(-50%)">
+                <div th:if="${!stats.isEmpty()}" class="card sticky-md-top top-50 translate-middle-y mb-4 mb-md-0" id="matches-result-calc">
                     <div class="card-header">
                         <span>합산</span>
                         <span class="float-end text-muted">
