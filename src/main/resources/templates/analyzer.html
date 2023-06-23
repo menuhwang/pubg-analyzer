@@ -197,7 +197,7 @@
                         </div>
                     </div>
                     <!-- 분석 -->
-                    <div class="vstack gap-4">
+                    <div th:if="${!analyze.damageLog.isEmpty()}" class="vstack gap-4">
                         <!-- 분석 그래프 -->
                         <div class="row g-4">
                             <!-- 페이즈 데미지 차트:원형 차트 -->
