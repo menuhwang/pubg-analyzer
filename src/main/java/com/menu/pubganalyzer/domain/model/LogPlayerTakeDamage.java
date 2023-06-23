@@ -15,7 +15,37 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Entity
+/*
+CREATE TABLE log_player_take_damage
+        (
+        `id`                   INT AUTO_INCREMENT NOT NULL,
+        `match_id`             CHAR(36)        NULL,
+        `timestamp`            datetime           NULL,
+        `attack_id`            INT                NULL,
+        `attacker_name`        VARCHAR(255)       NULL,
+        `attacker_team_id`     INT                NULL,
+        `attacker_health`      FLOAT              NULL,
+        `attacker_ranking`     INT                NULL,
+        `attacker_account_id`  CHAR(40)        NULL,
+        `victim_name`          VARCHAR(255)       NULL,
+        `victim_team_id`       INT                NULL,
+        `victim_health`        FLOAT              NULL,
+        `victim_ranking`       INT                NULL,
+        `victim_account_id`    CHAR(40)        NULL,
+        `damage_type_category` VARCHAR(255)       NULL,
+        `damage_reason`        VARCHAR(255)       NULL,
+        `damage`               FLOAT              NULL,
+        `damage_causer_name`   VARCHAR(255)       NULL,
+        `phase`                INT                NULL,
+        CONSTRAINT pk_logplayertakedamage PRIMARY KEY (id)
+        );
+
+        CREATE INDEX attackerName_victimName_matchId_index ON log_player_take_damage (attacker_name, victim_name, match_id);
+
+        CREATE INDEX matchId_index ON log_player_take_damage (match_id);
+*/
+
+@Entity(name = "log_player_take_damage")
 @Getter
 @Builder
 @AllArgsConstructor
@@ -32,6 +62,7 @@ public class LogPlayerTakeDamage implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     private Integer id;
+    @Column(length = 36)
     private String matchId;
     private LocalDateTime timestamp;
     private Integer attackId;
@@ -39,11 +70,13 @@ public class LogPlayerTakeDamage implements Serializable {
     private Integer attackerTeamId;
     private Float attackerHealth;
     private Integer attackerRanking;
+    @Column(length = 40)
     private String attackerAccountId;
     private String victimName;
     private Integer victimTeamId;
     private Float victimHealth;
     private Integer victimRanking;
+    @Column(length = 40)
     private String victimAccountId;
     @Enumerated(EnumType.STRING)
     private DamageTypeCategory damageTypeCategory;

@@ -20,6 +20,29 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+/*
+CREATE TABLE matches
+        (
+        `id`              CHAR(36)  NOT NULL,
+        `game_mode`       VARCHAR(255) NULL,
+        `season_state`    VARCHAR(255) NULL,
+        `duration`        INT          NOT NULL,
+        `title_id`        VARCHAR(255) NULL,
+        `shard_id`        VARCHAR(255) NULL,
+        `map_name`        VARCHAR(255) NULL,
+        `is_custom_match` BIT(1)       NOT NULL,
+        `match_type`      VARCHAR(255) NULL,
+        `created_at`      datetime     NULL,
+        `asset_id`        CHAR(36)  NULL,
+        CONSTRAINT pk_matches PRIMARY KEY (id)
+        );
+
+        CREATE INDEX match_id_shard_index ON matches (id, shard_id);
+
+        ALTER TABLE matches
+        ADD CONSTRAINT FK_MATCHES_ON_ASSET FOREIGN KEY (asset_id) REFERENCES asset (id);
+*/
+
 @Getter
 @Builder
 @AllArgsConstructor
@@ -30,6 +53,7 @@ import java.util.*;
         })
 public class Match {
     @Id
+    @Column(length = 36)
     private String id;
     @Enumerated(EnumType.STRING)
     private GameMode gameMode;

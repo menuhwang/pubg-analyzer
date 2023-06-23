@@ -8,6 +8,6 @@ import java.util.Optional;
 
 
 public interface ParticipantRepository extends JpaRepository<Participant, String> {
-    @Query("select p from Participant p join fetch p.roster r join fetch r.participants join fetch r.match m join fetch m.rosters where p.match.id = :matchId and p.name = :playerName")
+    @Query("select p from participant p join fetch p.roster r join fetch r.participants join fetch r.match m join fetch m.rosters where p.match.id = :matchId and p.name = :playerName")
     Optional<Participant> findByMatchIdAndPlayerName(String matchId, String playerName);
 }

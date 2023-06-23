@@ -10,10 +10,27 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/*
+CREATE TABLE roster
+        (
+        `id`        CHAR(36)  NOT NULL,
+        `won`       BIT(1)       NOT NULL,
+        `shard_id`  VARCHAR(255) NULL,
+        `win_place` INT          NULL,
+        `team_id`   INT          NOT NULL,
+        `match_id`  CHAR(36)  NULL,
+        CONSTRAINT pk_roster PRIMARY KEY (id)
+        );
+
+        ALTER TABLE roster
+        ADD CONSTRAINT FK_ROSTER_ON_MATCH FOREIGN KEY (match_id) REFERENCES matches (id);
+*/
+
 @Getter
-@Entity
+@Entity(name = "roster")
 public class Roster {
     @Id
+    @Column(length = 36)
     private String id;
     private boolean won;
     @Enumerated(EnumType.STRING)
