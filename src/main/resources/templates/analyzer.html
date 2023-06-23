@@ -56,9 +56,11 @@
             <!--sidebar:left-->
             <aside class="col-lg-2"></aside>
             <div class="col-lg-8">
-                <div class="d-flex mb-4">
-                    <a class="h3 m-0 text-decoration-none text-dark fw-bold" role="button" th:href="${'/players?shard=' + shard + '&nickname=' + player}">[[${player}]]</a>
-                    <div  th:if="${!member.isEmpty()}" class="ms-auto">
+                <div class="row mb-4 g-4">
+                    <div class="col">
+                        <a class="h3 m-0 text-decoration-none text-dark fw-bold" role="button" th:href="${'/players?shard=' + shard + '&nickname=' + player}">[[${player}]]</a>
+                    </div>
+                    <div th:if="${!member.isEmpty()}" class="col-md-4">
                         <div class="input-group">
                             <label class="input-group-text" for="other-player">Member</label>
                             <select class="form-select" id="other-player" onchange="if(this.value) location.href=this.value;">
@@ -195,7 +197,7 @@
                         </div>
                     </div>
                     <!-- 분석 -->
-                    <div class="vstack gap-4">
+                    <div th:if="${!analyze.damageLog.isEmpty()}" class="vstack gap-4">
                         <!-- 분석 그래프 -->
                         <div class="row g-4">
                             <!-- 페이즈 데미지 차트:원형 차트 -->
@@ -226,12 +228,12 @@
                             <div class="col">
                                 <div class="accordion" id="kills-accordion">
                                     <div th:each="kill : ${analyze.killLog}" class="accordion-item">
-                                        <h2 class="accordion-header" th:id="${kill.victim.name + '-heading'}">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" th:data-bs-target="${'#' + kill.victim.name + '-collapse'}" aria-expanded="false" th:aria-controls="${kill.victim.name + '-collapse'}">
+                                        <h2 class="accordion-header" th:id="${'player-' + kill.victim.name + '-heading'}">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" th:data-bs-target="${'#player-' + kill.victim.name + '-collapse'}" aria-expanded="false" th:aria-controls="${'player-' + kill.victim.name + '-collapse'}">
                                                 [[${kill.victim.name}]]
                                             </button>
                                         </h2>
-                                        <div th:id="${kill.victim.name + '-collapse'}" class="accordion-collapse collapse" th:aria-labelledby="${kill.victim.name + '-heading'}" data-bs-parent="#kills-accordion">
+                                        <div th:id="${'player-' + kill.victim.name + '-collapse'}" class="accordion-collapse collapse" th:aria-labelledby="${'player-' + kill.victim.name + '-heading'}" data-bs-parent="#kills-accordion">
                                             <div class="accordion-body">
                                                 <div class="table-responsive">
                                                     <table class="table align-middle">
@@ -254,7 +256,7 @@
                                                         <thead class="align-middle">
                                                         <tr>
                                                             <th rowspan="2" scope="col">Time</th>
-                                                            <th rowspan="2" scope="col">Victim</th>
+                                                            <th rowspan="2" scope="col">Attacker</th>
                                                             <th rowspan="2" scope="col">Reason</th>
                                                             <th rowspan="2" scope="col">Weapon</th>
                                                             <th rowspan="2" scope="col">Damage</th>
