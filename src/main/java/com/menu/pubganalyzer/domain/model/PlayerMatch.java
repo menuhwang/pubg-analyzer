@@ -7,6 +7,24 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/*
+CREATE TABLE player_match
+        (
+        `id`                BIGINT AUTO_INCREMENT NOT NULL,
+        `player_id`         CHAR(40)           NULL,
+        `match_id`          CHAR(36)           NULL,
+        `created_date_time` datetime              NULL,
+        CONSTRAINT pk_player_match PRIMARY KEY (id)
+        );
+
+        CREATE INDEX created_date_time_index ON player_match (created_date_time);
+
+        CREATE UNIQUE INDEX player_match_index ON player_match (player_id, match_id);
+
+        ALTER TABLE player_match
+        ADD CONSTRAINT FK_PLAYER_MATCH_ON_PLAYER FOREIGN KEY (player_id) REFERENCES player (id);
+*/
+
 @Entity(name = "player_match")
 @Table(indexes = {
         @Index(name = "created_date_time_index", columnList = "createdDateTime"),
@@ -18,6 +36,7 @@ public class PlayerMatch {
     private Long id;
     @ManyToOne
     private Player player;
+    @Column(length = 36)
     private String matchId;
     private LocalDateTime createdDateTime;
 

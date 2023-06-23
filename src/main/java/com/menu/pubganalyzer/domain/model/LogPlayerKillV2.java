@@ -14,13 +14,49 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Entity
+/*
+CREATE TABLE log_player_kill_v2
+(
+    `id`                            INT AUTO_INCREMENT NOT NULL,
+    `match_id`                      CHAR(36)        NULL,
+    `timestamp`                     datetime           NULL,
+    `attack_id`                     INT                NULL,
+    `dbnoid`                        INT                NULL,
+    `victim_name`                   VARCHAR(255)       NULL,
+    `victim_account_id`             CHAR(40)        NULL,
+    `dbnoname`                      VARCHAR(255)       NULL,
+    `dbnoaccount_id`                CHAR(40)        NULL,
+    `dbnodamage_reason`             VARCHAR(255)       NULL,
+    `dbnodamage_type_category`      VARCHAR(255)       NULL,
+    `dbnodamage_causer_name`        VARCHAR(255)       NULL,
+    `dbnodistance`                  FLOAT              NULL,
+    `finisher_name`                 VARCHAR(255)       NULL,
+    `finisher_account_id`           CHAR(40)        NULL,
+    `finisher_damage_reason`        VARCHAR(255)       NULL,
+    `finisher_damage_type_category` VARCHAR(255)       NULL,
+    `finisher_damage_causer_name`   VARCHAR(255)       NULL,
+    `finisher_distance`             FLOAT              NULL,
+    `killer_name`                   VARCHAR(255)       NULL,
+    `killer_account_id`             CHAR(40)        NULL,
+    `killer_damage_reason`          VARCHAR(255)       NULL,
+    `killer_damage_type_category`   VARCHAR(255)       NULL,
+    `killer_damage_causer_name`     VARCHAR(255)       NULL,
+    `killer_distance`               FLOAT              NULL,
+    `suicide`                       BIT(1)             NULL,
+    CONSTRAINT pk_log_player_kill_v2 PRIMARY KEY (id)
+);
+
+CREATE INDEX killerName_matchId_index ON log_player_kill_v2 (killer_name, match_id);
+
+CREATE INDEX matchId_index ON log_player_kill_v2 (match_id);
+*/
+
+@Entity(name = "log_player_kill_v2")
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(
-        name = "log_player_kill_v2",
         indexes = {
                 @Index(columnList = "matchId", name = "matchId_index"),
                 @Index(columnList = "killerName, matchId", name = "killerName_matchId_index")
@@ -32,13 +68,16 @@ public class LogPlayerKillV2 implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     private Integer id;
+    @Column(length = 36)
     private String matchId;
     private LocalDateTime timestamp;
     private Integer attackId;
     private Integer dBNOId;
     private String victimName;
+    @Column(length = 40)
     private String victimAccountId;
     private String dBNOName;
+    @Column(length = 40)
     private String dBNOAccountId;
     @Enumerated(EnumType.STRING)
     private DamageReason dBNODamageReason;
@@ -48,6 +87,7 @@ public class LogPlayerKillV2 implements Serializable {
     private DamageCauserName dBNODamageCauserName;
     private Float dBNODistance;
     private String finisherName;
+    @Column(length = 40)
     private String finisherAccountId;
     @Enumerated(EnumType.STRING)
     private DamageReason finisherDamageReason;
@@ -57,6 +97,7 @@ public class LogPlayerKillV2 implements Serializable {
     private DamageCauserName finisherDamageCauserName;
     private Float finisherDistance;
     private String killerName;
+    @Column(length = 40)
     private String killerAccountId;
     @Enumerated(EnumType.STRING)
     private DamageReason killerDamageReason;
