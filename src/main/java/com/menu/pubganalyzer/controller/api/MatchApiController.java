@@ -8,9 +8,10 @@ import com.menu.pubganalyzer.support.apiResult.ApiResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 import static com.menu.pubganalyzer.support.apiResult.ApiResultUtil.success;
 
@@ -26,5 +27,12 @@ public class MatchApiController {
         Page<MatchRes> matchResPage = matchPage.map(MatchRes::of);
 
         return success(PageDTO.of(matchResPage));
+    }
+
+    @DeleteMapping("{id}")
+    public ApiResult<Map<String, String>> deleteById(@PathVariable final String id) {
+        matchService.deleteById(List.of(id));
+
+        return success(Map.of("id", id));
     }
 }
