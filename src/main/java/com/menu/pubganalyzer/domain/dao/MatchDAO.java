@@ -7,5 +7,6 @@ import org.springframework.data.domain.Pageable;
 public interface MatchDAO {
     Match findById(String id);
     Page<Match> findById(String id, Pageable pageable);
+    Page<Match> findAll(Pageable pageable);
     void deleteById(String id);
 }
