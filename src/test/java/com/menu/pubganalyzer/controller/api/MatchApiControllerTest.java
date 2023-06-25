@@ -9,6 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -26,7 +27,7 @@ class MatchApiControllerTest {
         ResultActions result = mockMvc.perform(
                 get("/api/matches")
                         .param("page", "0")
-                        .param("size", "20")
+                        .param("size", "5")
         );
 
         result.andDo(print())
@@ -34,6 +35,29 @@ class MatchApiControllerTest {
                 .andExpect(handler().handlerType(MatchApiController.class))
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.result.content.length()", lessThanOrEqualTo(5)))
+                .andExpect(jsonPath("$.result.content[0].id").isString())
+                .andExpect(jsonPath("$.result.content[0].gameMode").isString())
+                .andExpect(jsonPath("$.result.content[0].duration").isNumber())
+                .andExpect(jsonPath("$.result.content[0].mapName").isString())
+                .andExpect(jsonPath("$.result.content[0].customMatch").isBoolean())
+                .andExpect(jsonPath("$.result.content[0].matchType").isString())
+                .andExpect(jsonPath("$.result.content[0].createdAt").isString())
+        ;
+    }
+
+    @Test
+    void findAllDefaultPageable() throws Exception {
+        ResultActions result = mockMvc.perform(
+                get("/api/matches")
+        );
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(MatchApiController.class))
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.result.content.length()", lessThanOrEqualTo(20)))
                 .andExpect(jsonPath("$.result.content[0].id").isString())
                 .andExpect(jsonPath("$.result.content[0].gameMode").isString())
                 .andExpect(jsonPath("$.result.content[0].duration").isNumber())
