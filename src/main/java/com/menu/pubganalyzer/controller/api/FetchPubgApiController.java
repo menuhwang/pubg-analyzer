@@ -5,6 +5,7 @@ import com.menu.pubganalyzer.support.apiResult.ApiResult;
 import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.PlayersResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,20 +20,20 @@ public class FetchPubgApiController {
     private final FetchAPIService fetchAPIService;
 
     @GetMapping("player")
-    public ApiResult<PlayersResponse> fetchPlayer(
+    public ResponseEntity<ApiResult<PlayersResponse>> fetchPlayer(
             @RequestParam String shard,
             @RequestParam String nickname) {
         PlayersResponse response = fetchAPIService.player(shard, nickname);
 
-        return success(response);
+        return ResponseEntity.ok(success(response));
     }
 
     @GetMapping("match")
-    public ApiResult<MatchResponse> fetchMatch(
+    public ResponseEntity<ApiResult<MatchResponse>> fetchMatch(
             @RequestParam String shard,
             @RequestParam String id) {
         MatchResponse response = fetchAPIService.match(shard, id);
 
-        return success(response);
+        return ResponseEntity.ok(success(response));
     }
 }

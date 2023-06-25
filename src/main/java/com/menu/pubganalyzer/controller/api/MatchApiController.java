@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,17 +25,17 @@ public class MatchApiController {
     private final MatchService matchService;
 
     @GetMapping
-    public ApiResult<PageDTO<MatchRes>> findAll(@PageableDefault(size = 20, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<ApiResult<PageDTO<MatchRes>>> findAll(@PageableDefault(size = 20, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Match> matchPage = matchService.findAll(pageable);
         Page<MatchRes> matchResPage = matchPage.map(MatchRes::of);
 
-        return success(PageDTO.of(matchResPage));
+        return ResponseEntity.ok(success(PageDTO.of(matchResPage)));
     }
 
     @DeleteMapping("{id}")
-    public ApiResult<Map<String, String>> deleteById(@PathVariable final String id) {
+    public ResponseEntity<ApiResult<Map<String, String>>> deleteById(@PathVariable final String id) {
         matchService.deleteById(List.of(id));
 
-        return success(Map.of("id", id));
+        return ResponseEntity.ok(success(Map.of("id", id)));
     }
 }
