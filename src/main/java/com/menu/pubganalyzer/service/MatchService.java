@@ -21,6 +21,10 @@ public class MatchService {
         return matchDAO.findById(id, pageable);
     }
 
+    public Page<Match> findAll(Pageable pageable) {
+        return matchDAO.findAll(pageable);
+    }
+
     @Transactional
     public void deleteById(Collection<String> ids) {
         for (String id : ids) {

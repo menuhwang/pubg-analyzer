@@ -118,6 +118,18 @@ class MatchDAOTest {
     }
 
     @Test
+    @DisplayName("[refactor] 매치 조회 페이징")
+    void findAll_paging() {
+        given(matchRepository.findAll(MatchFixture.PAGEABLE))
+                .willReturn(MatchFixture.MATCH_PAGE);
+
+        Page<Match> result = matchDAO.findAll(MatchFixture.PAGEABLE);
+
+        assertEquals(MatchFixture.MATCH_PAGE, result);
+        verify(matchRepository).findAll(any(Pageable.class));
+    }
+
+    @Test
     @DisplayName("매치 삭제 시 Match 캐시, Participant 캐시, DB 데이터 모두 삭제한다.")
     void deleteById() {
         given(matchCache.get(MATCH_ID, Match.class))

@@ -1,8 +1,6 @@
 package com.menu.pubganalyzer.domain.dto;
 
 import com.menu.pubganalyzer.domain.model.Match;
-import com.menu.pubganalyzer.domain.model.Participant;
-import com.menu.pubganalyzer.domain.model.Roster;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +9,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Set;
 
 @Getter
 @Builder
@@ -24,8 +21,6 @@ public class MatchRes {
     private boolean isCustomMatch;
     private String matchType;
     private LocalDateTime createdAt;
-    private Set<Participant> participants;
-    private Set<Roster> rosters;
 
     private MatchRes() {
     }
@@ -39,7 +34,6 @@ public class MatchRes {
                 .isCustomMatch(match.isCustomMatch())
                 .matchType(match.getMatchType().getTitle())
                 .createdAt(match.getCreatedAt())
-                .rosters(match.getRosters())
                 .build();
     }
 
