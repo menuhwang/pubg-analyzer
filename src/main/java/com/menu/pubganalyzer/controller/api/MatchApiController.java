@@ -8,6 +8,8 @@ import com.menu.pubganalyzer.support.apiResult.ApiResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +24,7 @@ public class MatchApiController {
     private final MatchService matchService;
 
     @GetMapping
-    public ApiResult<PageDTO<MatchRes>> findAll(Pageable pageable) {
+    public ApiResult<PageDTO<MatchRes>> findAll(@PageableDefault(size = 20, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Match> matchPage = matchService.findAll(pageable);
         Page<MatchRes> matchResPage = matchPage.map(MatchRes::of);
 
