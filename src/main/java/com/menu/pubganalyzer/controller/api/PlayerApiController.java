@@ -17,7 +17,7 @@ public class PlayerApiController {
     private final SearchPlayerService searchPlayerService;
 
     @PatchMapping("/{nickname}")
-    public ResponseEntity<ApiResult<Void>> renew(@PathVariable String shardId, @PathVariable String nickname) {
+    public ResponseEntity<ApiResult<Void>> renew(@PathVariable String shardId, @PathVariable String nickname) throws InterruptedException {
         searchPlayerService.updateMatchHistory(nickname);
         return ResponseEntity.ok().body(ApiResultUtil.success());
     }

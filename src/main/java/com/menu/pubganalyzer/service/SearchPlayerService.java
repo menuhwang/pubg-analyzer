@@ -17,14 +17,17 @@ import com.menu.pubganalyzer.exception.MatchNotFoundException;
 import com.menu.pubganalyzer.exception.PlayerNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.core.task.support.ExecutorServiceAdapter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.concurrent.*;
 
 @Slf4j
 @Service
@@ -36,6 +39,7 @@ public class SearchPlayerService {
     private final PlayerMatchRepository playerMatchRepository;
     private final PlayerEventPublisher playerEventPublisher;
     private final MatchEventPublisher matchEventPublisher;
+    private final TaskExecutor pubgApiExecutor;
 
     @Transactional
     public SearchPlayer searchPlayer(SearchPlayerReq request, Pageable pageable) {
@@ -59,18 +63,37 @@ public class SearchPlayerService {
 
     public void updateMatchHistory(String nickname) {
         Player player = playerDAO.fetch(nickname);
-        List<Match> matches = player.getMatchIds().stream()
-                .parallel()
-                .map(id -> {
-                    try {
-                        return matchDAO.findById(id);
-                    } catch (MatchNotFoundException e) {
-                        log.warn("[{}] {} match id:{}", e.getClass().getName(), e.getMessage(), e.getMatchId());
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+
+        // 매치 병렬 조회 - 시작
+        List<Future<Match>> matchFutures = new ArrayList<>(player.getMatchIds().size());
+
+        ExecutorService executorService = new ExecutorServiceAdapter(pubgApiExecutor);
+        for (String matchId : player.getMatchIds()) {
+            Future<Match> matchFuture = executorService.submit(() -> {
+                try {
+                    return matchDAO.findById(matchId);
+                } catch (MatchNotFoundException e) {
+                    log.warn("[{}] {} match id:{}", e.getClass().getName(), e.getMessage(), e.getMatchId());
+                    return null;
+                }
+            });
+
+            matchFutures.add(matchFuture);
+        }
+
+        List<Match> matches = new ArrayList<>();
+        String transactionId = MDC.get("transactionId");
+        for (Future<Match> matchFuture : matchFutures) {
+            try {
+                Match match = matchFuture.get(1000L, TimeUnit.MILLISECONDS);
+                matches.add(match);
+            } catch (InterruptedException | ExecutionException e) {
+                log.warn("[{}] 전적 갱신 실패", transactionId);
+            } catch (TimeoutException e) {
+                log.warn("[{}] 전적 갱신 시간 초과", transactionId);
+            }
+        }
+        // 매치 병렬 조회 - 끝
 
         for (Match match : matches) player.addMatch(match.getId(), match.getCreatedAt());
 

@@ -26,14 +26,15 @@ public class TelemetryEventListener {
         List<LogPlayerKillV2> logPlayerKills = event.getLogPlayerKill();
         List<LogPlayerTakeDamage> logPlayerTakeDamages = event.getLogPlayerTakeDamages();
 
-        log.info("Telemetry:LogPlayerKill DB insert 시작 size:{}", logPlayerKills.size());
+        String transactionId = event.getTransactionId();
+        log.debug("[{}] Telemetry:LogPlayerKill DB insert 시작 size:{}", transactionId, logPlayerKills.size());
         long start = System.currentTimeMillis();
         logPlayerKillV2Repository.saveAll(logPlayerKills);
-        log.info("Telemetry:LogPlayerKill DB insert 종료 size:{}, time:{}ms", logPlayerKills.size(), System.currentTimeMillis() - start);
+        log.debug("[{}] Telemetry:LogPlayerKill DB insert 종료 time:{}ms", transactionId, System.currentTimeMillis() - start);
 
-        log.info("Telemetry:LogPlayerTakeDamage DB insert 시작 size:{}", logPlayerTakeDamages.size());
+        log.debug("[{}] Telemetry:LogPlayerTakeDamage DB insert 시작 size:{}", transactionId, logPlayerTakeDamages.size());
         start = System.currentTimeMillis();
         logPlayerTakeDamageRepository.saveAll(logPlayerTakeDamages);
-        log.info("Telemetry:LogPlayerTakeDamage DB insert 종료 size:{}, time:{}ms", logPlayerTakeDamages.size(), System.currentTimeMillis() - start);
+        log.info("[{}] Telemetry:LogPlayerTakeDamage DB insert 종료 time:{}ms", transactionId, System.currentTimeMillis() - start);
     }
 }

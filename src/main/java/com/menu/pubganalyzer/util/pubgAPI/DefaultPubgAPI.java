@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,21 +21,21 @@ public class DefaultPubgAPI implements PubgAPI {
     private final RestTemplate restTemplate;
     private static final String BASE_URL = "https://api.pubg.com";
 
-    private final HttpEntity DEFAULT_HTTP_ENTITY;
-    private final HttpEntity AUTH_HTTP_ENTITY;
+    private final HttpEntity<MultiValueMap<String, String>> DEFAULT_HTTP_ENTITY;
+    private final HttpEntity<MultiValueMap<String, String>> AUTH_HTTP_ENTITY;
 
     public DefaultPubgAPI(String token, RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
         HttpHeaders defaultHeaders = new HttpHeaders();
         defaultHeaders.set("accept", "application/vnd.api+json");
 
-        DEFAULT_HTTP_ENTITY = new HttpEntity(defaultHeaders);
+        DEFAULT_HTTP_ENTITY = new HttpEntity<>(defaultHeaders);
 
         HttpHeaders authHeaders = new HttpHeaders();
         authHeaders.set("accept", "application/vnd.api+json");
         authHeaders.set("Authorization", "Bearer " + token);
 
-        AUTH_HTTP_ENTITY = new HttpEntity(authHeaders);
+        AUTH_HTTP_ENTITY = new HttpEntity<>(authHeaders);
     }
 
     @Override
@@ -45,13 +46,11 @@ public class DefaultPubgAPI implements PubgAPI {
             ResponseEntity<MatchResponse> response = restTemplate.exchange(url, HttpMethod.GET, DEFAULT_HTTP_ENTITY, MatchResponse.class);
             matchResponse = response.getBody();
         } catch (HttpClientErrorException e) {
-            switch (e.getStatusCode()) {
-                case NOT_FOUND:
-                    throw new PubgAPIMatchNotFoundException(matchId);
-                default:
-                    log.warn("you need to handle exception");
-                    log.error("{}", e.getMessage(), e);
-                    break;
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                throw new PubgAPIMatchNotFoundException(matchId);
+            } else {
+                log.warn("you need to handle exception");
+                log.error("{}", e.getMessage(), e);
             }
         }
         return matchResponse;
@@ -59,7 +58,6 @@ public class DefaultPubgAPI implements PubgAPI {
 
     @Override
     public PlayersResponse player(String shardId, Collection<String> nicknames) throws PubgAPIPlayerNotFoundException {
-        log.info("Player api 호출 players:{}", nicknames);
         StringBuilder url = new StringBuilder(BASE_URL + "/shards/" + shardId.toLowerCase() + "/players?filter[playerNames]=");
         for (String nickname : nicknames) {
             url.append(nickname);
@@ -71,7 +69,6 @@ public class DefaultPubgAPI implements PubgAPI {
         try {
             ResponseEntity<PlayersResponse> response = restTemplate.exchange(url.toString(), HttpMethod.GET, AUTH_HTTP_ENTITY, PlayersResponse.class);
             playersResponse = response.getBody();
-            log.info("rate limit remaining:{}", response.getHeaders().get("X-Ratelimit-Remaining"));
         } catch (HttpClientErrorException e) {
             switch (e.getStatusCode()) {
                 case NOT_FOUND:
@@ -92,7 +89,6 @@ public class DefaultPubgAPI implements PubgAPI {
     @Override
     @Cacheable(cacheNames = "pubg_api_telemetry", key = "#url")
     public List<TelemetryResponse> telemetry(String url) {
-        log.info("Telemetry api 호출");
         ParameterizedTypeReference<List<TelemetryResponse>> responseType = new ParameterizedTypeReference<>() {
         };
         return restTemplate.exchange(url, HttpMethod.GET, DEFAULT_HTTP_ENTITY, responseType).getBody();

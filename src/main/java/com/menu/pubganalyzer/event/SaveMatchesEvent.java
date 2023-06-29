@@ -4,7 +4,7 @@ import com.menu.pubganalyzer.domain.model.Match;
 
 import java.util.Collection;
 
-public class SaveMatchesEvent {
+public class SaveMatchesEvent extends Event {
     private final Collection<Match> matches;
 
     private SaveMatchesEvent(Collection<Match> matches)  {

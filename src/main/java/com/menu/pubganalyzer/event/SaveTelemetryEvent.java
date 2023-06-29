@@ -5,7 +5,7 @@ import com.menu.pubganalyzer.domain.model.LogPlayerTakeDamage;
 
 import java.util.List;
 
-public class SaveTelemetryEvent {
+public class SaveTelemetryEvent extends Event {
     private final List<LogPlayerKillV2> logPlayerKill;
     private final List<LogPlayerTakeDamage> logPlayerTakeDamages;
 
