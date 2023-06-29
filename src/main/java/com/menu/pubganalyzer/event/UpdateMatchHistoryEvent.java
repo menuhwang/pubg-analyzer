@@ -5,7 +5,7 @@ import com.menu.pubganalyzer.domain.model.PlayerMatch;
 
 import java.util.Set;
 
-public class UpdateMatchHistoryEvent {
+public class UpdateMatchHistoryEvent extends Event {
     private final Player player;
 
     private UpdateMatchHistoryEvent(Player player) {

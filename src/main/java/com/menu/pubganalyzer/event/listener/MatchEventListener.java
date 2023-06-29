@@ -29,11 +29,12 @@ public class MatchEventListener {
 
         if (matches.isEmpty()) return;
 
-        log.info("매치 DB insert 시작 matches size:{}", matches.size());
+        String transactionId = event.getTransactionId();
+        log.info("[{}] 매치 DB insert 시작 matches size:{}", transactionId, matches.size());
         long start = System.currentTimeMillis();
         for (Match match : matches) {
             matchRepository.saveAndFlush(match);
         }
-        log.info("매치 DB insert 종료 matches size:{}, time:{}ms", matches.size(), System.currentTimeMillis() - start);
+        log.info("[{}] 매치 DB insert 종료 time:{}ms", transactionId, System.currentTimeMillis() - start);
     }
 }
