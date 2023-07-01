@@ -19,7 +19,7 @@ import java.util.Map;
 import static com.menu.pubganalyzer.support.apiResult.ApiResultUtil.success;
 
 @RestController
-@RequestMapping("/api/matches")
+@RequestMapping("/api/admin/v2/matches")
 @RequiredArgsConstructor
 public class MatchApiController {
     private final MatchService matchService;

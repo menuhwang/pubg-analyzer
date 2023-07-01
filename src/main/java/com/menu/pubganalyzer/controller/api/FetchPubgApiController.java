@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import static com.menu.pubganalyzer.support.apiResult.ApiResultUtil.success;
 
 @RestController
-@RequestMapping("/api/fetch")
+@RequestMapping("/api/admin/v2/fetch")
 @RequiredArgsConstructor
 public class FetchPubgApiController {
     private final FetchAPIService fetchAPIService;
