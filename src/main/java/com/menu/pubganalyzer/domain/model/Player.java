@@ -13,7 +13,21 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Entity
+/*
+CREATE TABLE player
+        (
+        `id`            CHAR(40)  NOT NULL,
+        `name`          VARCHAR(255) NULL,
+        `title_id`      VARCHAR(255) NULL,
+        `shard_id`      VARCHAR(255) NULL,
+        `patch_version` VARCHAR(255) NULL,
+        CONSTRAINT pk_player PRIMARY KEY (id)
+        );
+
+        CREATE UNIQUE INDEX player_name_shard_index ON player (name, shard_id);
+*/
+
+@Entity(name = "player")
 @Table(indexes = {
         @Index(name = "player_name_shard_index", columnList = "name, shardId", unique = true),
 })
@@ -21,6 +35,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class Player {
     @Id
+    @Column(length = 40)
     private String id;
     private String name;
     private String titleId;

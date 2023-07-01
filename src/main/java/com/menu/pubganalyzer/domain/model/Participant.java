@@ -9,13 +9,56 @@ import lombok.Getter;
 
 import javax.persistence.*;
 
+/*
+CREATE TABLE participant
+        (
+        `id`               CHAR(36)  NOT NULL,
+        `shard_id`         VARCHAR(255) NULL,
+        `dbnos`            INT          NOT NULL,
+        `assists`          INT          NOT NULL,
+        `boosts`           INT          NOT NULL,
+        `heals`            INT          NOT NULL,
+        `damage_dealt`     FLOAT        NOT NULL,
+        `death_type`       VARCHAR(255) NULL,
+        `headshot_kills`   INT          NOT NULL,
+        `kill_place`       INT          NOT NULL,
+        `kill_streaks`     INT          NOT NULL,
+        `kills`            INT          NOT NULL,
+        `longest_kill`     FLOAT        NOT NULL,
+        `revives`          INT          NOT NULL,
+        `ride_distance`    FLOAT        NOT NULL,
+        `road_kills`       INT          NOT NULL,
+        `swim_distance`    FLOAT        NOT NULL,
+        `team_kills`       INT          NOT NULL,
+        `time_survived`    FLOAT        NOT NULL,
+        `vehicle_destroys` INT          NOT NULL,
+        `walk_distance`    FLOAT        NOT NULL,
+        `weapons_acquired` INT          NOT NULL,
+        `win_place`        INT          NOT NULL,
+        `name`             VARCHAR(255) NULL,
+        `player_id`        CHAR(40)  NULL,
+        `roster_id`        CHAR(36)  NULL,
+        `match_id`         CHAR(36)  NULL,
+        CONSTRAINT pk_participant PRIMARY KEY (id)
+        );
+
+        CREATE INDEX name_match_id_index ON participant (name, match_id);
+
+        ALTER TABLE participant
+        ADD CONSTRAINT FK_PARTICIPANT_ON_MATCH FOREIGN KEY (match_id) REFERENCES matches (id);
+
+        ALTER TABLE participant
+        ADD CONSTRAINT FK_PARTICIPANT_ON_ROSTER FOREIGN KEY (roster_id) REFERENCES roster (id);
+*/
+
 @Builder
 @AllArgsConstructor
 @Getter
-@Entity
+@Entity(name = "participant")
 @Table(indexes = {@Index(name = "name_match_id_index", columnList = "name, match_id")})
 public class Participant {
     @Id
+    @Column(length = 36)
     private String id;
     @Enumerated(EnumType.STRING)
     private Shard shardId;
@@ -42,6 +85,7 @@ public class Participant {
     private int weaponsAcquired;
     private int winPlace;
     private String name;
+    @Column(length = 40)
     private String playerId;
     @ManyToOne(fetch = FetchType.LAZY)
     private Roster roster;

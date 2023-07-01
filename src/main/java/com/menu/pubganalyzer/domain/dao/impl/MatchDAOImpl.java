@@ -49,6 +49,11 @@ public class MatchDAOImpl implements MatchDAO {
     }
 
     @Override
+    public Page<Match> findAll(Pageable pageable) {
+        return matchRepository.findAll(pageable);
+    }
+
+    @Override
     public void deleteById(String id) {
         Match match = matchCache.get(id, Match.class);
         if (match == null) {

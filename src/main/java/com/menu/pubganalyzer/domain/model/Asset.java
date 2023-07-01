@@ -4,17 +4,32 @@ import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
 import lombok.Builder;
 import lombok.Getter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
 
+/*
+CREATE TABLE asset
+        (
+        `id`            CHAR(36)  NOT NULL,
+        `name`          VARCHAR(255) NULL,
+        `description` VARCHAR(255) NULL,
+        `url`           CHAR(150) NULL,
+        `created_at`    datetime     NULL,
+        CONSTRAINT pk_asset PRIMARY KEY (id)
+        );
+ */
+
 @Getter
-@Entity
+@Entity(name = "asset")
 public class Asset {
     @Id
+    @Column(length = 36)
     private String id;
     private String name;
     private String description;
+    @Column(length = 150)
     private String url;
     private LocalDateTime createdAt;
 
