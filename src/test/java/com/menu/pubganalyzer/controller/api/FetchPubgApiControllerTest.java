@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class FetchPubgApiControllerTest {
+    private static final String FETCH_API_URL = "/api/admin/v2/fetch";
     @Autowired
     private MockMvc mockMvc;
 
@@ -33,7 +34,7 @@ class FetchPubgApiControllerTest {
     @Order(1)
     void fetchPlayer() throws Exception {
         ResultActions result = mockMvc.perform(
-                get("/api/fetch/player")
+                get(FETCH_API_URL + "/player")
                         .param("shard", SHARD)
                         .param("nickname", PLAYER_NICKNAME)
         );
@@ -55,7 +56,7 @@ class FetchPubgApiControllerTest {
     @Order(2)
     void fetchMatch() throws Exception {
         ResultActions result = mockMvc.perform(
-                get("/api/fetch/match")
+                get(FETCH_API_URL + "/match")
                         .param("shard", SHARD)
                         .param("id", MATCH_ID)
         );

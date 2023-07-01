@@ -19,13 +19,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 class MatchApiControllerTest {
+    private static final String MATCH_API_URL = "/api/admin/v2/matches";
     @Autowired
     private MockMvc mockMvc;
 
     @Test
     void findAll() throws Exception {
         ResultActions result = mockMvc.perform(
-                get("/api/matches")
+                get(MATCH_API_URL)
                         .param("page", "0")
                         .param("size", "5")
         );
@@ -49,7 +50,7 @@ class MatchApiControllerTest {
     @Test
     void findAllDefaultPageable() throws Exception {
         ResultActions result = mockMvc.perform(
-                get("/api/matches")
+                get(MATCH_API_URL)
         );
 
         result.andDo(print())
@@ -73,7 +74,7 @@ class MatchApiControllerTest {
     void deleteById() throws Exception {
         String id = "069990ee-ce9a-43b4-9621-8da0339b4adf";
         ResultActions result = mockMvc.perform(
-                delete("/api/matches/" + id)
+                delete(MATCH_API_URL + "/" + id)
         );
 
         result.andDo(print())
