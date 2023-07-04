@@ -5,7 +5,7 @@
     <div class="container h-100 d-flex">
         <div class="vstack gap-3 my-auto">
             <h1 class="text-center pa-logo">PUBG Analyzer</h1>
-            <form class="row justify-content-center" method="get" action="/players">
+            <form id="pa-search-player-form" class="row justify-content-center" method="get" action="/players">
                 <div class="col-3 col-lg-2">
                     <select name="shard" class="form-select">
                         <option selected th:each="shard : ${shards}" th:if="${shard == 'STEAM'}" th:value="${shard}" th:text="${shard}"></option>
@@ -35,6 +35,24 @@
             </div>
         </div>
     </div>
+    <script>
+        const nicknameInput = document.getElementById('input-nickname');
+        const searchPlayerForm = document.getElementById('pa-search-player-form');
+
+        searchPlayerForm.addEventListener('submit', (event) => {
+            const value = nicknameInput.value;
+            if (isBlank(value)) {
+                alert('닉네임을 입력해주세요.');
+                event.preventDefault();
+                return;
+            }
+            searchPlayerForm.submit();
+        })
+
+        function isBlank(text) {
+            return !!text === false || text.trim().length === 0;
+        }
+    </script>
 <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 </body>
 </html>
