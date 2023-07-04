@@ -10,9 +10,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @ControllerAdvice
@@ -22,8 +28,31 @@ public class GlobalExceptionHandler {
             MatchNotFoundException.class,
             PlayerNotFoundException.class
     })
-    public String badRequestExceptionHandler(Model model) {
+    public String badRequestExceptionHandler(Throwable e, Model model) {
         model.addAttribute("viewTitle", "잘못된 접근");
+        model.addAttribute("errMsg", e.getMessage());
+
+        return "error/bad-request";
+    }
+
+    @ExceptionHandler(value = BindException.class)
+    public String validationExceptionHandler(BindException e, Model model) {
+        BindingResult bindingResult = e.getBindingResult();
+        Map<String, String> result = new HashMap<>();
+
+        String key;
+
+        for (FieldError fieldError : bindingResult.getFieldErrors()) {
+            key = fieldError.getField();
+            if (key.lastIndexOf('.') != -1) {
+                key = key.substring(key.lastIndexOf('.') + 1);
+            }
+            result.put(key, fieldError.getDefaultMessage());
+        }
+
+        model.addAttribute("viewTitle", "잘못된 접근");
+        model.addAttribute("errMsg", result.toString());
+
         return "error/bad-request";
     }
 
