@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/players")
@@ -31,7 +32,7 @@ public class PlayerController {
     @GetMapping()
     public String search(
             @BookmarkCookie BookmarkCookieParameter bookmarkCookieParameter,
-            SearchPlayerReq req,
+            @Valid SearchPlayerReq req,
             Model model,
             @PageableDefault(size = 20, sort = "createdDateTime", direction = Sort.Direction.DESC) Pageable pageable) {
         SearchPlayer searchPlayer = searchPlayerService.searchPlayer(req, pageable);
