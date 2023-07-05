@@ -12,4 +12,11 @@ public class SearchPlayerReq {
     private Shard shard;
     @NotBlank
     private String nickname;
+
+    public static SearchPlayerReq of(final String nickname) {
+        SearchPlayerReq result = new SearchPlayerReq();
+        result.setShard(Shard.STEAM);
+        result.setNickname(nickname);
+        return result;
+    }
 }
