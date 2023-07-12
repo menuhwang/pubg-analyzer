@@ -1,10 +1,5 @@
 package com.menu.pubganalyzer.domain.model;
 
-import com.menu.pubganalyzer.domain.model.enums.Shard;
-import com.menu.pubganalyzer.domain.model.enums.match.GameMode;
-import com.menu.pubganalyzer.domain.model.enums.match.MapName;
-import com.menu.pubganalyzer.domain.model.enums.match.MatchType;
-import com.menu.pubganalyzer.domain.model.enums.match.SeasonState;
 import com.menu.pubganalyzer.exception.ParticipantNotFoundException;
 import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
 import lombok.AllArgsConstructor;
@@ -14,33 +9,29 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /*
 CREATE TABLE matches
-        (
-        `id`              CHAR(36)  NOT NULL,
-        `game_mode`       VARCHAR(255) NULL,
-        `season_state`    VARCHAR(255) NULL,
-        `duration`        INT          NOT NULL,
-        `title_id`        VARCHAR(255) NULL,
-        `shard_id`        VARCHAR(255) NULL,
-        `map_name`        VARCHAR(255) NULL,
-        `is_custom_match` BIT(1)       NOT NULL,
-        `match_type`      VARCHAR(255) NULL,
-        `created_at`      datetime     NULL,
-        `asset_id`        CHAR(36)  NULL,
-        CONSTRAINT pk_matches PRIMARY KEY (id)
-        );
+(
+    `id`              CHAR(36)  NOT NULL,
+    `game_mode`       VARCHAR(255) NULL,
+    `season_state`    VARCHAR(255) NULL,
+    `duration`        INT          NOT NULL,
+    `title_id`        VARCHAR(255) NULL,
+    `shard_id`        VARCHAR(255) NULL,
+    `map_name`        VARCHAR(255) NULL,
+    `is_custom_match` BIT(1)       NOT NULL,
+    `match_type`      VARCHAR(255) NULL,
+    `created_at`      datetime     NULL,
+    `asset_id`        CHAR(36)  NULL,
+    CONSTRAINT pk_matches PRIMARY KEY (id)
+);
 
-        CREATE INDEX match_id_shard_index ON matches (id, shard_id);
+CREATE INDEX match_id_shard_index ON matches (id, shard_id);
 
-        ALTER TABLE matches
-        ADD CONSTRAINT FK_MATCHES_ON_ASSET FOREIGN KEY (asset_id) REFERENCES asset (id);
+ALTER TABLE matches
+ADD CONSTRAINT FK_MATCHES_ON_ASSET FOREIGN KEY (asset_id) REFERENCES asset (id);
 */
 
 @Getter
@@ -55,19 +46,14 @@ public class Match {
     @Id
     @Column(length = 36)
     private String id;
-    @Enumerated(EnumType.STRING)
-    private GameMode gameMode;
-    @Enumerated(EnumType.STRING)
-    private SeasonState seasonState;
+    private String gameMode;
+    private String seasonState;
     private int duration;
     private String titleId;
-    @Enumerated(EnumType.STRING)
-    private Shard shardId;
-    @Enumerated(EnumType.STRING)
-    private MapName mapName;
+    private String shardId;
+    private String mapName;
     private boolean isCustomMatch;
-    @Enumerated(EnumType.STRING)
-    private MatchType matchType;
+    private String matchType;
     private LocalDateTime createdAt;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
@@ -101,22 +87,6 @@ public class Match {
         return getParticipant(temp);
     }
 
-    public String getZonedCreatedAt() {
-        ZonedDateTime zonedDateTime = ZonedDateTime.of(this.createdAt, ZoneId.of("UTC"));
-        ZonedDateTime createdAtKor = zonedDateTime.withZoneSameInstant(ZoneId.of("Asia/Seoul"));
-        return createdAtKor.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    }
-
-    public String getCreatedOffset() {
-        LocalDateTime now = LocalDateTime.now(ZoneId.of("UTC"));
-        long offset = ChronoUnit.MINUTES.between(this.createdAt, now);
-        if (offset < 60) return offset + "분 전";
-        if (offset < (24 * 60)) return offset / 60 + "시간 전";
-        if (offset < (30 * 24 * 60)) return offset / (24 * 60) + "일 전";
-        if (offset < (12 * 30 * 24 * 60)) return offset / (30 * 24 * 60) + "달 전";
-        return offset / 518400 + "년 전";
-    }
-
     public void setRosters(Collection<Roster> rosters) {
         rosters.forEach(roster -> roster.setMatch(this));
         this.rosters = new HashSet<>(rosters);
@@ -135,14 +105,14 @@ public class Match {
     public static Match of(MatchResponse matchResponse) {
         Match m = Match.builder()
                 .id(matchResponse.getId())
-                .gameMode(GameMode.of(matchResponse.getAttributes().getGameMode()))
-                .seasonState(SeasonState.valueOf((matchResponse.getAttributes().getSeasonState()).toUpperCase()))
+                .gameMode(matchResponse.getAttributes().getGameMode().toUpperCase())
+                .seasonState(matchResponse.getAttributes().getSeasonState().toUpperCase())
                 .duration(matchResponse.getAttributes().getDuration())
                 .titleId(matchResponse.getAttributes().getTitleId())
-                .shardId(Shard.valueOf((matchResponse.getAttributes().getShardId()).toUpperCase()))
-                .mapName(MapName.valueOf(matchResponse.getAttributes().getMapName()))
+                .shardId(matchResponse.getAttributes().getShardId().toUpperCase())
+                .mapName(matchResponse.getAttributes().getMapName().toUpperCase())
                 .isCustomMatch(matchResponse.getAttributes().getIsCustomMatch())
-                .matchType(MatchType.valueOf((matchResponse.getAttributes().getMatchType()).toUpperCase()))
+                .matchType(matchResponse.getAttributes().getMatchType().toUpperCase())
                 .createdAt(matchResponse.getAttributes().getCreatedAt())
                 .build();
 

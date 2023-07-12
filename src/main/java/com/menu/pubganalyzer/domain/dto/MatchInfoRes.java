@@ -28,8 +28,8 @@ public class MatchInfoRes {
     public static MatchInfoRes of(Match match) {
         return MatchInfoRes.builder()
                 .id(match.getId())
-                .map(match.getMapName())
-                .mode(match.getGameMode())
+                .map(MapName.valueOf(match.getMapName()))
+                .mode(GameMode.valueOf(match.getGameMode()))
                 .createdAt(match.getCreatedAt())
                 .duration(match.getDuration())
                 .build();
