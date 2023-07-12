@@ -8,6 +8,9 @@ import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 /*
 CREATE TABLE participant
@@ -135,6 +138,13 @@ public class Participant {
                 .name(stat.getName())
                 .playerId((stat.getPlayerId().startsWith("account") ? stat.getPlayerId() : "ai"))
                 .build();
+    }
+
+    public List<String> getMember() {
+        List<String> member = new ArrayList<>(roster.extractParticipantNameWithout(name));
+        member.sort(Comparator.naturalOrder());
+
+        return member;
     }
 
     @Override
