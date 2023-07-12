@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.*;
 
 @Slf4j
@@ -50,6 +51,7 @@ public class SearchPlayerService {
         return SearchPlayer.of(player, participants);
     }
 
+    @Transactional
     public void updateMatchHistory(String nickname) {
         Player player = playerDAO.fetch(nickname);
 
@@ -84,12 +86,14 @@ public class SearchPlayerService {
         }
         // 매치 병렬 조회 - 끝
 
-        for (Match match : matches) player.addMatch(match.getId(), match.getCreatedAt());
+        for (Match match : matches) player.addMatch(match.getId());
 
-        if (matches.get(0).getShardId() != player.getShardId()) {
+        if (!Objects.equals(matches.get(0).getShardId(), player.getShardId())) {
             player.updateShard(matches.get(0).getShardId());
-            playerDAO.save(player);
         }
+        player.updateMatchHistory();
+
+        playerDAO.save(player);
 
         playerEventPublisher.updateMatchHistory(player);
         matchEventPublisher.saveMatches(matches);
