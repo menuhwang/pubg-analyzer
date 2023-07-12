@@ -16,8 +16,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-class ReportApiControllerTest {
-    private static final String REPORT_API_URL = "/api/admin/v2/report";
+class ReportRestControllerTest {
+    private static final String REPORT_API_URL = "/report";
     private static final String MATCH_ID = "e8955382-1ff1-44ea-a836-3c1b1e0412cf";
     private static final String PLAYER_NICKNAME = "WackyJacky101";
     @Autowired
@@ -31,13 +31,13 @@ class ReportApiControllerTest {
 
         result.andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(handler().handlerType(ReportApiController.class))
+                .andExpect(handler().handlerType(ReportRestController.class))
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.result.matchInfo.id").isString())
-                .andExpect(jsonPath("$.result.matchInfo.mode").isString())
+                .andExpect(jsonPath("$.result.matchInfo.mode").isMap())
                 .andExpect(jsonPath("$.result.matchInfo.duration").isNumber())
-                .andExpect(jsonPath("$.result.matchInfo.map").isString())
+                .andExpect(jsonPath("$.result.matchInfo.map").isMap())
                 .andExpect(jsonPath("$.result.matchInfo.createdAt").isString())
                 .andExpect(jsonPath("$.result.matchResult.rank").isNumber())
                 .andExpect(jsonPath("$.result.matchResult.rosters").isNumber())

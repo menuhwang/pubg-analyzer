@@ -18,8 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-class MatchApiControllerTest {
-    private static final String MATCH_API_URL = "/api/admin/v2/matches";
+class MatchRestControllerTest {
+    private static final String MATCH_API_URL = "/matches";
     @Autowired
     private MockMvc mockMvc;
 
@@ -33,7 +33,7 @@ class MatchApiControllerTest {
 
         result.andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(handler().handlerType(MatchApiController.class))
+                .andExpect(handler().handlerType(MatchRestController.class))
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.result.content.length()", lessThanOrEqualTo(5)))
@@ -55,7 +55,7 @@ class MatchApiControllerTest {
 
         result.andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(handler().handlerType(MatchApiController.class))
+                .andExpect(handler().handlerType(MatchRestController.class))
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.result.content.length()", lessThanOrEqualTo(20)))
@@ -79,7 +79,7 @@ class MatchApiControllerTest {
 
         result.andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(handler().handlerType(MatchApiController.class))
+                .andExpect(handler().handlerType(MatchRestController.class))
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.result.id").value(id))

@@ -16,8 +16,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-class PlayerApiV2ControllerTest {
-    private static final String PLAYER_API_URL = "/api/admin/v2/players";
+class PlayerRestControllerTest {
+    private static final String PLAYER_API_URL = "/players";
     private static final String PLAYER_NICKNAME = "WackyJacky101";
     @Autowired
     private MockMvc mockMvc;
@@ -30,15 +30,15 @@ class PlayerApiV2ControllerTest {
 
         result.andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(handler().handlerType(PlayerApiV2Controller.class))
+                .andExpect(handler().handlerType(PlayerRestController.class))
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.result.player").value(PLAYER_NICKNAME))
                 .andExpect(jsonPath("$.result.matches.content.length()", lessThanOrEqualTo(20)))
                 .andExpect(jsonPath("$.result.matches.content[0].match.id").isString())
-                .andExpect(jsonPath("$.result.matches.content[0].match.mode").isString())
+                .andExpect(jsonPath("$.result.matches.content[0].match.mode").isMap())
                 .andExpect(jsonPath("$.result.matches.content[0].match.duration").isNumber())
-                .andExpect(jsonPath("$.result.matches.content[0].match.map").isString())
+                .andExpect(jsonPath("$.result.matches.content[0].match.map").isMap())
                 .andExpect(jsonPath("$.result.matches.content[0].match.createdAt").isString())
                 .andExpect(jsonPath("$.result.matches.content[0].stat.rank").isNumber())
                 .andExpect(jsonPath("$.result.matches.content[0].stat.rosters").isNumber())
