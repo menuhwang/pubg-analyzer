@@ -8,6 +8,7 @@ import com.menu.pubganalyzer.event.UpdateMatchHistoryEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,6 +20,7 @@ public class PlayerEventListener {
     private final PlayerMatchRepository playerMatchRepository;
 
     @EventListener
+    @Transactional
     public void updateMatchHistory(UpdateMatchHistoryEvent event) {
         Player player = event.getPlayer();
         Set<PlayerMatch> exists = playerMatchRepository.findByPlayer(player);
