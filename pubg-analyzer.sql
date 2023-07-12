@@ -114,7 +114,7 @@ CREATE TABLE player_match
     CONSTRAINT pk_player_match PRIMARY KEY (id)
 );
 
-CREATE INDEX created_date_time_index ON player_match (created_date_time);
+CREATE INDEX created_date_time_index ON player_match (created_datetime);
 
 CREATE UNIQUE INDEX player_match_index ON player_match (player_id, match_id);
 
