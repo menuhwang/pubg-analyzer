@@ -22,7 +22,7 @@ public class PlayerEventListener {
     public void updateMatchHistory(UpdateMatchHistoryEvent event) {
         Player player = event.getPlayer();
         Set<PlayerMatch> exists = playerMatchRepository.findByPlayer(player);
-        Set<PlayerMatch> playerMatches = new HashSet<>(player.getPlayerMatches());
+        Set<PlayerMatch> playerMatches = new HashSet<>(event.getPlayerMatches());
         playerMatches.removeAll(exists);
 
         playerMatchRepository.saveAll(playerMatches);

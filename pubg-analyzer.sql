@@ -110,11 +110,12 @@ CREATE TABLE player_match
     `id`                BIGINT AUTO_INCREMENT NOT NULL,
     `player_id`         CHAR(40)           NULL,
     `match_id`          CHAR(36)           NULL,
-    `created_datetime`  datetime             NULL,
+    `created_datetime`  datetime           NULL,
+    `match_created_at`  datetime           NULL,
     CONSTRAINT pk_player_match PRIMARY KEY (id)
 );
 
-CREATE INDEX created_date_time_index ON player_match (created_datetime);
+CREATE INDEX match_created_at_index ON player_match (match_created_at);
 
 CREATE UNIQUE INDEX player_match_index ON player_match (player_id, match_id);
 

@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -56,10 +57,10 @@ public class SearchPlayerService {
         Player player = playerDAO.fetch(nickname);
 
         // 매치 병렬 조회 - 시작
-        List<Future<Match>> matchFutures = new ArrayList<>(player.getMatchIds().size());
+        List<Future<Match>> matchFutures = new ArrayList<>(player.getMatches().size());
 
         ExecutorService executorService = new ExecutorServiceAdapter(pubgApiExecutor);
-        for (String matchId : player.getMatchIds()) {
+        for (String matchId : player.getMatches()) {
             Future<Match> matchFuture = executorService.submit(() -> {
                 try {
                     return matchDAO.findById(matchId);
@@ -86,13 +87,13 @@ public class SearchPlayerService {
         }
         // 매치 병렬 조회 - 끝
 
-        for (Match match : matches) player.addMatch(match.getId());
+        List<PlayerMatch> playerMatches = matches.stream().map(match -> PlayerMatch.of(player, match)).collect(Collectors.toList());
 
         if (!Objects.equals(matches.get(0).getShardId(), player.getShardId())) {
             player.updateShard(matches.get(0).getShardId());
         }
 
-        playerEventPublisher.updateMatchHistory(player);
+        playerEventPublisher.updateMatchHistory(player, playerMatches);
         matchEventPublisher.saveMatches(matches);
     }
 }

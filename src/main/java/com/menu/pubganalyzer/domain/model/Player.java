@@ -9,10 +9,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /*
 CREATE TABLE player
@@ -49,9 +46,8 @@ public class Player {
     private String patchVersion;
     private String banType;
     private String clanId;
-    @OneToMany(mappedBy = "player", fetch = FetchType.LAZY)
-    @Builder.Default
-    private Set<PlayerMatch> playerMatches = new HashSet<>();
+    @Transient
+    private List<String> matches;
 
     @CreatedDate
     private LocalDateTime createdDatetime;
@@ -72,24 +68,13 @@ public class Player {
         return shardId;
     }
 
-    public Set<PlayerMatch> getPlayerMatches() {
-        return playerMatches;
-    }
-
-    public Set<String> getMatchIds() {
-        return playerMatches.stream()
-                .map(PlayerMatch::getMatchId)
-                .collect(Collectors.toSet());
+    public List<String> getMatches() {
+        return matches;
     }
 
     public void updateShard(String shard) {
         if (shard == null) return;
         this.shardId = shard;
-    }
-
-    public void addMatch(String matchId) {
-        PlayerMatch playerMatch = PlayerMatch.of(this, matchId);
-        this.playerMatches.add(playerMatch);
     }
 
     public void updateMatchHistory() {
@@ -100,9 +85,6 @@ public class Player {
         List<Player> result = new ArrayList<>();
         for (PlayersResponse.Player prp : playersResponse.getPlayers()) {
             Player player = Player.from(prp);
-            for (String matchId : prp.getMatchIds()) {
-                player.addMatch(matchId);
-            }
             result.add(player);
         }
         return result;
@@ -112,11 +94,12 @@ public class Player {
         return Player.builder()
                 .id(prp.getId())
                 .name(prp.getAttributes().getName())
-                .titleId(prp.getAttributes().getTitleId().toUpperCase())
-                .shardId(prp.getAttributes().getShardId().toUpperCase())
-                .banType(prp.getAttributes().getBanType().toUpperCase())
+                .titleId(prp.getAttributes().getTitleId())
+                .shardId(prp.getAttributes().getShardId())
+                .banType(prp.getAttributes().getBanType())
                 .clanId(prp.getAttributes().getClanId())
                 .patchVersion(prp.getAttributes().getPatchVersion())
+                .matches(prp.getMatchIds())
                 .build();
     }
 }

@@ -15,11 +15,12 @@ CREATE TABLE player_match
     `id`                BIGINT AUTO_INCREMENT NOT NULL,
     `player_id`         CHAR(40)           NULL,
     `match_id`          CHAR(36)           NULL,
-    `created_datetime`  datetime             NULL,
+    `created_datetime`  datetime           NULL,
+    `match_created_at`  datetime           NULL,
     CONSTRAINT pk_player_match PRIMARY KEY (id)
 );
 
-CREATE INDEX created_date_time_index ON player_match (created_date_time);
+CREATE INDEX match_created_at_index ON player_match (match_created_at);
 
 CREATE UNIQUE INDEX player_match_index ON player_match (player_id, match_id);
 
@@ -29,7 +30,7 @@ ADD CONSTRAINT FK_PLAYER_MATCH_ON_PLAYER FOREIGN KEY (player_id) REFERENCES play
 
 @Entity(name = "player_match")
 @Table(indexes = {
-        @Index(name = "created_datetime_index", columnList = "createdDatetime"),
+        @Index(name = "match_created_at_index", columnList = "matchCreatedAt"),
         @Index(name = "player_match_index", columnList = "player_id,matchId", unique = true)
 })
 @EntityListeners(AuditingEntityListener.class)
@@ -43,6 +44,7 @@ public class PlayerMatch {
     private String matchId;
     @CreatedDate
     private LocalDateTime createdDatetime;
+    private LocalDateTime matchCreatedAt;
 
     public Player getPlayer() {
         return player;
@@ -56,15 +58,17 @@ public class PlayerMatch {
     }
 
     @Builder
-    public PlayerMatch(Player player, String matchId) {
+    public PlayerMatch(Player player, String matchId, LocalDateTime matchCreatedAt) {
         this.player = player;
         this.matchId = matchId;
+        this.matchCreatedAt = matchCreatedAt;
     }
 
-    public static PlayerMatch of(Player player, String matchId) {
+    public static PlayerMatch of(Player player, Match match) {
         return PlayerMatch.builder()
                 .player(player)
-                .matchId(matchId)
+                .matchId(match.getId())
+                .matchCreatedAt(match.getCreatedAt())
                 .build();
     }
 
