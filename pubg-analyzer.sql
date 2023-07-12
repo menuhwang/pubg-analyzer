@@ -110,7 +110,7 @@ CREATE TABLE player_match
     `id`                BIGINT AUTO_INCREMENT NOT NULL,
     `player_id`         CHAR(40)           NULL,
     `match_id`          CHAR(36)           NULL,
-    `created_date_time` datetime              NULL,
+    `created_datetime`  datetime             NOT NULL,
     CONSTRAINT pk_player_match PRIMARY KEY (id)
 );
 
