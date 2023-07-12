@@ -1,7 +1,6 @@
 package com.menu.pubganalyzer.controller.api;
 
 import com.menu.pubganalyzer.domain.SearchPlayer;
-import com.menu.pubganalyzer.domain.dto.SearchPlayerReq;
 import com.menu.pubganalyzer.domain.dto.SearchPlayerRes;
 import com.menu.pubganalyzer.service.SearchPlayerService;
 import com.menu.pubganalyzer.support.apiResult.ApiResult;
@@ -28,7 +27,7 @@ public class PlayerRestController {
     public ResponseEntity<ApiResult<SearchPlayerRes>> search(
             @Valid @NotBlank @PathVariable String nickname,
             @PageableDefault(size = 20, sort = "createdDateTime", direction = Sort.Direction.DESC) Pageable pageable) {
-        SearchPlayer searchPlayer = searchPlayerService.searchPlayer(SearchPlayerReq.of(nickname), pageable);
+        SearchPlayer searchPlayer = searchPlayerService.searchPlayer(nickname, pageable);
 
         return ResponseEntity.ok(success(SearchPlayerRes.of(searchPlayer)));
     }

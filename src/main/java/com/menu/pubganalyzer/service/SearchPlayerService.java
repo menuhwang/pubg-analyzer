@@ -4,17 +4,14 @@ import com.menu.pubganalyzer.domain.SearchPlayer;
 import com.menu.pubganalyzer.domain.dao.MatchDAO;
 import com.menu.pubganalyzer.domain.dao.ParticipantDAO;
 import com.menu.pubganalyzer.domain.dao.PlayerDAO;
-import com.menu.pubganalyzer.domain.dto.SearchPlayerReq;
 import com.menu.pubganalyzer.domain.model.Match;
 import com.menu.pubganalyzer.domain.model.Participant;
 import com.menu.pubganalyzer.domain.model.Player;
 import com.menu.pubganalyzer.domain.model.PlayerMatch;
-import com.menu.pubganalyzer.domain.model.enums.Shard;
 import com.menu.pubganalyzer.domain.repository.PlayerMatchRepository;
 import com.menu.pubganalyzer.event.publisher.MatchEventPublisher;
 import com.menu.pubganalyzer.event.publisher.PlayerEventPublisher;
 import com.menu.pubganalyzer.exception.MatchNotFoundException;
-import com.menu.pubganalyzer.exception.PlayerNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -42,16 +39,8 @@ public class SearchPlayerService {
     private final TaskExecutor pubgApiExecutor;
 
     @Transactional
-    public SearchPlayer searchPlayer(SearchPlayerReq request, Pageable pageable) {
-        Shard shard = request.getShard();
-        String nickname = request.getNickname();
-
-        Player player;
-        try {
-            player = playerDAO.findByNickname(nickname);
-        } catch (PlayerNotFoundException e) {
-            return SearchPlayer.of(Player.temp(shard, nickname), Page.empty());
-        }
+    public SearchPlayer searchPlayer(String nickname, Pageable pageable) {
+        Player player = playerDAO.findByNickname(nickname);
 
         Page<PlayerMatch> playerMatches = playerMatchRepository.findByPlayer(player, pageable);
         final String playerName = player.getName();
