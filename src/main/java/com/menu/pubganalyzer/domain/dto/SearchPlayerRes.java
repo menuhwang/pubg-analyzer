@@ -20,7 +20,7 @@ public class SearchPlayerRes {
 
         return new SearchPlayerRes(
                 searchPlayer.getPlayer().getName(),
-                PageDTO.of(participantPage.map(ParticipantRes::of), participantPage.getPageable().getPageSize())
+                PageDTO.of(participantPage.map(ParticipantRes::of))
         );
     }
 }
