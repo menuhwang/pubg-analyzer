@@ -1,6 +1,6 @@
 package com.menu.pubganalyzer.util.pubgAPI.exception;
 
-abstract class PubgAPIException extends RuntimeException {
+public abstract class PubgAPIException extends RuntimeException {
     protected PubgAPIException(String message) {
         super(message);
     }

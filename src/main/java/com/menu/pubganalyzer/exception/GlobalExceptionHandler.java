@@ -2,6 +2,7 @@ package com.menu.pubganalyzer.exception;
 
 import com.menu.pubganalyzer.support.apiResult.ApiResult;
 import com.menu.pubganalyzer.support.apiResult.ApiResultUtil;
+import com.menu.pubganalyzer.util.pubgAPI.exception.PubgAPIException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,13 @@ public class GlobalExceptionHandler {
         log.warn("{}", e.getMessage(), e);
 
         return errorResponse(e, e.getHttpStatus());
+    }
+
+    @ExceptionHandler(value = PubgAPIException.class)
+    public ResponseEntity<ApiResult<?>> pubgAPIExceptionHandler(PubgAPIException e) {
+        log.warn("{}", e.getMessage(), e);
+
+        return errorResponse(e, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = BindException.class)
