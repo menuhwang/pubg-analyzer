@@ -48,4 +48,19 @@ class PlayerRestControllerTest {
                 .andExpect(jsonPath("$.result.matches.content[0].stat.revives").isNumber())
         ;
     }
+
+    @Test
+    void searchThrowPlayerNotFoundException() throws Exception {
+        ResultActions result = mockMvc.perform(
+                get(PLAYER_API_URL + "/Wr0ngN1cknamePlayer")
+        );
+
+        result.andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(handler().handlerType(PlayerRestController.class))
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.result.message").isString())
+        ;
+    }
 }
