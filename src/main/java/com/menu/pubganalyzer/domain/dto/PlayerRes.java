@@ -1,6 +1,7 @@
 package com.menu.pubganalyzer.domain.dto;
 
 import com.menu.pubganalyzer.domain.model.Player;
+import com.menu.pubganalyzer.domain.model.enums.Shard;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import java.util.Set;
 public class PlayerRes {
     private String id;
     private String nickname;
-    private String shard;
+    private Shard shard;
     private Set<String> matchIds;
 
     private PlayerRes() {
@@ -23,7 +24,7 @@ public class PlayerRes {
         return PlayerRes.builder()
                 .id(player.getId())
                 .nickname(player.getName())
-                .shard(player.getShardId().name().toLowerCase())
+                .shard(Shard.valueOf(player.getShardId()))
                 .matchIds(player.getMatchIds())
                 .build();
     }

@@ -2,10 +2,14 @@
 CREATE TABLE player
 (
     `id`            CHAR(40)  NOT NULL,
-    `name`          VARCHAR(255) NULL,
-    `title_id`      VARCHAR(255) NULL,
-    `shard_id`      VARCHAR(255) NULL,
+    `name`          VARCHAR(255) NOT NULL,
+    `title_id`      VARCHAR(255) NOT NULL,
+    `shard_id`      VARCHAR(255) NOT NULL,
     `patch_version` VARCHAR(255) NULL,
+    `ban_type`      VARCHAR(20) NOT NULL,
+    `clan_id`       VARCHAR(40) NULL,
+    `created_datetime` datetime    NOT NULL,
+    `updated_datetime` datetime    NULL,
     CONSTRAINT pk_player PRIMARY KEY (id)
 );
 

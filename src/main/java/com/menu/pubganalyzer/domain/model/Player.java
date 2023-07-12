@@ -1,9 +1,9 @@
 package com.menu.pubganalyzer.domain.model;
 
-import com.menu.pubganalyzer.domain.model.enums.Shard;
 import com.menu.pubganalyzer.util.pubgAPI.response.PlayersResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,16 +15,20 @@ import java.util.stream.Collectors;
 
 /*
 CREATE TABLE player
-        (
-        `id`            CHAR(40)  NOT NULL,
-        `name`          VARCHAR(255) NULL,
-        `title_id`      VARCHAR(255) NULL,
-        `shard_id`      VARCHAR(255) NULL,
-        `patch_version` VARCHAR(255) NULL,
-        CONSTRAINT pk_player PRIMARY KEY (id)
-        );
+(
+    `id`            CHAR(40)  NOT NULL,
+    `name`          VARCHAR(255) NOT NULL,
+    `title_id`      VARCHAR(255) NOT NULL,
+    `shard_id`      VARCHAR(255) NOT NULL,
+    `patch_version` VARCHAR(255) NULL,
+    `ban_type`      VARCHAR(20) NOT NULL,
+    `clan_id`       VARCHAR(40) NULL,
+    `created_datetime` datetime    NOT NULL,
+    `updated_datetime` datetime    NULL,
+    CONSTRAINT pk_player PRIMARY KEY (id)
+);
 
-        CREATE UNIQUE INDEX player_name_shard_index ON player (name, shard_id);
+CREATE UNIQUE INDEX player_name_shard_index ON player (name, shard_id);
 */
 
 @Entity(name = "player")
@@ -39,12 +43,17 @@ public class Player {
     private String id;
     private String name;
     private String titleId;
-    @Enumerated(EnumType.STRING)
-    private Shard shardId;
+    private String shardId;
     private String patchVersion;
+    private String banType;
+    private String clanId;
     @OneToMany(mappedBy = "player", fetch = FetchType.LAZY)
     @Builder.Default
     private Set<PlayerMatch> playerMatches = new HashSet<>();
+
+    @CreatedDate
+    private LocalDateTime createdDatetime;
+    private LocalDateTime updatedDatetime;
 
     protected Player() {
     }
@@ -57,7 +66,7 @@ public class Player {
         return name;
     }
 
-    public Shard getShardId() {
+    public String getShardId() {
         return shardId;
     }
 
@@ -71,39 +80,41 @@ public class Player {
                 .collect(Collectors.toSet());
     }
 
-    public void updateShard(Shard shard) {
+    public void updateShard(String shard) {
         if (shard == null) return;
         this.shardId = shard;
     }
 
-    public void addMatch(String matchId, LocalDateTime createdDateTime) {
-        PlayerMatch playerMatch = PlayerMatch.of(this, matchId, createdDateTime);
-        this.playerMatches.remove(playerMatch);
+    public void addMatch(String matchId) {
+        PlayerMatch playerMatch = PlayerMatch.of(this, matchId);
         this.playerMatches.add(playerMatch);
     }
 
-    public static Player temp(Shard shard, String nickname) {
-        return Player.builder()
-                .shardId(shard)
-                .name(nickname)
-                .build();
+    public void updateMatchHistory() {
+        this.updatedDatetime = LocalDateTime.now();
     }
 
     public static List<Player> of(PlayersResponse playersResponse) {
         List<Player> result = new ArrayList<>();
-        for (PlayersResponse.Player psp : playersResponse.getPlayers()) {
-            Player player = Player.builder()
-                    .id(psp.getId())
-                    .name(psp.getAttributes().getName())
-                    .titleId(psp.getAttributes().getTitleId())
-                    .shardId(Shard.valueOf((psp.getAttributes().getShardId()).toUpperCase()))
-                    .patchVersion(psp.getAttributes().getPatchVersion())
-                    .build();
-            for (String matchId : psp.getMatchIds()) {
-                player.addMatch(matchId, psp.getAttributes().getCreatedAt());
+        for (PlayersResponse.Player prp : playersResponse.getPlayers()) {
+            Player player = Player.from(prp);
+            for (String matchId : prp.getMatchIds()) {
+                player.addMatch(matchId);
             }
             result.add(player);
         }
         return result;
+    }
+
+    private static Player from(PlayersResponse.Player prp) {
+        return Player.builder()
+                .id(prp.getId())
+                .name(prp.getAttributes().getName())
+                .titleId(prp.getAttributes().getTitleId().toUpperCase())
+                .shardId(prp.getAttributes().getShardId().toUpperCase())
+                .banType(prp.getAttributes().getBanType().toUpperCase())
+                .clanId(prp.getAttributes().getClanId())
+                .patchVersion(prp.getAttributes().getPatchVersion())
+                .build();
     }
 }
