@@ -3,6 +3,7 @@ package com.menu.pubganalyzer.domain.model;
 import lombok.Builder;
 import org.hibernate.Hibernate;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -14,7 +15,7 @@ CREATE TABLE player_match
     `id`                BIGINT AUTO_INCREMENT NOT NULL,
     `player_id`         CHAR(40)           NULL,
     `match_id`          CHAR(36)           NULL,
-    `created_datetime`  datetime             NOT NULL,
+    `created_datetime`  datetime             NULL,
     CONSTRAINT pk_player_match PRIMARY KEY (id)
 );
 
@@ -28,9 +29,10 @@ ADD CONSTRAINT FK_PLAYER_MATCH_ON_PLAYER FOREIGN KEY (player_id) REFERENCES play
 
 @Entity(name = "player_match")
 @Table(indexes = {
-        @Index(name = "created_date_time_index", columnList = "createdDateTime"),
+        @Index(name = "created_datetime_index", columnList = "createdDatetime"),
         @Index(name = "player_match_index", columnList = "player_id,matchId", unique = true)
 })
+@EntityListeners(AuditingEntityListener.class)
 public class PlayerMatch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -78,6 +80,6 @@ public class PlayerMatch {
 
     @Override
     public int hashCode() {
-        return Objects.hash(player.getId(), matchId);
+        return getClass().hashCode();
     }
 }

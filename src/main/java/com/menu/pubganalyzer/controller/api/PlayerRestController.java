@@ -26,7 +26,7 @@ public class PlayerRestController {
     @GetMapping("/{nickname}")
     public ResponseEntity<ApiResult<SearchPlayerRes>> search(
             @Valid @NotBlank @PathVariable String nickname,
-            @PageableDefault(size = 20, sort = "createdDateTime", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(size = 20, sort = "createdDatetime", direction = Sort.Direction.DESC) Pageable pageable) {
         SearchPlayer searchPlayer = searchPlayerService.searchPlayer(nickname, pageable);
 
         return ResponseEntity.ok(success(SearchPlayerRes.of(searchPlayer)));

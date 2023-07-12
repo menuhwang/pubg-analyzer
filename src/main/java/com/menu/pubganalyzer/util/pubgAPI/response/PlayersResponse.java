@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.Delegate;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,10 +53,10 @@ public class PlayersResponse {
         String name;
         String shardId;
         String stats;
-        LocalDateTime createdAt;
-        LocalDateTime updatedAt;
         String patchVersion;
         String titleId;
+        String clanId;
+        String banType;
     }
 
     @Getter

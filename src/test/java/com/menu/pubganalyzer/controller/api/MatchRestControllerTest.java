@@ -38,11 +38,11 @@ class MatchRestControllerTest {
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.result.content.length()", lessThanOrEqualTo(5)))
                 .andExpect(jsonPath("$.result.content[0].id").isString())
-                .andExpect(jsonPath("$.result.content[0].gameMode").isString())
+                .andExpect(jsonPath("$.result.content[0].gameMode").isMap())
                 .andExpect(jsonPath("$.result.content[0].duration").isNumber())
-                .andExpect(jsonPath("$.result.content[0].mapName").isString())
+                .andExpect(jsonPath("$.result.content[0].mapName").isMap())
                 .andExpect(jsonPath("$.result.content[0].customMatch").isBoolean())
-                .andExpect(jsonPath("$.result.content[0].matchType").isString())
+                .andExpect(jsonPath("$.result.content[0].matchType").isMap())
                 .andExpect(jsonPath("$.result.content[0].createdAt").isString())
         ;
     }
@@ -60,11 +60,11 @@ class MatchRestControllerTest {
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.result.content.length()", lessThanOrEqualTo(20)))
                 .andExpect(jsonPath("$.result.content[0].id").isString())
-                .andExpect(jsonPath("$.result.content[0].gameMode").isString())
+                .andExpect(jsonPath("$.result.content[0].gameMode").isMap())
                 .andExpect(jsonPath("$.result.content[0].duration").isNumber())
-                .andExpect(jsonPath("$.result.content[0].mapName").isString())
+                .andExpect(jsonPath("$.result.content[0].mapName").isMap())
                 .andExpect(jsonPath("$.result.content[0].customMatch").isBoolean())
-                .andExpect(jsonPath("$.result.content[0].matchType").isString())
+                .andExpect(jsonPath("$.result.content[0].matchType").isMap())
                 .andExpect(jsonPath("$.result.content[0].createdAt").isString())
         ;
     }

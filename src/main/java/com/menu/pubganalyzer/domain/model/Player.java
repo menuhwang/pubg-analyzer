@@ -4,6 +4,7 @@ import com.menu.pubganalyzer.util.pubgAPI.response.PlayersResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -23,7 +24,7 @@ CREATE TABLE player
     `patch_version` VARCHAR(255) NULL,
     `ban_type`      VARCHAR(20) NOT NULL,
     `clan_id`       VARCHAR(40) NULL,
-    `created_datetime` datetime    NOT NULL,
+    `created_datetime` datetime    NULL,
     `updated_datetime` datetime    NULL,
     CONSTRAINT pk_player PRIMARY KEY (id)
 );
@@ -37,6 +38,7 @@ CREATE UNIQUE INDEX player_name_shard_index ON player (name, shard_id);
 })
 @Builder
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Player {
     @Id
     @Column(length = 40)

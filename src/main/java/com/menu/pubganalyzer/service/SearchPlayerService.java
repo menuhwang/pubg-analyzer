@@ -91,9 +91,6 @@ public class SearchPlayerService {
         if (!Objects.equals(matches.get(0).getShardId(), player.getShardId())) {
             player.updateShard(matches.get(0).getShardId());
         }
-        player.updateMatchHistory();
-
-        playerDAO.save(player);
 
         playerEventPublisher.updateMatchHistory(player);
         matchEventPublisher.saveMatches(matches);

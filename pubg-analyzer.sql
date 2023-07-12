@@ -8,7 +8,7 @@ CREATE TABLE player
     `patch_version` VARCHAR(255) NULL,
     `ban_type`      VARCHAR(20) NOT NULL,
     `clan_id`       VARCHAR(40) NULL,
-    `created_datetime` datetime    NOT NULL,
+    `created_datetime` datetime    NULL,
     `updated_datetime` datetime    NULL,
     CONSTRAINT pk_player PRIMARY KEY (id)
 );
@@ -110,7 +110,7 @@ CREATE TABLE player_match
     `id`                BIGINT AUTO_INCREMENT NOT NULL,
     `player_id`         CHAR(40)           NULL,
     `match_id`          CHAR(36)           NULL,
-    `created_datetime`  datetime             NOT NULL,
+    `created_datetime`  datetime             NULL,
     CONSTRAINT pk_player_match PRIMARY KEY (id)
 );
 
