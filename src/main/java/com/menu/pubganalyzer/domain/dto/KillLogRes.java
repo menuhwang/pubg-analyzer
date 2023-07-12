@@ -38,18 +38,22 @@ public class KillLogRes {
         CharacterInfo victim = CharacterInfo.builder()
                 .name(logPlayerKillV2.getVictimName())
                 .accountId(logPlayerKillV2.getVictimAccountId())
+                .bot(logPlayerKillV2.isVictimBot())
                 .build();
         CharacterInfo dBNOMaker = CharacterInfo.builder()
                 .name(logPlayerKillV2.getDBNOName())
                 .accountId(logPlayerKillV2.getDBNOAccountId())
+                .bot(logPlayerKillV2.isDBNOMakerBot())
                 .build();
         CharacterInfo finisher = CharacterInfo.builder()
                 .name(logPlayerKillV2.getFinisherName())
                 .accountId(logPlayerKillV2.getFinisherAccountId())
+                .bot(logPlayerKillV2.isFinisherBot())
                 .build();
         CharacterInfo killer = CharacterInfo.builder()
                 .name(logPlayerKillV2.getKillerName())
                 .accountId(logPlayerKillV2.getKillerAccountId())
+                .bot(logPlayerKillV2.isKillerBot())
                 .build();
 
         DamageInfo dBNOInfo = DamageInfo.builder()
@@ -88,11 +92,13 @@ public class KillLogRes {
     public static class CharacterInfo {
         private final String name;
         private final String accountId;
+        private final Boolean bot;
 
         @Builder
-        public CharacterInfo(String name, String accountId) {
+        public CharacterInfo(String name, String accountId, Boolean bot) {
             this.name = name;
             this.accountId = accountId;
+            this.bot = bot;
         }
     }
 
