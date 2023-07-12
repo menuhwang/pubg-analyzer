@@ -5,15 +5,13 @@ import com.menu.pubganalyzer.domain.dto.SearchPlayerReq;
 import com.menu.pubganalyzer.domain.dto.SearchPlayerRes;
 import com.menu.pubganalyzer.service.SearchPlayerService;
 import com.menu.pubganalyzer.support.apiResult.ApiResult;
+import com.menu.pubganalyzer.support.apiResult.ApiResultUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -21,9 +19,9 @@ import javax.validation.constraints.NotBlank;
 import static com.menu.pubganalyzer.support.apiResult.ApiResultUtil.success;
 
 @RestController
-@RequestMapping("/api/admin/v2/players")
+@RequestMapping("/players")
 @RequiredArgsConstructor
-public class PlayerApiV2Controller {
+public class PlayerRestController {
     private final SearchPlayerService searchPlayerService;
 
     @GetMapping("/{nickname}")
@@ -33,5 +31,12 @@ public class PlayerApiV2Controller {
         SearchPlayer searchPlayer = searchPlayerService.searchPlayer(SearchPlayerReq.of(nickname), pageable);
 
         return ResponseEntity.ok(success(SearchPlayerRes.of(searchPlayer)));
+    }
+
+    @PatchMapping("/{nickname}")
+    public ResponseEntity<ApiResult<Void>> updateMatchHistory(
+            @Valid @NotBlank @PathVariable String nickname) {
+        searchPlayerService.updateMatchHistory(nickname);
+        return ResponseEntity.ok().body(ApiResultUtil.success());
     }
 }

@@ -19,9 +19,9 @@ import java.util.Map;
 import static com.menu.pubganalyzer.support.apiResult.ApiResultUtil.success;
 
 @RestController
-@RequestMapping("/api/admin/v2/matches")
+@RequestMapping("/matches")
 @RequiredArgsConstructor
-public class MatchApiController {
+public class MatchRestController {
     private final MatchService matchService;
 
     @GetMapping

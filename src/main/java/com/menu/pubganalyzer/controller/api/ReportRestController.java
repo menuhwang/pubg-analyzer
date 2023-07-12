@@ -16,9 +16,9 @@ import javax.validation.constraints.NotBlank;
 import static com.menu.pubganalyzer.support.apiResult.ApiResultUtil.success;
 
 @RestController
-@RequestMapping("/api/admin/v2/report")
+@RequestMapping("/report")
 @RequiredArgsConstructor
-public class ReportApiController {
+public class ReportRestController {
     private final ReportService reportService;
 
     @GetMapping("/match/{matchId}/player/{nickname}")
