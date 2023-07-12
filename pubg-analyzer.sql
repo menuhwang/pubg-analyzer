@@ -10,6 +10,7 @@ CREATE TABLE player
     `clan_id`       VARCHAR(40) NULL,
     `created_datetime` datetime    NULL,
     `updated_datetime` datetime    NULL,
+    `update_count`  INT         NOT NULL,
     CONSTRAINT pk_player PRIMARY KEY (id)
 );
 

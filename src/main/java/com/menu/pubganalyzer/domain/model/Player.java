@@ -23,6 +23,7 @@ CREATE TABLE player
     `clan_id`       VARCHAR(40) NULL,
     `created_datetime` datetime    NULL,
     `updated_datetime` datetime    NULL,
+    `update_count`  INT         NOT NULL,
     CONSTRAINT pk_player PRIMARY KEY (id)
 );
 
@@ -50,8 +51,11 @@ public class Player {
     private List<String> matches;
 
     @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime createdDatetime;
     private LocalDateTime updatedDatetime;
+    @Column(nullable = false)
+    private int updateCount;
 
     protected Player() {
     }
@@ -79,6 +83,7 @@ public class Player {
 
     public void updateMatchHistory() {
         this.updatedDatetime = LocalDateTime.now();
+        this.updateCount++;
     }
 
     public static List<Player> of(PlayersResponse playersResponse) {
