@@ -7,9 +7,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -61,6 +63,36 @@ class PlayerRestControllerTest {
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.status").value(404))
                 .andExpect(jsonPath("$.result.message").isString())
+        ;
+    }
+
+    @Test
+    @Transactional
+    void updateMatchHistory() throws Exception {
+        ResultActions result = mockMvc.perform(
+                patch(PLAYER_API_URL + "/" + PLAYER_NICKNAME)
+        );
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(PlayerRestController.class))
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.status").value(200))
+        ;
+    }
+
+    @Test
+    @Transactional
+    void updateMatchHistoryThrowPubgAPIException() throws Exception {
+        ResultActions result = mockMvc.perform(
+                patch(PLAYER_API_URL + "/Wr0ngN1cknamePlayer")
+        );
+
+        result.andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(handler().handlerType(PlayerRestController.class))
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.status").value(400))
         ;
     }
 }
