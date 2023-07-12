@@ -65,6 +65,30 @@ public class MatchResponse {
         String description;
         @JsonProperty(value = "URL")
         String URL;
+
+        public String getShardId() {
+            return shardId.toUpperCase();
+        }
+
+        public String getGameMode() {
+            return gameMode.replaceAll("-", "_").toUpperCase();
+        }
+
+        public String getSeasonState() {
+            return seasonState.toUpperCase();
+        }
+
+        public String getTitleId() {
+            return titleId.toUpperCase();
+        }
+
+        public String getMapName() {
+            return mapName.toUpperCase();
+        }
+
+        public String getMatchType() {
+            return matchType.toUpperCase();
+        }
     }
 
     @Getter
@@ -97,6 +121,10 @@ public class MatchResponse {
         Integer winPlace;
         Integer rank;
         Integer teamId;
+
+        public String getDeathType() {
+            return deathType.toUpperCase();
+        }
     }
 
     @Getter

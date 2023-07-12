@@ -1,6 +1,14 @@
 package com.menu.pubganalyzer.domain.model.enums.match;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Getter
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum MatchType {
+    NOT_FOUND(""),
     AIROYALE("ai모드"),
     ARCADE("아케이드"),
     COMPETITIVE("경쟁전"),
@@ -11,13 +19,17 @@ public enum MatchType {
     TRAINING("연습"),
     ;
 
-    private final String title;
+    private final String kor;
 
-    MatchType(String title) {
-        this.title = title;
+    MatchType(String kor) {
+        this.kor = kor;
     }
 
-    public String getTitle() {
-        return title;
+    public static MatchType of(String name) {
+        for (MatchType matchType : values()) {
+            if (matchType.name().equals(name)) return matchType;
+        }
+        log.error("Enum MatchType not found [{}]", name);
+        return NOT_FOUND;
     }
 }

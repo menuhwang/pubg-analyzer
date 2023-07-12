@@ -1,10 +1,13 @@
 package com.menu.pubganalyzer.domain.model.enums.match;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum DeathType {
-    alive,
-    byplayer,
-    byzone,
-    suicide,
-    logout,
+    ALIVE,
+    BYPLAYER,
+    BYZONE,
+    SUICIDE,
+    LOGOUT,
     ;
 }

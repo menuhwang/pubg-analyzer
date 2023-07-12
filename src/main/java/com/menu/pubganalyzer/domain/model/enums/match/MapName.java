@@ -1,35 +1,41 @@
 package com.menu.pubganalyzer.domain.model.enums.match;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+@Getter
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum MapName {
-    Baltic_Main("Erangel (Remastered)", "에란겔"),
-    Chimera_Main("Paramo", "파라모"),
-    Desert_Main("Miramar", "미라마"),
-    DihorOtok_Main("Vikendi", "비켄디"),
-    Erangel_Main("Erangel", "에란겔"),
-    Heaven_Main("Haven", "헤이븐"),
-    Kiki_Main("Deston", "데스턴"),
-    Range_Main("Camp Jackal", "훈련장"),
-    Savage_Main("Sanhok", "사녹"),
-    Summerland_Main("Karakin", "카라킨"),
-    Tiger_Main("Taego", "태이고"),
+    NOT_FOUND("", ""),
+    BALTIC_MAIN("Erangel (Remastered)", "에란겔"),
+    CHIMERA_MAIN("Paramo", "파라모"),
+    DESERT_MAIN("Miramar", "미라마"),
+    DIHOROTOK_MAIN("Vikendi", "비켄디"),
+    ERANGEL_MAIN("Erangel", "에란겔"),
+    HEAVEN_MAIN("Haven", "헤이븐"),
+    KIKI_MAIN("Deston", "데스턴"),
+    RANGE_MAIN("Camp Jackal", "훈련장"),
+    SAVAGE_MAIN("Sanhok", "사녹"),
+    SUMMERLAND_MAIN("Karakin", "카라킨"),
+    TIGER_MAIN("Taego", "태이고"),
+    ITALY_MAIN("Riviera", "리비에라")
     ;
 
-    private final String mapName;
-    private final String mapNameKor;
+    private final String eng;
+    private final String kor;
 
-    MapName(String name, String nameKor) {
-        this.mapName = name;
-        this.mapNameKor = nameKor;
+    MapName(String eng, String kor) {
+        this.eng = eng;
+        this.kor = kor;
     }
 
-    public String getMapName() {
-        return mapName;
-    }
-
-    public String getMapNameKor() {
-        return mapNameKor;
+    public static MapName of(String name) {
+        for (MapName mapName : values()) {
+            if (mapName.name().equals(name)) return mapName;
+        }
+        log.error("Enum MapName not found [{}]", name);
+        return NOT_FOUND;
     }
 }

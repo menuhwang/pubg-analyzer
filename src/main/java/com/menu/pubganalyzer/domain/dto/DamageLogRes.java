@@ -53,10 +53,10 @@ public class DamageLogRes {
                 .timestamp(logPlayerTakeDamage.getTimestamp())
                 .attacker(attacker)
                 .victim(victim)
-                .damageTypeCategory(logPlayerTakeDamage.getDamageTypeCategory())
-                .damageReason(logPlayerTakeDamage.getDamageReason())
+                .damageTypeCategory(DamageTypeCategory.of(logPlayerTakeDamage.getDamageTypeCategory()))
+                .damageReason(DamageReason.of(logPlayerTakeDamage.getDamageReason()))
                 .damage(logPlayerTakeDamage.getDamage())
-                .damageCauserName(logPlayerTakeDamage.getDamageCauserName())
+                .damageCauserName(DamageCauserName.of(logPlayerTakeDamage.getDamageCauserName()))
                 .phase(logPlayerTakeDamage.getPhase())
                 .build();
     }

@@ -57,6 +57,18 @@ public class PlayersResponse {
         String titleId;
         String clanId;
         String banType;
+
+        public String getShardId() {
+            return shardId.toUpperCase();
+        }
+
+        public String getTitleId() {
+            return titleId.toUpperCase();
+        }
+
+        public String getBanType() {
+            return banType.toUpperCase();
+        }
     }
 
     @Getter

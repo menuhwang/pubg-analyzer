@@ -1,6 +1,5 @@
 package com.menu.pubganalyzer.domain.model;
 
-import com.menu.pubganalyzer.domain.model.enums.Shard;
 import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,8 +32,7 @@ public class Roster {
     @Column(length = 36)
     private String id;
     private boolean won;
-    @Enumerated(EnumType.STRING)
-    private Shard shardId;
+    private String shardId;
     @Column(name = "winPlace")
     private int rank;
     private int teamId;
@@ -57,7 +55,7 @@ public class Roster {
     }
 
     @Builder
-    private Roster(String id, boolean won, Shard shardId, int rank, int teamId, Match match) {
+    private Roster(String id, boolean won, String shardId, int rank, int teamId, Match match) {
         this.id = id;
         this.won = won;
         this.shardId = shardId;
@@ -70,7 +68,7 @@ public class Roster {
         return Roster.builder()
                 .id(roster.getId())
                 .won(roster.getAttributes().getWon())
-                .shardId(Shard.valueOf((roster.getAttributes().getShardId()).toUpperCase()))
+                .shardId(roster.getAttributes().getShardId())
                 .rank(roster.getAttributes().getStats().getRank())
                 .teamId(roster.getAttributes().getStats().getTeamId())
                 .build();

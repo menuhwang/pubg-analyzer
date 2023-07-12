@@ -105,14 +105,14 @@ public class Match {
     public static Match of(MatchResponse matchResponse) {
         Match m = Match.builder()
                 .id(matchResponse.getId())
-                .gameMode(matchResponse.getAttributes().getGameMode().toUpperCase())
-                .seasonState(matchResponse.getAttributes().getSeasonState().toUpperCase())
+                .gameMode(matchResponse.getAttributes().getGameMode())
+                .seasonState(matchResponse.getAttributes().getSeasonState())
                 .duration(matchResponse.getAttributes().getDuration())
                 .titleId(matchResponse.getAttributes().getTitleId())
-                .shardId(matchResponse.getAttributes().getShardId().toUpperCase())
-                .mapName(matchResponse.getAttributes().getMapName().toUpperCase())
+                .shardId(matchResponse.getAttributes().getShardId())
+                .mapName(matchResponse.getAttributes().getMapName())
                 .isCustomMatch(matchResponse.getAttributes().getIsCustomMatch())
-                .matchType(matchResponse.getAttributes().getMatchType().toUpperCase())
+                .matchType(matchResponse.getAttributes().getMatchType())
                 .createdAt(matchResponse.getAttributes().getCreatedAt())
                 .build();
 

@@ -1,9 +1,6 @@
 package com.menu.pubganalyzer.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.menu.pubganalyzer.domain.model.enums.DamageCauserName;
-import com.menu.pubganalyzer.domain.model.enums.DamageReason;
-import com.menu.pubganalyzer.domain.model.enums.DamageTypeCategory;
 import com.menu.pubganalyzer.util.pubgAPI.response.TelemetryResponse;
 import lombok.*;
 
@@ -79,32 +76,23 @@ public class LogPlayerKillV2 implements Serializable {
     private String dBNOName;
     @Column(length = 40)
     private String dBNOAccountId;
-    @Enumerated(EnumType.STRING)
-    private DamageReason dBNODamageReason;
-    @Enumerated(EnumType.STRING)
-    private DamageTypeCategory dBNODamageTypeCategory;
-    @Enumerated(EnumType.STRING)
-    private DamageCauserName dBNODamageCauserName;
+    private String dBNODamageReason;
+    private String dBNODamageTypeCategory;
+    private String dBNODamageCauserName;
     private Float dBNODistance;
     private String finisherName;
     @Column(length = 40)
     private String finisherAccountId;
-    @Enumerated(EnumType.STRING)
-    private DamageReason finisherDamageReason;
-    @Enumerated(EnumType.STRING)
-    private DamageTypeCategory finisherDamageTypeCategory;
-    @Enumerated(EnumType.STRING)
-    private DamageCauserName finisherDamageCauserName;
+    private String finisherDamageReason;
+    private String finisherDamageTypeCategory;
+    private String finisherDamageCauserName;
     private Float finisherDistance;
     private String killerName;
     @Column(length = 40)
     private String killerAccountId;
-    @Enumerated(EnumType.STRING)
-    private DamageReason killerDamageReason;
-    @Enumerated(EnumType.STRING)
-    private DamageTypeCategory killerDamageTypeCategory;
-    @Enumerated(EnumType.STRING)
-    private DamageCauserName killerDamageCauserName;
+    private String killerDamageReason;
+    private String killerDamageTypeCategory;
+    private String killerDamageCauserName;
     private Float killerDistance;
     private Boolean suicide;
 
@@ -127,21 +115,21 @@ public class LogPlayerKillV2 implements Serializable {
                 .victimAccountId(victim.getAccountId())
                 .dBNOName(dBNOMaker == null ? null : dBNOMaker.getName())
                 .dBNOAccountId(dBNOMaker == null ? null : dBNOMaker.getAccountId())
-                .dBNODamageReason(DamageReason.of(dbnoDamageInfo.getDamageReason()))
-                .dBNODamageTypeCategory(DamageTypeCategory.of(dbnoDamageInfo.getDamageTypeCategory()))
-                .dBNODamageCauserName(DamageCauserName.of(dbnoDamageInfo.getDamageCauserName()))
+                .dBNODamageReason(dbnoDamageInfo.getDamageReason())
+                .dBNODamageTypeCategory(dbnoDamageInfo.getDamageTypeCategory())
+                .dBNODamageCauserName(dbnoDamageInfo.getDamageCauserName())
                 .dBNODistance(dbnoDamageInfo.getDistance())
                 .finisherName(finisher == null ? null : finisher.getName())
                 .finisherAccountId(finisher == null ? null : finisher.getAccountId())
-                .finisherDamageReason(DamageReason.of(finishDamageInfo.getDamageReason()))
-                .finisherDamageTypeCategory(DamageTypeCategory.of(finishDamageInfo.getDamageTypeCategory()))
-                .finisherDamageCauserName(DamageCauserName.of(finishDamageInfo.getDamageCauserName()))
+                .finisherDamageReason(finishDamageInfo.getDamageReason())
+                .finisherDamageTypeCategory(finishDamageInfo.getDamageTypeCategory())
+                .finisherDamageCauserName(finishDamageInfo.getDamageCauserName())
                 .finisherDistance(finishDamageInfo.getDistance())
                 .killerName(killer == null ? null : killer.getName())
                 .killerAccountId(killer == null ? null : killer.getAccountId())
-                .killerDamageReason(DamageReason.of(killerDamageInfo.getDamageReason()))
-                .killerDamageTypeCategory(DamageTypeCategory.of(killerDamageInfo.getDamageTypeCategory()))
-                .killerDamageCauserName(DamageCauserName.of(killerDamageInfo.getDamageCauserName()))
+                .killerDamageReason(killerDamageInfo.getDamageReason())
+                .killerDamageTypeCategory(killerDamageInfo.getDamageTypeCategory())
+                .killerDamageCauserName(killerDamageInfo.getDamageCauserName())
                 .killerDistance(killerDamageInfo.getDistance())
                 .suicide(telemetryResponse.getIsSuicide())
                 .build();

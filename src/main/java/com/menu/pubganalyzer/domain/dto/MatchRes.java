@@ -28,11 +28,11 @@ public class MatchRes {
     public static MatchRes of(Match match) {
         return MatchRes.builder()
                 .id(match.getId())
-                .gameMode(GameMode.valueOf(match.getGameMode()))
+                .gameMode(GameMode.of(match.getGameMode()))
                 .duration(match.getDuration())
-                .mapName(MapName.valueOf(match.getMapName()))
+                .mapName(MapName.of(match.getMapName()))
                 .isCustomMatch(match.isCustomMatch())
-                .matchType(MatchType.valueOf(match.getMatchType()))
+                .matchType(MatchType.of(match.getMatchType()))
                 .createdAt(match.getCreatedAt())
                 .build();
     }

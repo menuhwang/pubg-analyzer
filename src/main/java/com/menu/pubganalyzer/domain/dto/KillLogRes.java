@@ -57,21 +57,21 @@ public class KillLogRes {
                 .build();
 
         DamageInfo dBNOInfo = DamageInfo.builder()
-                .damageReason(logPlayerKillV2.getDBNODamageReason())
-                .damageTypeCategory(logPlayerKillV2.getDBNODamageTypeCategory())
-                .damageCauserName(logPlayerKillV2.getDBNODamageCauserName())
+                .damageReason(DamageReason.of(logPlayerKillV2.getDBNODamageReason()))
+                .damageTypeCategory(DamageTypeCategory.of(logPlayerKillV2.getDBNODamageTypeCategory()))
+                .damageCauserName(DamageCauserName.of(logPlayerKillV2.getDBNODamageCauserName()))
                 .distance(logPlayerKillV2.getDBNODistance())
                 .build();
         DamageInfo finishInfo = DamageInfo.builder()
-                .damageReason(logPlayerKillV2.getFinisherDamageReason())
-                .damageTypeCategory(logPlayerKillV2.getFinisherDamageTypeCategory())
-                .damageCauserName(logPlayerKillV2.getFinisherDamageCauserName())
+                .damageReason(DamageReason.of(logPlayerKillV2.getFinisherDamageReason()))
+                .damageTypeCategory(DamageTypeCategory.of(logPlayerKillV2.getFinisherDamageTypeCategory()))
+                .damageCauserName(DamageCauserName.of(logPlayerKillV2.getFinisherDamageCauserName()))
                 .distance(logPlayerKillV2.getFinisherDistance())
                 .build();
         DamageInfo killInfo = DamageInfo.builder()
-                .damageReason(logPlayerKillV2.getKillerDamageReason())
-                .damageTypeCategory(logPlayerKillV2.getKillerDamageTypeCategory())
-                .damageCauserName(logPlayerKillV2.getKillerDamageCauserName())
+                .damageReason(DamageReason.of(logPlayerKillV2.getKillerDamageReason()))
+                .damageTypeCategory(DamageTypeCategory.of(logPlayerKillV2.getKillerDamageTypeCategory()))
+                .damageCauserName(DamageCauserName.of(logPlayerKillV2.getKillerDamageCauserName()))
                 .distance(logPlayerKillV2.getKillerDistance())
                 .build();
 
