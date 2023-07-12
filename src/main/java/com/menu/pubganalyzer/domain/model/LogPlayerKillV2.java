@@ -147,6 +147,26 @@ public class LogPlayerKillV2 implements Serializable {
                 .build();
     }
 
+    public Boolean isVictimBot() {
+        if (victimAccountId == null) return null;
+        return victimAccountId.startsWith("ai.");
+    }
+
+    public Boolean isDBNOMakerBot() {
+        if (dBNOAccountId == null) return null;
+        return dBNOAccountId.startsWith("ai.");
+    }
+
+    public Boolean isFinisherBot() {
+        if (finisherAccountId == null) return null;
+        return finisherAccountId.startsWith("ai.");
+    }
+
+    public Boolean isKillerBot() {
+        if (killerAccountId == null) return null;
+        return killerAccountId.startsWith("ai.");
+    }
+
     public static Set<String> extractVictimNames(Collection<LogPlayerKillV2> logPlayerKills) {
         return logPlayerKills.stream()
                 .map(LogPlayerKillV2::getVictimName)
