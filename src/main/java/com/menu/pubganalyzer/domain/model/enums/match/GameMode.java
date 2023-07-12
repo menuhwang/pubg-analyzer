@@ -1,5 +1,8 @@
 package com.menu.pubganalyzer.domain.model.enums.match;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum GameMode {
     DUO("duo", "듀오"),
     DUO_FPP("duo-fpp", "듀오 1인칭"),

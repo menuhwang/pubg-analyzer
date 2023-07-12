@@ -1,8 +1,10 @@
 package com.menu.pubganalyzer.domain.model.enums;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum DamageReason {
     NOT_FOUND("Not_Found", "Not Found"),
     EMPTY("", ""),

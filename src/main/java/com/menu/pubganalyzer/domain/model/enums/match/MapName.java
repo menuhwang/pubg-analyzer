@@ -1,5 +1,8 @@
 package com.menu.pubganalyzer.domain.model.enums.match;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum MapName {
     Baltic_Main("Erangel (Remastered)", "에란겔"),
     Chimera_Main("Paramo", "파라모"),
