@@ -8,20 +8,22 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum MatchType {
-    NOT_FOUND(""),
-    AIROYALE("ai모드"),
-    ARCADE("아케이드"),
-    COMPETITIVE("경쟁전"),
-    CUSTOM("커스텀 매치"),
-    EVENT("이벤트 매치"),
-    OFFICIAL("오피셜 매치"),
-    SEASONAL("시즌 매치"),
-    TRAINING("연습"),
+    NOT_FOUND("", ""),
+    AIROYALE("AI mode", "ai모드"),
+    ARCADE("arcade", "아케이드"),
+    COMPETITIVE("competitive", "경쟁전"),
+    CUSTOM("custom", "커스텀 매치"),
+    EVENT("event", "이벤트 매치"),
+    OFFICIAL("official", "오피셜 매치"),
+    SEASONAL("seasonal", "시즌 매치"),
+    TRAINING("training", "연습"),
     ;
 
+    private final String eng;
     private final String kor;
 
-    MatchType(String kor) {
+    MatchType(String eng, String kor) {
+        this.eng = eng;
         this.kor = kor;
     }
 
