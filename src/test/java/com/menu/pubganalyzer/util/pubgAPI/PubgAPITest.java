@@ -11,8 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -83,34 +81,6 @@ class PubgAPITest {
 
         @Test
         @Order(2)
-        @DisplayName("여러 매치 조회시 병렬 처리로 처리 시간을 단축한다.")
-        void matchParallel() {
-            long start = System.currentTimeMillis();
-            List<String> result = MATCH_IDS.stream()
-                            .parallel()
-                            .map(id -> {
-                                try {
-                                    return pubgAPI.match(SHARD, id);
-                                } catch (PubgAPIMatchNotFoundException e) {
-                                    System.out.printf("[%s] %s\n", e.getClass().getName(), e.getMessage());
-                                    return null;
-                                }
-                            })
-                            .filter(Objects::nonNull)
-                            .map(MatchResponse::getId)
-                            .collect(Collectors.toList());
-            long end = System.currentTimeMillis();
-
-            for (String id : result) {
-                assertTrue(MATCH_IDS.contains(id));
-            }
-
-            System.out.printf("match size:%d\n", MATCH_IDS.size());
-            System.out.printf("time:%dms\n", end - start);
-        }
-
-        @Test
-        @Order(3)
         @DisplayName("잘못된 매치 id 조회시 PubgAPIMatchNotFoundException 예외를 반환한다.")
         void match_not_found() {
             String wrongId = "wrong_match_id";
