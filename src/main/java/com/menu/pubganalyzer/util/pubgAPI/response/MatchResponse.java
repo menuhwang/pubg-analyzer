@@ -67,27 +67,27 @@ public class MatchResponse {
         String URL;
 
         public String getShardId() {
-            return shardId.toUpperCase();
+            return shardId == null ? null : shardId.toUpperCase();
         }
 
         public String getGameMode() {
-            return gameMode.replaceAll("-", "_").toUpperCase();
+            return gameMode == null ? null : gameMode.replaceAll("-", "_").toUpperCase();
         }
 
         public String getSeasonState() {
-            return seasonState.toUpperCase();
+            return seasonState == null ? null : seasonState.toUpperCase();
         }
 
         public String getTitleId() {
-            return titleId.toUpperCase();
+            return titleId == null ? null : titleId.toUpperCase();
         }
 
         public String getMapName() {
-            return mapName.toUpperCase();
+            return mapName == null ? null : mapName.toUpperCase();
         }
 
         public String getMatchType() {
-            return matchType.toUpperCase();
+            return matchType == null ? null : matchType.toUpperCase();
         }
     }
 
@@ -123,7 +123,7 @@ public class MatchResponse {
         Integer teamId;
 
         public String getDeathType() {
-            return deathType.toUpperCase();
+            return deathType == null ? null : deathType.toUpperCase();
         }
     }
 

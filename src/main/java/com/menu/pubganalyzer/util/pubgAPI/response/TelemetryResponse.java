@@ -95,15 +95,15 @@ public class TelemetryResponse {
     Integer fireCount;
 
     public String getDamageTypeCategory() {
-        return damageTypeCategory.toUpperCase();
+        return damageTypeCategory == null ? null : damageTypeCategory.toUpperCase();
     }
 
     public String getDamageReason() {
-        return damageReason.toUpperCase();
+        return damageReason == null ? null : damageReason.toUpperCase();
     }
 
     public String getDamageCauserName() {
-        return damageCauserName.replaceAll("-", "_").toUpperCase();
+        return damageCauserName == null ? null : damageCauserName.replaceAll("-", "_").toUpperCase();
     }
 
     @Getter
@@ -165,15 +165,15 @@ public class TelemetryResponse {
         Boolean isThroughPenetrableWall;
 
         public String getDamageReason() {
-            return damageReason.toUpperCase();
+            return damageReason == null ? null : damageReason.toUpperCase();
         }
 
         public String getDamageTypeCategory() {
-            return damageTypeCategory.toUpperCase();
+            return damageTypeCategory == null ? null : damageTypeCategory.toUpperCase();
         }
 
         public String getDamageCauserName() {
-            return damageCauserName.replaceAll("-", "_").toUpperCase();
+            return damageCauserName == null ? null : damageCauserName.replaceAll("-", "_").toUpperCase();
         }
     }
 

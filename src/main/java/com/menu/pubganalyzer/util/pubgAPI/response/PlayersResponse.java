@@ -59,15 +59,15 @@ public class PlayersResponse {
         String banType;
 
         public String getShardId() {
-            return shardId.toUpperCase();
+            return shardId == null ? null : shardId.toUpperCase();
         }
 
         public String getTitleId() {
-            return titleId.toUpperCase();
+            return titleId == null ? null : titleId.toUpperCase();
         }
 
         public String getBanType() {
-            return banType.toUpperCase();
+            return banType == null ? null : banType.toUpperCase();
         }
     }
 
