@@ -72,7 +72,7 @@ class MatchRestControllerTest {
     @Transactional
     @Test
     void deleteById() throws Exception {
-        String id = "069990ee-ce9a-43b4-9621-8da0339b4adf";
+        String id = "21181011-0962-46cb-8426-2d88cfeb5752";
         ResultActions result = mockMvc.perform(
                 delete(MATCH_API_URL + "/" + id)
         );
