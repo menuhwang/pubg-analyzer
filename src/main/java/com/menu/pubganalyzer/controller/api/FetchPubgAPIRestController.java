@@ -1,6 +1,7 @@
 package com.menu.pubganalyzer.controller.api;
 
 import com.menu.pubganalyzer.service.FetchAPIService;
+import com.menu.pubganalyzer.support.admin.AdminOnly;
 import com.menu.pubganalyzer.support.apiResult.ApiResult;
 import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.PlayersResponse;
@@ -19,6 +20,7 @@ import static com.menu.pubganalyzer.support.apiResult.ApiResultUtil.success;
 public class FetchPubgAPIRestController {
     private final FetchAPIService fetchAPIService;
 
+    @AdminOnly
     @GetMapping("player")
     public ResponseEntity<ApiResult<PlayersResponse>> fetchPlayer(
             @RequestParam String shard,
@@ -28,6 +30,7 @@ public class FetchPubgAPIRestController {
         return ResponseEntity.ok(success(response));
     }
 
+    @AdminOnly
     @GetMapping("match")
     public ResponseEntity<ApiResult<MatchResponse>> fetchMatch(
             @RequestParam String shard,

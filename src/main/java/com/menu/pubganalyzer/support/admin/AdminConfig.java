@@ -5,10 +5,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AdminConfig {
-    private final AdminProperties adminProperties = new AdminProperties();
-
     @Bean
-    public AdminInterceptor adminInterceptor() {
+    public AdminInterceptor adminInterceptor(AdminProperties adminProperties) {
         return new AdminInterceptor(adminProperties.getAllow());
     }
 }
