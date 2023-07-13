@@ -31,7 +31,7 @@ CREATE TABLE matches
 CREATE INDEX match_id_shard_index ON matches (id, shard_id);
 
 ALTER TABLE matches
-ADD CONSTRAINT FK_MATCHES_ON_ASSET FOREIGN KEY (asset_id) REFERENCES asset (id);
+ADD CONSTRAINT FK_MATCHES_ON_ASSET FOREIGN KEY (asset_id) REFERENCES asset (id) ON DELETE CASCADE;
 */
 
 @Getter

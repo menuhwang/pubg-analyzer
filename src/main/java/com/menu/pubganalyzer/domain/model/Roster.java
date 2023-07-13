@@ -22,7 +22,7 @@ CREATE TABLE roster
         );
 
         ALTER TABLE roster
-        ADD CONSTRAINT FK_ROSTER_ON_MATCH FOREIGN KEY (match_id) REFERENCES matches (id);
+        ADD CONSTRAINT FK_ROSTER_ON_MATCH FOREIGN KEY (match_id) REFERENCES matches (id) ON DELETE CASCADE;
 */
 
 @Getter

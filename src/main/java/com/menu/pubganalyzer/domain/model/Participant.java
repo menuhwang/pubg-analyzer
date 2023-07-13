@@ -46,10 +46,10 @@ CREATE TABLE participant
         CREATE INDEX name_match_id_index ON participant (name, match_id);
 
         ALTER TABLE participant
-        ADD CONSTRAINT FK_PARTICIPANT_ON_MATCH FOREIGN KEY (match_id) REFERENCES matches (id);
+        ADD CONSTRAINT FK_PARTICIPANT_ON_MATCH FOREIGN KEY (match_id) REFERENCES matches (id) ON DELETE CASCADE;
 
         ALTER TABLE participant
-        ADD CONSTRAINT FK_PARTICIPANT_ON_ROSTER FOREIGN KEY (roster_id) REFERENCES roster (id);
+        ADD CONSTRAINT FK_PARTICIPANT_ON_ROSTER FOREIGN KEY (roster_id) REFERENCES roster (id) ON DELETE CASCADE;
 */
 
 @Builder
