@@ -13,6 +13,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
+  TAG: beta-1.0.0
 
 
 jobs:
@@ -78,20 +79,7 @@ jobs:
           name: build-artifact
 
       - name: Docker Build
-        run: docker build -t ${{ env.REGISTRY }}/${{ github.repository }} .
+        run: docker build -t ${{ env.REGISTRY }}/${{ github.repository }}:${{ env.TAG }} ${{ env.REGISTRY }}/${{ github.repository }}:latest .
 
       - name: Docker push
         run: docker push ${{ env.REGISTRY }}/${{ github.repository }}
-
-  deploy:
-    needs: docker-push
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: executing remote ssh commands using password
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          script: sudo sh projects/pubg-analyzer/deploy.sh
