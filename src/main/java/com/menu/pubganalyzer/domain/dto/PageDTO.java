@@ -31,11 +31,11 @@ public class PageDTO<T> extends PageImpl<T> {
     }
 
     public int getPreviousPageNum() {
-        return this.previousOrFirstPageable().getPageNumber();
+        return getPageable().isPaged() ? this.previousOrFirstPageable().getPageNumber() : -1;
     }
 
     public int getNextPageNum() {
-        return this.nextOrLastPageable().getPageNumber();
+        return getPageable().isPaged() ? this.nextOrLastPageable().getPageNumber() : -1;
     }
 
     public int getPaginationStartNum() {

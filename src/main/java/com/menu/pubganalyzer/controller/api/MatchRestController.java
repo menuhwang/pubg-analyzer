@@ -4,6 +4,7 @@ import com.menu.pubganalyzer.domain.dto.MatchRes;
 import com.menu.pubganalyzer.domain.dto.PageDTO;
 import com.menu.pubganalyzer.domain.model.Match;
 import com.menu.pubganalyzer.service.MatchService;
+import com.menu.pubganalyzer.support.admin.AdminOnly;
 import com.menu.pubganalyzer.support.apiResult.ApiResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,11 +20,12 @@ import java.util.Map;
 import static com.menu.pubganalyzer.support.apiResult.ApiResultUtil.success;
 
 @RestController
-@RequestMapping("/api/admin/v2/matches")
+@RequestMapping("/matches")
 @RequiredArgsConstructor
-public class MatchApiController {
+public class MatchRestController {
     private final MatchService matchService;
 
+    @AdminOnly
     @GetMapping
     public ResponseEntity<ApiResult<PageDTO<MatchRes>>> findAll(@PageableDefault(size = 20, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Match> matchPage = matchService.findAll(pageable);
@@ -32,6 +34,7 @@ public class MatchApiController {
         return ResponseEntity.ok(success(PageDTO.of(matchResPage)));
     }
 
+    @AdminOnly
     @DeleteMapping("{id}")
     public ResponseEntity<ApiResult<Map<String, String>>> deleteById(@PathVariable final String id) {
         matchService.deleteById(List.of(id));

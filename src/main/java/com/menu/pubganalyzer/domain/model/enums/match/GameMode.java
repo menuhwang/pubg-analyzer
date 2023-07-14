@@ -1,6 +1,14 @@
 package com.menu.pubganalyzer.domain.model.enums.match;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Getter
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum GameMode {
+    NOT_FOUND("", ""),
     DUO("duo", "듀오"),
     DUO_FPP("duo-fpp", "듀오 1인칭"),
     SOLO("solo", "솔로"),
@@ -41,28 +49,22 @@ public enum GameMode {
     LAB_FPP("lab-fpp", "실험실 1인칭"),
     TDM("tdm", "팀 데스매치"),
     BLUEBALL("blueball", "존 태그"),
+    BOMB_FPP("Bluebomb Rush", "블루밤 러시"),
     ;
 
-    private final String tag;
-    private final String title;
+    private final String eng;
+    private final String kor;
 
-    GameMode(String tag, String title) {
-        this.tag = tag;
-        this.title = title;
+    GameMode(String eng, String kor) {
+        this.eng = eng;
+        this.kor = kor;
     }
 
-    public static GameMode of(String tag) throws IllegalArgumentException {
+    public static GameMode of(String name) throws IllegalArgumentException {
         for (GameMode gameMode : values()) {
-            if (gameMode.getTag().equals(tag)) return gameMode;
+            if (gameMode.name().equals(name)) return gameMode;
         }
-        throw new IllegalArgumentException(String.format("해당하는 gameMode를 찾을 수 없습니다. [tag=%s]", tag));
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getTag() {
-        return tag;
+        log.error("Enum GameMode not found [{}]", name);
+        return NOT_FOUND;
     }
 }

@@ -4,17 +4,14 @@ import com.menu.pubganalyzer.domain.SearchPlayer;
 import com.menu.pubganalyzer.domain.dao.MatchDAO;
 import com.menu.pubganalyzer.domain.dao.ParticipantDAO;
 import com.menu.pubganalyzer.domain.dao.PlayerDAO;
-import com.menu.pubganalyzer.domain.dto.SearchPlayerReq;
 import com.menu.pubganalyzer.domain.model.Match;
 import com.menu.pubganalyzer.domain.model.Participant;
 import com.menu.pubganalyzer.domain.model.Player;
 import com.menu.pubganalyzer.domain.model.PlayerMatch;
-import com.menu.pubganalyzer.domain.model.enums.Shard;
 import com.menu.pubganalyzer.domain.repository.PlayerMatchRepository;
 import com.menu.pubganalyzer.event.publisher.MatchEventPublisher;
 import com.menu.pubganalyzer.event.publisher.PlayerEventPublisher;
 import com.menu.pubganalyzer.exception.MatchNotFoundException;
-import com.menu.pubganalyzer.exception.PlayerNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -27,7 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -42,16 +41,8 @@ public class SearchPlayerService {
     private final TaskExecutor pubgApiExecutor;
 
     @Transactional
-    public SearchPlayer searchPlayer(SearchPlayerReq request, Pageable pageable) {
-        Shard shard = request.getShard();
-        String nickname = request.getNickname();
-
-        Player player;
-        try {
-            player = playerDAO.findByNickname(nickname);
-        } catch (PlayerNotFoundException e) {
-            return SearchPlayer.of(Player.temp(shard, nickname), Page.empty());
-        }
+    public SearchPlayer searchPlayer(String nickname, Pageable pageable) {
+        Player player = playerDAO.findByNickname(nickname);
 
         Page<PlayerMatch> playerMatches = playerMatchRepository.findByPlayer(player, pageable);
         final String playerName = player.getName();
@@ -61,14 +52,15 @@ public class SearchPlayerService {
         return SearchPlayer.of(player, participants);
     }
 
+    @Transactional
     public void updateMatchHistory(String nickname) {
         Player player = playerDAO.fetch(nickname);
 
         // 매치 병렬 조회 - 시작
-        List<Future<Match>> matchFutures = new ArrayList<>(player.getMatchIds().size());
+        List<Future<Match>> matchFutures = new ArrayList<>(player.getMatches().size());
 
         ExecutorService executorService = new ExecutorServiceAdapter(pubgApiExecutor);
-        for (String matchId : player.getMatchIds()) {
+        for (String matchId : player.getMatches()) {
             Future<Match> matchFuture = executorService.submit(() -> {
                 try {
                     return matchDAO.findById(matchId);
@@ -95,14 +87,13 @@ public class SearchPlayerService {
         }
         // 매치 병렬 조회 - 끝
 
-        for (Match match : matches) player.addMatch(match.getId(), match.getCreatedAt());
+        List<PlayerMatch> playerMatches = matches.stream().map(match -> PlayerMatch.of(player, match)).collect(Collectors.toList());
 
-        if (matches.get(0).getShardId() != player.getShardId()) {
+        if (!Objects.equals(matches.get(0).getShardId(), player.getShardId())) {
             player.updateShard(matches.get(0).getShardId());
-            playerDAO.save(player);
         }
 
-        playerEventPublisher.updateMatchHistory(player);
+        playerEventPublisher.updateMatchHistory(player, playerMatches);
         matchEventPublisher.saveMatches(matches);
     }
 }

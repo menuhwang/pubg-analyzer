@@ -1,13 +1,14 @@
 package com.menu.pubganalyzer.domain.model;
 
-import com.menu.pubganalyzer.domain.model.enums.Shard;
-import com.menu.pubganalyzer.domain.model.enums.match.DeathType;
 import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 /*
 CREATE TABLE participant
@@ -45,10 +46,10 @@ CREATE TABLE participant
         CREATE INDEX name_match_id_index ON participant (name, match_id);
 
         ALTER TABLE participant
-        ADD CONSTRAINT FK_PARTICIPANT_ON_MATCH FOREIGN KEY (match_id) REFERENCES matches (id);
+        ADD CONSTRAINT FK_PARTICIPANT_ON_MATCH FOREIGN KEY (match_id) REFERENCES matches (id) ON DELETE CASCADE;
 
         ALTER TABLE participant
-        ADD CONSTRAINT FK_PARTICIPANT_ON_ROSTER FOREIGN KEY (roster_id) REFERENCES roster (id);
+        ADD CONSTRAINT FK_PARTICIPANT_ON_ROSTER FOREIGN KEY (roster_id) REFERENCES roster (id) ON DELETE CASCADE;
 */
 
 @Builder
@@ -60,15 +61,13 @@ public class Participant {
     @Id
     @Column(length = 36)
     private String id;
-    @Enumerated(EnumType.STRING)
-    private Shard shardId;
+    private String shardId;
     private int dbnos;
     private int assists;
     private int boosts;
     private int heals;
     private float damageDealt;
-    @Enumerated(EnumType.STRING)
-    private DeathType deathType;
+    private String deathType;
     private int headshotKills;
     private int killPlace;
     private int killStreaks;
@@ -110,13 +109,13 @@ public class Participant {
 
         return Participant.builder()
                 .id(participant.getId())
-                .shardId(Shard.valueOf((attribute.getShardId()).toUpperCase()))
+                .shardId(attribute.getShardId())
                 .dbnos(stat.getDBNOs())
                 .assists(stat.getAssists())
                 .boosts(stat.getBoosts())
                 .heals(stat.getHeals())
                 .damageDealt(stat.getDamageDealt())
-                .deathType(DeathType.valueOf(stat.getDeathType()))
+                .deathType(stat.getDeathType())
                 .headshotKills(stat.getHeadshotKills())
                 .killPlace(stat.getKillPlace())
                 .killStreaks(stat.getKillStreaks())
@@ -135,6 +134,13 @@ public class Participant {
                 .name(stat.getName())
                 .playerId((stat.getPlayerId().startsWith("account") ? stat.getPlayerId() : "ai"))
                 .build();
+    }
+
+    public List<String> getMember() {
+        List<String> member = new ArrayList<>(roster.extractParticipantNameWithout(name));
+        member.sort(Comparator.naturalOrder());
+
+        return member;
     }
 
     @Override

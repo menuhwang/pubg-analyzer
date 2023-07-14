@@ -1,9 +1,6 @@
 package com.menu.pubganalyzer.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.menu.pubganalyzer.domain.model.enums.DamageCauserName;
-import com.menu.pubganalyzer.domain.model.enums.DamageReason;
-import com.menu.pubganalyzer.domain.model.enums.DamageTypeCategory;
 import com.menu.pubganalyzer.util.pubgAPI.response.TelemetryResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -78,13 +75,10 @@ public class LogPlayerTakeDamage implements Serializable {
     private Integer victimRanking;
     @Column(length = 40)
     private String victimAccountId;
-    @Enumerated(EnumType.STRING)
-    private DamageTypeCategory damageTypeCategory;
-    @Enumerated(EnumType.STRING)
-    private DamageReason damageReason;
+    private String damageTypeCategory;
+    private String damageReason;
     private Float damage;
-    @Enumerated(EnumType.STRING)
-    private DamageCauserName damageCauserName;
+    private String damageCauserName;
     private Integer phase;
 
     public static LogPlayerTakeDamage of(TelemetryResponse telemetryResponse, String matchId) {
@@ -103,10 +97,10 @@ public class LogPlayerTakeDamage implements Serializable {
                 .victimHealth(telemetryResponse.getVictim().getHealth())
                 .victimRanking(telemetryResponse.getVictim().getRanking())
                 .victimAccountId(telemetryResponse.getVictim().getAccountId())
-                .damageTypeCategory(DamageTypeCategory.of(telemetryResponse.getDamageTypeCategory()))
-                .damageReason(DamageReason.of(telemetryResponse.getDamageReason()))
+                .damageTypeCategory(telemetryResponse.getDamageTypeCategory())
+                .damageReason(telemetryResponse.getDamageReason())
                 .damage(telemetryResponse.getDamage())
-                .damageCauserName(DamageCauserName.of(telemetryResponse.getDamageCauserName()))
+                .damageCauserName(telemetryResponse.getDamageCauserName())
                 .phase(telemetryResponse.getCommon().getIsGame().intValue())
                 .build();
     }

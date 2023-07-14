@@ -21,8 +21,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class FetchPubgApiControllerTest {
-    private static final String FETCH_API_URL = "/api/admin/v2/fetch";
+class FetchPubgAPIRestControllerTest {
+    private static final String FETCH_API_URL = "/fetch";
     @Autowired
     private MockMvc mockMvc;
 
@@ -40,7 +40,7 @@ class FetchPubgApiControllerTest {
         );
 
         result.andDo(print())
-                .andExpect(handler().handlerType(FetchPubgApiController.class))
+                .andExpect(handler().handlerType(FetchPubgAPIRestController.class))
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.result.data").isArray())
@@ -62,7 +62,7 @@ class FetchPubgApiControllerTest {
         );
 
         result.andDo(print())
-                .andExpect(handler().handlerType(FetchPubgApiController.class))
+                .andExpect(handler().handlerType(FetchPubgAPIRestController.class))
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.result.data.id").value(MATCH_ID))

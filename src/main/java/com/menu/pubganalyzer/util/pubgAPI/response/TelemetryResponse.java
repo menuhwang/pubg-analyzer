@@ -94,6 +94,18 @@ public class TelemetryResponse {
     String weaponId;
     Integer fireCount;
 
+    public String getDamageTypeCategory() {
+        return damageTypeCategory == null ? null : damageTypeCategory.toUpperCase();
+    }
+
+    public String getDamageReason() {
+        return damageReason == null ? null : damageReason.toUpperCase();
+    }
+
+    public String getDamageCauserName() {
+        return damageCauserName == null ? null : damageCauserName.replaceAll("-", "_").toUpperCase();
+    }
+
     @Getter
     @Builder
     @AllArgsConstructor
@@ -151,6 +163,18 @@ public class TelemetryResponse {
         List<String> additionalInfo;
         Float distance;
         Boolean isThroughPenetrableWall;
+
+        public String getDamageReason() {
+            return damageReason == null ? null : damageReason.toUpperCase();
+        }
+
+        public String getDamageTypeCategory() {
+            return damageTypeCategory == null ? null : damageTypeCategory.toUpperCase();
+        }
+
+        public String getDamageCauserName() {
+            return damageCauserName == null ? null : damageCauserName.replaceAll("-", "_").toUpperCase();
+        }
     }
 
     @Getter

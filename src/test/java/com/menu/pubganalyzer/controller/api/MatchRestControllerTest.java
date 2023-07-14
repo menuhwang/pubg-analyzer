@@ -18,8 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-class MatchApiControllerTest {
-    private static final String MATCH_API_URL = "/api/admin/v2/matches";
+class MatchRestControllerTest {
+    private static final String MATCH_API_URL = "/matches";
     @Autowired
     private MockMvc mockMvc;
 
@@ -33,16 +33,16 @@ class MatchApiControllerTest {
 
         result.andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(handler().handlerType(MatchApiController.class))
+                .andExpect(handler().handlerType(MatchRestController.class))
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.result.content.length()", lessThanOrEqualTo(5)))
                 .andExpect(jsonPath("$.result.content[0].id").isString())
-                .andExpect(jsonPath("$.result.content[0].gameMode").isString())
+                .andExpect(jsonPath("$.result.content[0].gameMode").isMap())
                 .andExpect(jsonPath("$.result.content[0].duration").isNumber())
-                .andExpect(jsonPath("$.result.content[0].mapName").isString())
+                .andExpect(jsonPath("$.result.content[0].mapName").isMap())
                 .andExpect(jsonPath("$.result.content[0].customMatch").isBoolean())
-                .andExpect(jsonPath("$.result.content[0].matchType").isString())
+                .andExpect(jsonPath("$.result.content[0].matchType").isMap())
                 .andExpect(jsonPath("$.result.content[0].createdAt").isString())
         ;
     }
@@ -55,16 +55,16 @@ class MatchApiControllerTest {
 
         result.andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(handler().handlerType(MatchApiController.class))
+                .andExpect(handler().handlerType(MatchRestController.class))
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.result.content.length()", lessThanOrEqualTo(20)))
                 .andExpect(jsonPath("$.result.content[0].id").isString())
-                .andExpect(jsonPath("$.result.content[0].gameMode").isString())
+                .andExpect(jsonPath("$.result.content[0].gameMode").isMap())
                 .andExpect(jsonPath("$.result.content[0].duration").isNumber())
-                .andExpect(jsonPath("$.result.content[0].mapName").isString())
+                .andExpect(jsonPath("$.result.content[0].mapName").isMap())
                 .andExpect(jsonPath("$.result.content[0].customMatch").isBoolean())
-                .andExpect(jsonPath("$.result.content[0].matchType").isString())
+                .andExpect(jsonPath("$.result.content[0].matchType").isMap())
                 .andExpect(jsonPath("$.result.content[0].createdAt").isString())
         ;
     }
@@ -72,14 +72,14 @@ class MatchApiControllerTest {
     @Transactional
     @Test
     void deleteById() throws Exception {
-        String id = "069990ee-ce9a-43b4-9621-8da0339b4adf";
+        String id = "21181011-0962-46cb-8426-2d88cfeb5752";
         ResultActions result = mockMvc.perform(
                 delete(MATCH_API_URL + "/" + id)
         );
 
         result.andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(handler().handlerType(MatchApiController.class))
+                .andExpect(handler().handlerType(MatchRestController.class))
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.result.id").value(id))

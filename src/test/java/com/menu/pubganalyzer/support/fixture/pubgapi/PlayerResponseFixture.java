@@ -15,6 +15,8 @@ public class PlayerResponseFixture {
             .titleId("")
             .shardId(PLAYER_SHARD)
             .patchVersion("")
+            .banType("Innocent")
+            .clanId("clan.00001111222233334444555566667777")
             .build();
 
     private static final PlayersResponse.Included RES_ASSET = PlayersResponse.Included.builder()

@@ -2,10 +2,15 @@
 CREATE TABLE player
 (
     `id`            CHAR(40)  NOT NULL,
-    `name`          VARCHAR(255) NULL,
-    `title_id`      VARCHAR(255) NULL,
-    `shard_id`      VARCHAR(255) NULL,
+    `name`          VARCHAR(255) NOT NULL,
+    `title_id`      VARCHAR(255) NOT NULL,
+    `shard_id`      VARCHAR(255) NOT NULL,
     `patch_version` VARCHAR(255) NULL,
+    `ban_type`      VARCHAR(20) NOT NULL,
+    `clan_id`       VARCHAR(40) NULL,
+    `created_datetime` datetime    NULL,
+    `updated_datetime` datetime    NULL,
+    `update_count`  INT         NOT NULL,
     CONSTRAINT pk_player PRIMARY KEY (id)
 );
 
@@ -42,7 +47,7 @@ CREATE TABLE matches
 CREATE INDEX match_id_shard_index ON matches (id, shard_id);
 
 ALTER TABLE matches
-    ADD CONSTRAINT FK_MATCHES_ON_ASSET FOREIGN KEY (asset_id) REFERENCES asset (id);
+    ADD CONSTRAINT FK_MATCHES_ON_ASSET FOREIGN KEY (asset_id) REFERENCES asset (id) ON DELETE CASCADE;
 
 -- Roster
 CREATE TABLE roster
@@ -57,7 +62,7 @@ CREATE TABLE roster
 );
 
 ALTER TABLE roster
-    ADD CONSTRAINT FK_ROSTER_ON_MATCH FOREIGN KEY (match_id) REFERENCES matches (id);
+    ADD CONSTRAINT FK_ROSTER_ON_MATCH FOREIGN KEY (match_id) REFERENCES matches (id) ON DELETE CASCADE;
 
 -- Participant
 CREATE TABLE participant
@@ -95,10 +100,10 @@ CREATE TABLE participant
 CREATE INDEX name_match_id_index ON participant (name, match_id);
 
 ALTER TABLE participant
-    ADD CONSTRAINT FK_PARTICIPANT_ON_MATCH FOREIGN KEY (match_id) REFERENCES matches (id);
+    ADD CONSTRAINT FK_PARTICIPANT_ON_MATCH FOREIGN KEY (match_id) REFERENCES matches (id) ON DELETE CASCADE;
 
 ALTER TABLE participant
-    ADD CONSTRAINT FK_PARTICIPANT_ON_ROSTER FOREIGN KEY (roster_id) REFERENCES roster (id);
+    ADD CONSTRAINT FK_PARTICIPANT_ON_ROSTER FOREIGN KEY (roster_id) REFERENCES roster (id) ON DELETE CASCADE;
 
 -- Player_Match
 CREATE TABLE player_match
@@ -106,11 +111,12 @@ CREATE TABLE player_match
     `id`                BIGINT AUTO_INCREMENT NOT NULL,
     `player_id`         CHAR(40)           NULL,
     `match_id`          CHAR(36)           NULL,
-    `created_date_time` datetime              NULL,
+    `created_datetime`  datetime           NULL,
+    `match_created_at`  datetime           NULL,
     CONSTRAINT pk_player_match PRIMARY KEY (id)
 );
 
-CREATE INDEX created_date_time_index ON player_match (created_date_time);
+CREATE INDEX match_created_at_index ON player_match (match_created_at);
 
 CREATE UNIQUE INDEX player_match_index ON player_match (player_id, match_id);
 

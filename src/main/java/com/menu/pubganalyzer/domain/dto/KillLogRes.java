@@ -38,36 +38,40 @@ public class KillLogRes {
         CharacterInfo victim = CharacterInfo.builder()
                 .name(logPlayerKillV2.getVictimName())
                 .accountId(logPlayerKillV2.getVictimAccountId())
+                .bot(logPlayerKillV2.isVictimBot())
                 .build();
         CharacterInfo dBNOMaker = CharacterInfo.builder()
                 .name(logPlayerKillV2.getDBNOName())
                 .accountId(logPlayerKillV2.getDBNOAccountId())
+                .bot(logPlayerKillV2.isDBNOMakerBot())
                 .build();
         CharacterInfo finisher = CharacterInfo.builder()
                 .name(logPlayerKillV2.getFinisherName())
                 .accountId(logPlayerKillV2.getFinisherAccountId())
+                .bot(logPlayerKillV2.isFinisherBot())
                 .build();
         CharacterInfo killer = CharacterInfo.builder()
                 .name(logPlayerKillV2.getKillerName())
                 .accountId(logPlayerKillV2.getKillerAccountId())
+                .bot(logPlayerKillV2.isKillerBot())
                 .build();
 
         DamageInfo dBNOInfo = DamageInfo.builder()
-                .damageReason(logPlayerKillV2.getDBNODamageReason())
-                .damageTypeCategory(logPlayerKillV2.getDBNODamageTypeCategory())
-                .damageCauserName(logPlayerKillV2.getDBNODamageCauserName())
+                .damageReason(DamageReason.of(logPlayerKillV2.getDBNODamageReason()))
+                .damageTypeCategory(DamageTypeCategory.of(logPlayerKillV2.getDBNODamageTypeCategory()))
+                .damageCauserName(DamageCauserName.of(logPlayerKillV2.getDBNODamageCauserName()))
                 .distance(logPlayerKillV2.getDBNODistance())
                 .build();
         DamageInfo finishInfo = DamageInfo.builder()
-                .damageReason(logPlayerKillV2.getFinisherDamageReason())
-                .damageTypeCategory(logPlayerKillV2.getFinisherDamageTypeCategory())
-                .damageCauserName(logPlayerKillV2.getFinisherDamageCauserName())
+                .damageReason(DamageReason.of(logPlayerKillV2.getFinisherDamageReason()))
+                .damageTypeCategory(DamageTypeCategory.of(logPlayerKillV2.getFinisherDamageTypeCategory()))
+                .damageCauserName(DamageCauserName.of(logPlayerKillV2.getFinisherDamageCauserName()))
                 .distance(logPlayerKillV2.getFinisherDistance())
                 .build();
         DamageInfo killInfo = DamageInfo.builder()
-                .damageReason(logPlayerKillV2.getKillerDamageReason())
-                .damageTypeCategory(logPlayerKillV2.getKillerDamageTypeCategory())
-                .damageCauserName(logPlayerKillV2.getKillerDamageCauserName())
+                .damageReason(DamageReason.of(logPlayerKillV2.getKillerDamageReason()))
+                .damageTypeCategory(DamageTypeCategory.of(logPlayerKillV2.getKillerDamageTypeCategory()))
+                .damageCauserName(DamageCauserName.of(logPlayerKillV2.getKillerDamageCauserName()))
                 .distance(logPlayerKillV2.getKillerDistance())
                 .build();
 
@@ -88,11 +92,13 @@ public class KillLogRes {
     public static class CharacterInfo {
         private final String name;
         private final String accountId;
+        private final Boolean bot;
 
         @Builder
-        public CharacterInfo(String name, String accountId) {
+        public CharacterInfo(String name, String accountId, Boolean bot) {
             this.name = name;
             this.accountId = accountId;
+            this.bot = bot;
         }
     }
 

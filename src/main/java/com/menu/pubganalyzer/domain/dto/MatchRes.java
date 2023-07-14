@@ -1,25 +1,25 @@
 package com.menu.pubganalyzer.domain.dto;
 
 import com.menu.pubganalyzer.domain.model.Match;
+import com.menu.pubganalyzer.domain.model.enums.match.GameMode;
+import com.menu.pubganalyzer.domain.model.enums.match.MapName;
+import com.menu.pubganalyzer.domain.model.enums.match.MatchType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Getter
 @Builder
 @AllArgsConstructor
 public class MatchRes {
     private String id;
-    private String gameMode;
+    private GameMode gameMode;
     private int duration;
-    private String mapName;
+    private MapName mapName;
     private boolean isCustomMatch;
-    private String matchType;
+    private MatchType matchType;
     private LocalDateTime createdAt;
 
     private MatchRes() {
@@ -28,18 +28,12 @@ public class MatchRes {
     public static MatchRes of(Match match) {
         return MatchRes.builder()
                 .id(match.getId())
-                .gameMode(match.getGameMode().getTitle())
+                .gameMode(GameMode.of(match.getGameMode()))
                 .duration(match.getDuration())
-                .mapName(match.getMapName().getMapNameKor())
+                .mapName(MapName.of(match.getMapName()))
                 .isCustomMatch(match.isCustomMatch())
-                .matchType(match.getMatchType().getTitle())
+                .matchType(MatchType.of(match.getMatchType()))
                 .createdAt(match.getCreatedAt())
                 .build();
-    }
-
-    public String getCreatedAt() {
-        ZonedDateTime zonedDateTime = ZonedDateTime.of(this.createdAt, ZoneId.of("UTC"));
-        ZonedDateTime createdAtKor = zonedDateTime.withZoneSameInstant(ZoneId.of("Asia/Seoul"));
-        return createdAtKor.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
     }
 }

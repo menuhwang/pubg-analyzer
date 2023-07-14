@@ -1,8 +1,12 @@
 package com.menu.pubganalyzer.domain.model.enums;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Getter
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum DamageReason {
     NOT_FOUND("Not_Found", "Not Found"),
     EMPTY("", ""),
@@ -17,23 +21,19 @@ public enum DamageReason {
     TORSOSHOT("TorsoShot", "몸통"),
     ;
 
-    private final String label;
+    private final String eng;
     private final String kor;
 
-    DamageReason(String label, String kor) {
-        this.label = label;
+    DamageReason(String eng, String kor) {
+        this.eng = eng;
         this.kor = kor;
     }
 
-    public String getKor() {
-        return kor;
-    }
-
-    public static DamageReason of(String label) {
+    public static DamageReason of(String name) {
         for (DamageReason damageReason : values()) {
-            if (damageReason.label.equals(label)) return damageReason;
+            if (damageReason.name().equals(name)) return damageReason;
         }
-        log.warn("DamageReason not found [{}]", label);
+        log.error("Enum DamageReason not found [{}]", name);
         return NOT_FOUND;
     }
 }

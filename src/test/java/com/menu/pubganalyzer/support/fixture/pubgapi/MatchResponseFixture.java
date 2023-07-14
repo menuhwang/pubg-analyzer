@@ -16,12 +16,12 @@ public class MatchResponseFixture {
     public static final String MATCH_ASSET_URL = "test-telemetry-url";
 
     private static final MatchResponse.Attribute RES_ATTRIBUTE = MatchResponse.Attribute.builder()
-            .gameMode(GameMode.DUO.getTag())
+            .gameMode(GameMode.DUO.getEng())
             .seasonState(SeasonState.PROGRESS.name())
             .duration(1000)
             .titleId("")
             .shardId(MATCH_SHARD)
-            .mapName(MapName.Baltic_Main.name())
+            .mapName(MapName.BALTIC_MAIN.name())
             .isCustomMatch(false)
             .matchType(MatchType.OFFICIAL.name())
             .createdAt(LocalDateTime.now())
