@@ -79,7 +79,7 @@ jobs:
           name: build-artifact
 
       - name: Docker Build
-        run: docker build -t ${{ env.REGISTRY }}/${{ github.repository }}:${{ env.TAG }} ${{ env.REGISTRY }}/${{ github.repository }}:latest .
+        run: docker build -t ${{ env.REGISTRY }}/${{ github.repository }}:${{ env.TAG }} -t ${{ env.REGISTRY }}/${{ github.repository }}:latest .
 
       - name: Docker push
-        run: docker push ${{ env.REGISTRY }}/${{ github.repository }}
+        run: docker push -a ${{ env.REGISTRY }}/${{ github.repository }}
