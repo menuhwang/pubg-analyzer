@@ -2,8 +2,8 @@
    게임 배틀그라운드의 매치 로그를 분석해주는 서비스입니다.
 
 # 🔗 Site
-   - [홈페이지](https://www.pubg-analyzer.site)
-   - [매치 조회 Demo](https://www.pubg-analyzer.site/players?shard=STEAM&nickname=WackyJacky101)
+   - [홈페이지](https://www.battlestats.site)
+   - [Demo 플레이어 조회](https://www.battlestats.site/player/WackyJacky101)
 
 # 📍 ERD
    ![ERD](./assets/erd.png)
