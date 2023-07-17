@@ -165,7 +165,7 @@ public enum DamageCauserName {
     WEAPDP28_C("DP-28", "DP-28"),
     WEAPDESERTEAGLE_C("Deagle", "Deagle"),
     WEAPDUNCANSHK416_C("M416", "M416"),
-    WeapFamasG2_C("Famas", "Famas"),
+    WEAPFAMASG2_C("Famas", "Famas"),
     WEAPFNFAL_C("SLR", "SLR"),
     WEAPG18_C("P18C", "P18C"),
     WEAPG36C_C("G36C", "G36C"),
