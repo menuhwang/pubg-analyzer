@@ -1,7 +1,6 @@
 FROM openjdk:11.0-slim
 WORKDIR /app
 COPY ./*-SNAPSHOT.jar ./app.jar
-ADD https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem /app
 RUN mkdir log
 
 VOLUME /app/log
