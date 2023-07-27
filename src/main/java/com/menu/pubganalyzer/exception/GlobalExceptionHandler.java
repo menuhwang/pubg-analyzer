@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResult<?>> pubgAPIExceptionHandler(PubgAPIException e) {
         log.warn("{}", e.getMessage(), e);
 
-        return errorResponse(e, HttpStatus.BAD_REQUEST);
+        return errorResponse(e, e.getHttpStatus());
     }
 
     @ExceptionHandler(value = BindException.class)
