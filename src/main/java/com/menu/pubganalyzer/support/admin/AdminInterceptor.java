@@ -1,5 +1,6 @@
 package com.menu.pubganalyzer.support.admin;
 
+import com.menu.pubganalyzer.exception.AuthorizationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.method.HandlerMethod;
@@ -21,8 +22,7 @@ public class AdminInterceptor implements HandlerInterceptor {
         String remoteHost = request.getRemoteHost();
         if (allow.contains(remoteHost)) return true;
 
-        response.setStatus(403);
-        return false;
+        throw new AuthorizationException();
     }
 
     private boolean hasAdminOnlyAnnotation(Object handler) {

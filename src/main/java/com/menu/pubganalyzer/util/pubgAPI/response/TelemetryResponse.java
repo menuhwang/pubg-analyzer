@@ -1,10 +1,15 @@
 package com.menu.pubganalyzer.util.pubgAPI.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.*;
 import lombok.*;
 
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Getter
 @Builder
@@ -12,37 +17,40 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class TelemetryResponse {
+    @CommonField
     @JsonProperty(value = "_D")
     LocalDateTime timestamp;
+    @CommonField
     @JsonProperty(value = "_T")
     String type;
-    Common common;
+    @CommonField
+    CommonResponse common;
     Integer attackId;
-    Characters attacker;
-    Characters victim;
+    CharacterResponse attacker;
+    CharacterResponse victim;
     String damageTypeCategory;
     String damageReason;
     String damageCauserName;
-    Item item;
+    ItemResponse item;
     Float distance;
-    List<Characters> survivors;
-    ItemPackage itemPackage;
-    Characters character;
+    List<CharacterResponse> survivors;
+    ItemPackageResponse itemPackage;
+    CharacterResponse character;
     String carryState;
-    Characters instigator;
-    List<Characters> riders;
-    GameState gameState;
+    CharacterResponse instigator;
+    List<CharacterResponse> riders;
+    GameStateResponse gameState;
     Float healAmount;
-    Item parentItem;
-    Item childItem;
+    ItemResponse parentItem;
+    ItemResponse childItem;
     Float carePackageUniqueId;
     Integer ownerTeamId;
     String creatorAccountId;
-    Vehicle vehicle;
+    VehicleResponse vehicle;
     String matchId;
     String seasonState;
-    List<CharacterWrapper> characters;
-    GameResultOnFinished gameResultOnFinished;
+    List<CharacterWrapperResponse> characters;
+    GameResultOnFinishedResponse gameResultOnFinished;
     String mapName;
     String weatherId;
     String cameraViewBehaviour;
@@ -51,46 +59,46 @@ public class TelemetryResponse {
     Boolean isEventMode;
     String blueZoneCustomOptions;
     String objectType;
-    Location objectLocation;
+    LocationResponse objectLocation;
     String objectTypeStatus;
     List<Object> objectTypeAdditionalInfo;
     Integer phase;
     Float elapsedTime;
     Integer fireWeaponStackCount;
     String attackType;
-    Item weapon;
-    Characters killer;
-    Characters assistant;
+    ItemResponse weapon;
+    CharacterResponse killer;
+    CharacterResponse assistant;
     @JsonProperty(value = "dBNOId")
     Integer dBNOId;
     List<String> damageCauserAdditionalInfo;
     String victimWeapon;
     List<String> victimWeaponAdditionalInfo;
-    GameResult victimGameResult;
+    GameResultResponse victimGameResult;
     Boolean isThroughPenetrableWall;
     @JsonProperty(value = "dBNOMaker")
-    Characters dBNOMaker;
+    CharacterResponse dBNOMaker;
     @JsonProperty(value = "dBNODamageInfo")
-    DamageInfo dBNODamageInfo;
-    Characters finisher;
-    DamageInfo finishDamageInfo;
-    DamageInfo killerDamageInfo;
+    DamageInfoResponse dBNODamageInfo;
+    CharacterResponse finisher;
+    DamageInfoResponse finishDamageInfo;
+    DamageInfoResponse killerDamageInfo;
     List<String> assists_AccountId;
     List<String> teamKillers_AccountId;
     Boolean isSuicide;
     String accountId;
     Boolean isAttackerInVehicle;
     Integer numAlivePlayers;
-    Characters reviver;
-    Float damage;
-    List<Characters> drivers;
+    CharacterResponse reviver;
+    Double damage;
+    List<CharacterResponse> drivers;
     Float swimDistance;
     Float maxSwimDepthOfWater;
     Boolean isLedgeGrab;
     Float rideDistance;
     Integer seatIndex;
     Float maxSpeed;
-    List<Characters> fellowPassengers;
+    List<CharacterResponse> fellowPassengers;
     String weaponId;
     Integer fireCount;
 
@@ -106,172 +114,32 @@ public class TelemetryResponse {
         return damageCauserName == null ? null : damageCauserName.replaceAll("-", "_").toUpperCase();
     }
 
-    @Getter
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @ToString
-    public static class Characters {
-        String name;
-        Integer teamId;
-        Float health;
-        Location location;
-        Integer ranking;
-        String accountId;
-        Boolean isInBlueZone;
-        Boolean isInRedZone;
-        List<String> zone;
-    }
+    public Map<String, Object> getAttribute() {
+        Map<String, Object> attribute = new HashMap<>();
+        Field[] fields = this.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            if (isCommonField(field)) continue;
 
-    @Getter
-    @ToString
-    public static class CharacterWrapper {
-        Characters character;
-        String primaryWeaponFirst;
-        String primaryWeaponSecond;
-        String secondaryWeapon;
-        Integer spawnKitIndex;
-    }
+            Object value = getValue(field);
+            if (Objects.isNull(value)) continue;
 
-    /**
-     * isGame = 0 -> Before lift off
-     * isGame = 0.1 -> On airplane
-     * isGame = 0.5 -> When there’s no ‘zone’ on map(before game starts)
-     * isGame = 1.0 -> First safezone and bluezone appear
-     * isGame = 1.5 -> First bluezone shrinks
-     * isGame = 2.0 -> Second bluezone appears
-     * isGame = 2.5 -> Second bluezone shrinks
-     **/
-    @Getter
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @ToString
-    public static class Common {
-        Float isGame;
-    }
-
-    @Getter
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @ToString
-    public static class DamageInfo {
-        String damageReason;
-        String damageTypeCategory;
-        String damageCauserName;
-        List<String> additionalInfo;
-        Float distance;
-        Boolean isThroughPenetrableWall;
-
-        public String getDamageReason() {
-            return damageReason == null ? null : damageReason.toUpperCase();
+            attribute.put(field.getName(), getValue(field));
         }
 
-        public String getDamageTypeCategory() {
-            return damageTypeCategory == null ? null : damageTypeCategory.toUpperCase();
+        return attribute;
+    }
+
+    private boolean isCommonField(Field field) {
+        CommonField commonField = field.getAnnotation(CommonField.class);
+        return Objects.nonNull(commonField);
+    }
+
+    private Object getValue(Field field) {
+        try {
+            return field.get(this);
+        } catch (IllegalAccessException ignore) {
+            // self access
         }
-
-        public String getDamageCauserName() {
-            return damageCauserName == null ? null : damageCauserName.replaceAll("-", "_").toUpperCase();
-        }
-    }
-
-    @Getter
-    @ToString
-    public static class GameResult {
-        Integer rank;
-        String gameResult;
-        Integer teamId;
-        Stats stats;
-        String accountId;
-    }
-
-    @Getter
-    @ToString
-    public static class GameResultOnFinished {
-        List<GameResult> results;
-    }
-
-    @Getter
-    @ToString
-    public static class GameState {
-        Integer elapsedTime;
-        Integer numAliveTeams;
-        Integer numJoinPlayers;
-        Integer numStartPlayers;
-        Integer numAlivePlayers;
-        Location safetyZonePosition;
-        Float safetyZoneRadius;
-        Location poisonGasWarningPosition;
-        Float poisonGasWarningRadius;
-        Location redZonePosition;
-        Float redZoneRadius;
-        Location blackZonePosition;
-        Float blackZoneRadius;
-    }
-
-    @Getter
-    @ToString
-    public static class Item {
-        String itemId;
-        Integer stackCount;
-        String category;
-        String subCategory;
-        List<String> attachedItems;
-    }
-
-    @Getter
-    @ToString
-    public static class ItemPackage {
-        String itemPackageId;
-        Location location;
-        List<Item> items;
-    }
-
-    /**
-     * Location values are measured in centimeters.
-     * (0,0) is at the top-left of each map.
-     * The range for the X and Y axes is 0 - 816,000 for Erangel, Miramar, Taego and Deston.
-     * The range for the X and Y axes is 0 - 612,000 for Vikendi.
-     * The range for the X and Y axes is 0 - 408,000 for Sanhok.
-     * The range for the X and Y axes is 0 - 306,000 for Paramo.
-     * The range for the X and Y axes is 0 - 204,000 for Karakin and Range.
-     * The range for the X and Y axes is 0 - 102,000 for Haven.
-     **/
-    @Getter
-    @ToString
-    public static class Location {
-        Float x;
-        Float y;
-        Float z;
-    }
-
-    @Getter
-    @ToString
-    public static class Stats {
-        Integer killCount;
-        Float distanceOnFoot;
-        Float distanceOnSwim;
-        Float distanceOnVehicle;
-        Float distanceOnParachute;
-        Float distanceOnFreefall;
-    }
-
-    @Getter
-    @ToString
-    public static class Vehicle {
-        String vehicleType;
-        String vehicleId;
-        Integer vehicleUniqueId;
-        Float healthPercent;
-        Float feulPercent;
-        Float altitudeAbs;
-        Float altitudeRel;
-        Float velocity;
-        Integer seatIndex;
-        Boolean isWheelsInAir;
-        Boolean isInWaterVolume;
-        Boolean isEngineOn;
+        return null;
     }
 }

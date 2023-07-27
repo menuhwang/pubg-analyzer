@@ -1,0 +1,21 @@
+package com.menu.pubganalyzer.domain.model.telemetries;
+
+import java.time.LocalDateTime;
+
+public interface LogPlayerKillV2 {
+    String getMatchId();
+    String getType();
+    LocalDateTime getTimestamp();
+    Common getCommon();
+    boolean isSuicide();
+    Character getVictim();
+    boolean isVictimBot();
+    String getVictimName();
+    Character getDBNOMaker();
+    DamageInfo getDBNODamageInfo();
+    Character getKiller();
+    String getKillerName();
+    DamageInfo getKillerDamageInfo();
+    Character getFinisher();
+    DamageInfo getFinisherDamageInfo();
+}

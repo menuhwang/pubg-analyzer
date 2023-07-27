@@ -35,7 +35,7 @@ class PubgAPITest {
         @Order(1)
         @DisplayName("플랫폼과 닉네임 리스트를 받아 PlayerResponse 객체를 반환한다.")
         void player() {
-            PlayersResponse players = assertDoesNotThrow(() -> pubgAPI.player(SHARD, List.of(PLAYER_NICKNAME)));
+            PlayersResponse players = assertDoesNotThrow(() -> pubgAPI.player(SHARD, PLAYER_NICKNAME));
             assertTrue(players.getPlayers().size() > 0);
             PlayersResponse.Player player = players.getPlayers().get(0);
             assertEquals(PLAYER_NICKNAME, player.getAttributes().getName());
@@ -53,7 +53,7 @@ class PubgAPITest {
         @DisplayName("조회 결과가 없는 경우 PubgAPIPlayerNotFoundException 예외를 반환한다.")
         void player_not_found() {
             String wrongNickname = "w";
-            Exception e = assertThrows(PubgAPIPlayerNotFoundException.class, () -> pubgAPI.player(SHARD, List.of(wrongNickname)));
+            Exception e = assertThrows(PubgAPIPlayerNotFoundException.class, () -> pubgAPI.player(SHARD, wrongNickname));
             assertEquals(PubgAPIPlayerNotFoundException.DEFAULT_MSG, e.getMessage());
         }
     }

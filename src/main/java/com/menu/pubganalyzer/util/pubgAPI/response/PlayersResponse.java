@@ -93,6 +93,9 @@ public class PlayersResponse {
     }
 
     @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     @ToString
     public static class Element {
         String type;

@@ -7,6 +7,7 @@ public enum ErrorCode {
     MATCH_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 매치를 찾을 수 없습니다."),
     PARTICIPANT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 참가자를 찾을 수 없습니다."),
     SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러 발생."),
+    AUTHORIZATION(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
     ;
 
     private final HttpStatus httpStatus;

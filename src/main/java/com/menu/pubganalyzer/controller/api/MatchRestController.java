@@ -1,8 +1,10 @@
 package com.menu.pubganalyzer.controller.api;
 
 import com.menu.pubganalyzer.domain.dto.MatchRes;
+import com.menu.pubganalyzer.domain.dto.MatchStatsRes;
 import com.menu.pubganalyzer.domain.dto.PageDTO;
-import com.menu.pubganalyzer.domain.model.Match;
+import com.menu.pubganalyzer.domain.dto.SearchPlayerRes;
+import com.menu.pubganalyzer.domain.model.matches.Match;
 import com.menu.pubganalyzer.service.MatchService;
 import com.menu.pubganalyzer.support.admin.AdminOnly;
 import com.menu.pubganalyzer.support.apiResult.ApiResult;
@@ -29,7 +31,7 @@ public class MatchRestController {
     @GetMapping
     public ResponseEntity<ApiResult<PageDTO<MatchRes>>> findAll(@PageableDefault(size = 20, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Match> matchPage = matchService.findAll(pageable);
-        Page<MatchRes> matchResPage = matchPage.map(MatchRes::of);
+        Page<MatchRes> matchResPage = matchPage.map(MatchRes::from);
 
         return ResponseEntity.ok(success(PageDTO.of(matchResPage)));
     }
@@ -40,5 +42,16 @@ public class MatchRestController {
         matchService.deleteById(List.of(id));
 
         return ResponseEntity.ok(success(Map.of("id", id)));
+    }
+
+    @GetMapping("/player/{playerName}")
+    public ResponseEntity<ApiResult<SearchPlayerRes>> findByPlayerName(
+            @PathVariable final String playerName,
+            @PageableDefault(size = 20, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Match> matchPage = matchService.findByPlayerName(playerName, pageable);
+        Page<MatchStatsRes> matchStatsResPage = matchPage.map(match -> MatchStatsRes.of(match, playerName));
+        PageDTO<MatchStatsRes> matchResPageDTO = PageDTO.of(matchStatsResPage);
+
+        return ResponseEntity.ok(success(SearchPlayerRes.of(playerName, matchResPageDTO)));
     }
 }

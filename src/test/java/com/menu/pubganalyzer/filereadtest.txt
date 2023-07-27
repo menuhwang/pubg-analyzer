@@ -1,2 +1,0 @@
-File Read.
-To String.

@@ -71,15 +71,6 @@ tasks.named('test') {
 	if (project.hasProperty("util.pubg.api.token")) {
 		systemProperty "util.pubg.api.token", project.property("util.pubg.api.token")
 	}
-	if (project.hasProperty("test.datasource.url")) {
-		systemProperty "spring.datasource.url", project.property("test.datasource.url")
-	}
-	if (project.hasProperty("test.datasource.username")) {
-		systemProperty "spring.datasource.username", project.property("test.datasource.username")
-	}
-	if (project.hasProperty("test.datasource.password")) {
-		systemProperty "spring.datasource.password", project.property("test.datasource.password")
-	}
 	useJUnitPlatform()
 	finalizedBy 'jacocoTestReport'
 }

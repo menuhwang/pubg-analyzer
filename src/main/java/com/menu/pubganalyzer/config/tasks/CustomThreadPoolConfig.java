@@ -7,18 +7,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Configuration
 public class CustomThreadPoolConfig {
-    @Bean(name = "sqlExecutor")
-    public TaskExecutor sqlExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(20);
-        executor.setMaxPoolSize(100);
-        executor.setQueueCapacity(100);
-        executor.setThreadNamePrefix("sql-exec-");
-        executor.setTaskDecorator(new ClonedTaskDecorator());
-        executor.initialize();
-        return executor;
-    }
-
     @Bean(name = "pubgApiExecutor")
     public TaskExecutor pubgApiExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

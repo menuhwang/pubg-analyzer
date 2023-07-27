@@ -5,10 +5,7 @@ import com.menu.pubganalyzer.util.ChartUtil;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -32,8 +29,8 @@ public class AnalyzerRes {
             Map<String, Object> charts) {
         this.killLog = killLog;
         this.damageLog = damageLog;
-        this.player = player == null ? 0 : player;
-        this.bot = bot == null ? 0 : bot;
+        this.player = Objects.requireNonNullElse(player, 0);
+        this.bot = Objects.requireNonNullElse(bot, 0);
         this.victimPlayerDamageDealt = victimPlayerDamageDealt;
         this.victimDamageLog = victimDamageLog;
         this.charts = charts;
@@ -41,30 +38,26 @@ public class AnalyzerRes {
 
     public static AnalyzerRes of(Analyzer analyzer) {
         Map<String, List<DamageLogRes>> map = new HashMap<>();
-        for (String victim : analyzer.getVictimDamageLog().keySet()) {
+        for (String victim : analyzer.damageLogGroupByVictim().keySet()) {
             map.put(
                     victim,
-                    analyzer.getVictimDamageLog().get(victim).stream()
+                    analyzer.damageLogGroupByVictim().get(victim).stream()
                             .map(DamageLogRes::of)
                             .collect(Collectors.toList())
             );
         }
         Map<String, Object> charts = new HashMap<>();
-        charts.put("phaseDamageChart", ChartUtil.phaseDamageChart(analyzer.getLogPlayerTakeDamages()));
-        charts.put("contributeDamageChart", ChartUtil.contributeDamageChart(analyzer.getLogPlayerKills(), analyzer.getVictimPlayerDamageDealt()));
+        charts.put("phaseDamageChart", ChartUtil.phaseDamageChart(analyzer.getRosterLogPlayerTakeDamages()));
+        charts.put("contributeDamageChart", ChartUtil.contributeDamageChart(analyzer.getLogPlayerKills(), analyzer.analysisDamageDealt()));
 
         return AnalyzerRes.builder()
                 .killLog(analyzer.getLogPlayerKills().stream().map(KillLogRes::of).collect(Collectors.toList()))
-                .damageLog(analyzer.getLogPlayerTakeDamages().stream().map(DamageLogRes::of).collect(Collectors.toList()))
-                .player(analyzer.getCount().get("player"))
-                .bot(analyzer.getCount().get("bot"))
-                .victimPlayerDamageDealt(analyzer.getVictimPlayerDamageDealt())
+                .damageLog(analyzer.getTotalLogPlayerTakeDamages().stream().map(DamageLogRes::of).collect(Collectors.toList()))
+                .player(analyzer.countVictimType().get("player"))
+                .bot(analyzer.countVictimType().get("bot"))
+                .victimPlayerDamageDealt(analyzer.analysisDamageDealt())
                 .victimDamageLog(map)
                 .charts(charts)
                 .build();
-    }
-
-    public Set<String> extractVictimNames() {
-        return victimPlayerDamageDealt.keySet();
     }
 }
