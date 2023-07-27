@@ -1,6 +1,8 @@
 package com.menu.pubganalyzer.controller.api;
 
 import com.menu.pubganalyzer.domain.dto.ReportRes;
+import com.menu.pubganalyzer.domain.model.matches.Match;
+import com.menu.pubganalyzer.service.MatchService;
 import com.menu.pubganalyzer.service.ReportService;
 import com.menu.pubganalyzer.support.apiResult.ApiResult;
 import lombok.RequiredArgsConstructor;
@@ -19,13 +21,15 @@ import static com.menu.pubganalyzer.support.apiResult.ApiResultUtil.success;
 @RequestMapping("/report")
 @RequiredArgsConstructor
 public class ReportRestController {
+    private final MatchService matchService;
     private final ReportService reportService;
 
     @GetMapping("/match/{matchId}/player/{nickname}")
     public ResponseEntity<ApiResult<ReportRes>> getMatchReport(
             @Valid @NotBlank @PathVariable String matchId,
             @Valid @NotBlank @PathVariable String nickname) {
-        ReportRes report = reportService.report(matchId, nickname);
+        Match match = matchService.findById(matchId);
+        ReportRes report = reportService.getMatchReport(match, nickname);
 
         return ResponseEntity.ok(success(report));
     }

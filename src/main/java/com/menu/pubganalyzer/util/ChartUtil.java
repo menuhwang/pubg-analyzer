@@ -1,7 +1,7 @@
 package com.menu.pubganalyzer.util;
 
-import com.menu.pubganalyzer.domain.model.LogPlayerKillV2;
-import com.menu.pubganalyzer.domain.model.LogPlayerTakeDamage;
+import com.menu.pubganalyzer.domain.model.telemetries.LogPlayerKillV2;
+import com.menu.pubganalyzer.domain.model.telemetries.LogPlayerTakeDamage;
 
 import java.util.*;
 import java.util.stream.Collectors;

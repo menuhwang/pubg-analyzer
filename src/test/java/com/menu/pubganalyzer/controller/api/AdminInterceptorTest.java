@@ -1,10 +1,14 @@
 package com.menu.pubganalyzer.controller.api;
 
+import com.menu.pubganalyzer.service.FetchAPIService;
+import com.menu.pubganalyzer.service.MatchService;
+import com.menu.pubganalyzer.service.PlayerService;
+import com.menu.pubganalyzer.support.admin.AdminInterceptor;
+import com.menu.pubganalyzer.support.fixture.admin.AdminEnvTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -14,9 +18,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@ActiveProfiles("test")
-@AutoConfigureMockMvc
+@WebMvcTest(controllers = {
+        FetchPubgAPIRestController.class,
+        PlayerRestController.class,
+        MatchRestController.class})
+@AdminEnvTest
 @TestPropertySource(properties = "application.admin.allow=admin.only.com")
 public class AdminInterceptorTest {
     private static final String FETCH_API_URL = "/fetch";
@@ -24,6 +30,14 @@ public class AdminInterceptorTest {
 
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private AdminInterceptor adminInterceptor;
+    @MockBean
+    private PlayerService playerService;
+    @MockBean
+    private FetchAPIService fetchAPIService;
+    @MockBean
+    private MatchService matchService;
 
     @Test
     void fetchPlayerNotAllowHost() throws Exception {

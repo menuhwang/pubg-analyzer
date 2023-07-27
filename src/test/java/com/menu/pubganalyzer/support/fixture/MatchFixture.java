@@ -1,8 +1,8 @@
 package com.menu.pubganalyzer.support.fixture;
 
-import com.menu.pubganalyzer.domain.model.Match;
-import com.menu.pubganalyzer.domain.model.Participant;
-import com.menu.pubganalyzer.domain.model.Roster;
+import com.menu.pubganalyzer.domain.model.matches.Match;
+import com.menu.pubganalyzer.domain.model.matches.Participant;
+import com.menu.pubganalyzer.domain.model.matches.Roster;
 import com.menu.pubganalyzer.support.fixture.pubgapi.MatchResponseFixture;
 import com.menu.pubganalyzer.support.fixture.pubgapi.PlayerResponseFixture;
 import org.springframework.data.domain.*;
@@ -31,7 +31,6 @@ public class MatchFixture {
     public static final Page<Match> MATCH_PAGE = new PageImpl<>(List.of(MATCH), PAGEABLE, TOTAL_SIZE);
 
     static {
-        PARTICIPANT.setMatch(MATCH);
         ROSTER.addParticipant(PARTICIPANT);
         MATCH.setRosters(Set.of(ROSTER));
     }

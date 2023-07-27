@@ -13,7 +13,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collection;
 import java.util.List;
 
 @Slf4j
@@ -39,6 +38,7 @@ public class DefaultPubgAPI implements PubgAPI {
     }
 
     @Override
+    @Cacheable(cacheNames = "match", key = "#matchId")
     public MatchResponse match(String shardId, String matchId) {
         String url = BASE_URL + "/shards/" + shardId.toLowerCase() + "/matches/" + matchId;
         MatchResponse matchResponse = null;
@@ -57,13 +57,13 @@ public class DefaultPubgAPI implements PubgAPI {
     }
 
     @Override
-    public PlayersResponse player(String shardId, Collection<String> nicknames) throws PubgAPIPlayerNotFoundException {
-        StringBuilder url = new StringBuilder(BASE_URL + "/shards/" + shardId.toLowerCase() + "/players?filter[playerNames]=");
-        for (String nickname : nicknames) {
-            url.append(nickname);
-            url.append(",");
-        }
-        url.deleteCharAt(url.length() - 1);
+    @Cacheable(cacheNames = "player", key = "#nickname")
+    public PlayersResponse player(String shardId, String nickname) throws PubgAPIPlayerNotFoundException {
+        StringBuilder url = new StringBuilder(BASE_URL);
+        url.append("/shards/")
+                .append(shardId.toLowerCase())
+                .append("/players?filter[playerNames]=")
+                .append(nickname);
 
         PlayersResponse playersResponse = null;
         try {
@@ -87,7 +87,7 @@ public class DefaultPubgAPI implements PubgAPI {
     }
 
     @Override
-    @Cacheable(cacheNames = "pubg_api_telemetry", key = "#url")
+    @Cacheable(cacheNames = "telemetry")
     public List<TelemetryResponse> telemetry(String url) {
         ParameterizedTypeReference<List<TelemetryResponse>> responseType = new ParameterizedTypeReference<>() {
         };

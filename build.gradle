@@ -23,6 +23,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'io.micrometer:micrometer-registry-prometheus'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -69,15 +70,6 @@ jacocoTestReport {
 tasks.named('test') {
 	if (project.hasProperty("util.pubg.api.token")) {
 		systemProperty "util.pubg.api.token", project.property("util.pubg.api.token")
-	}
-	if (project.hasProperty("test.datasource.url")) {
-		systemProperty "spring.datasource.url", project.property("test.datasource.url")
-	}
-	if (project.hasProperty("test.datasource.username")) {
-		systemProperty "spring.datasource.username", project.property("test.datasource.username")
-	}
-	if (project.hasProperty("test.datasource.password")) {
-		systemProperty "spring.datasource.password", project.property("test.datasource.password")
 	}
 	useJUnitPlatform()
 	finalizedBy 'jacocoTestReport'

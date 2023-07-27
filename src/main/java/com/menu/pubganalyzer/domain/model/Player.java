@@ -1,5 +1,6 @@
 package com.menu.pubganalyzer.domain.model;
 
+import com.menu.pubganalyzer.domain.model.matches.Match;
 import com.menu.pubganalyzer.util.pubgAPI.response.PlayersResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,7 +49,8 @@ public class Player {
     private String banType;
     private String clanId;
     @Transient
-    private List<String> matches;
+    @Builder.Default
+    private List<String> matches = new ArrayList<>();
 
     @CreatedDate
     @Column(updatable = false)
@@ -76,12 +78,27 @@ public class Player {
         return matches;
     }
 
-    public void updateShard(String shard) {
+    public void validateEqualShard(List<Match> matches) {
+        if (matches.isEmpty()) return;
+
+        Match match = matches.get(0);
+        String matchShard = match.getShardId();
+
+        if (equalShard(matchShard)) return;
+
+        updateShard(matchShard);
+    }
+
+    private boolean equalShard(String shard) {
+        return shard.equals(shardId);
+    }
+
+    private void updateShard(String shard) {
         if (shard == null) return;
         this.shardId = shard;
     }
 
-    public void updateMatchHistory() {
+    public void plusUpdateCount() {
         this.updatedDatetime = LocalDateTime.now();
         this.updateCount++;
     }

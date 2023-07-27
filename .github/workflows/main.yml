@@ -45,9 +45,6 @@ jobs:
             build 
             --parallel
             -Putil.pubg.api.token=${{ secrets.PUBG_TOKEN }}
-            -Ptest.datasource.url=${{ secrets.TEST_DATASOURCE_URL }}
-            -Ptest.datasource.username=${{ secrets.TEST_DATASOURCE_USERNAME }}
-            -Ptest.datasource.password=${{ secrets.TEST_DATASOURCE_PASSWORD }}
 
       - name: Upload Gradle Build Artifact
         uses: actions/upload-artifact@v3.1.2

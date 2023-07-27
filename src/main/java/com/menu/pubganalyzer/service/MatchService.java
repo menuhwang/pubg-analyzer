@@ -1,8 +1,8 @@
 package com.menu.pubganalyzer.service;
 
-import com.menu.pubganalyzer.domain.dao.MatchDAO;
-import com.menu.pubganalyzer.domain.model.Match;
-import com.menu.pubganalyzer.domain.repository.PlayerMatchRepository;
+import com.menu.pubganalyzer.domain.model.matches.Match;
+import com.menu.pubganalyzer.domain.repository.MatchRepository;
+import com.menu.pubganalyzer.exception.MatchNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,22 +14,26 @@ import java.util.Collection;
 @Service
 @RequiredArgsConstructor
 public class MatchService {
-    private final PlayerMatchRepository playerMatchRepository;
-    private final MatchDAO matchDAO;
-
-    public Page<Match> findById(String id, Pageable pageable) {
-        return matchDAO.findById(id, pageable);
-    }
+    private final MatchRepository matchRepository;
 
     public Page<Match> findAll(Pageable pageable) {
-        return matchDAO.findAll(pageable);
+        return matchRepository.findAll(pageable);
+    }
+
+    public Match findById(String id) {
+        return matchRepository.findById(id)
+                .orElseThrow(MatchNotFoundException::new);
+    }
+    public Page<Match> findByPlayerName(
+            final String playerName,
+            final Pageable pageable) {
+        return matchRepository.findByRosters_Participants_Name(playerName, pageable);
     }
 
     @Transactional
     public void deleteById(Collection<String> ids) {
         for (String id : ids) {
-            playerMatchRepository.deleteByMatchId(id);
-            matchDAO.deleteById(id);
+            matchRepository.deleteById(id);
         }
     }
 }

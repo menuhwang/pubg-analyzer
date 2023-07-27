@@ -1,52 +1,73 @@
 package com.menu.pubganalyzer.domain;
 
-import com.menu.pubganalyzer.domain.model.LogPlayerKillV2;
-import com.menu.pubganalyzer.domain.model.LogPlayerTakeDamage;
-import lombok.Getter;
+import com.menu.pubganalyzer.domain.model.telemetries.Character;
+import com.menu.pubganalyzer.domain.model.telemetries.LogPlayerKillV2;
+import com.menu.pubganalyzer.domain.model.telemetries.LogPlayerTakeDamage;
 import lombok.ToString;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Getter
 @ToString
 public class Analyzer {
     private List<LogPlayerKillV2> logPlayerKills;
-    private List<LogPlayerTakeDamage> logPlayerTakeDamages;
+    private Set<String> victimNames;
+    private List<LogPlayerTakeDamage> rosterLogPlayerTakeDamages;
+    private List<LogPlayerTakeDamage> totalLogPlayerTakeDamages;
     private Map<String, Map<String, Float>> victimPlayerDamageDealt;
     private Map<String, List<LogPlayerTakeDamage>> victimDamageLog;
-    private final Set<String> victimNames;
-    private final Map<String, Integer> count = new HashMap<>();
+    private Map<String, Integer> count;
+    private Analyzer() {}
 
-    private Analyzer(Collection<LogPlayerKillV2> logPlayerKills, Collection<LogPlayerTakeDamage> logPlayerTakeDamages) {
-        this.logPlayerKills = new ArrayList<>(logPlayerKills);
-        this.logPlayerTakeDamages = new ArrayList<>(logPlayerTakeDamages);
-        this.victimNames = LogPlayerKillV2.extractVictimNames(logPlayerKills);
-        count.put("player", 0);
-        count.put("bot", 0);
+    public static Analyzer init() {
+        return new Analyzer();
     }
 
-    public static Analyzer of(Collection<LogPlayerKillV2> logPlayerKills, Collection<LogPlayerTakeDamage> logPlayerTakeDamages) {
-        return new Analyzer(logPlayerKills, logPlayerTakeDamages).analyze();
-    }
-
-    public static Analyzer of(Telemetry telemetry, String killer) {
-        return new Analyzer(telemetry.getLogPlayerKills(), telemetry.getLogPlayerTakeDamages())
-                .analyze()
-                .filterByKiller(killer);
-    }
-
-    private Analyzer analyze() {
-        damagesGroupByVictim();
-        calculateDamageDealt();
+    public Analyzer logPlayerKills(List<LogPlayerKillV2> logPlayerKills) {
+        this.logPlayerKills = logPlayerKills;
+        this.victimNames = logPlayerKills.stream()
+                .map(LogPlayerKillV2::getVictim)
+                .map(Character::getName)
+                .collect(Collectors.toSet());
 
         return this;
     }
 
-    private void damagesGroupByVictim() {
-        if (victimDamageLog == null) victimDamageLog = new HashMap<>();
+    public Analyzer rosterLogPlayerTakeDamages(List<LogPlayerTakeDamage> logPlayerTakeDamages) {
+        this.rosterLogPlayerTakeDamages = logPlayerTakeDamages;
 
-        for (LogPlayerTakeDamage logPlayerTakeDamage : logPlayerTakeDamages) {
+        return this;
+    }
+
+    public Analyzer totalLogPlayerTakeDamage(List<LogPlayerTakeDamage> logPlayerTakeDamages) {
+        this.totalLogPlayerTakeDamages = logPlayerTakeDamages;
+
+        return this;
+    }
+
+    public Map<String, Map<String, Float>> analysisDamageDealt() {
+        if (Objects.nonNull(victimPlayerDamageDealt)) return victimPlayerDamageDealt;
+        calculateDamageDealt();
+        return victimPlayerDamageDealt;
+    }
+
+    public Map<String, List<LogPlayerTakeDamage>> damageLogGroupByVictim() {
+        if (Objects.nonNull(victimDamageLog)) return victimDamageLog;
+        damagesGroupByVictim();
+        return victimDamageLog;
+    }
+
+    public Map<String, Integer> countVictimType() {
+        if (Objects.nonNull(count)) return count;
+        countKillsPlayerBot();
+        return count;
+    }
+
+    private void damagesGroupByVictim() {
+        if (Objects.isNull(rosterLogPlayerTakeDamages) || Objects.isNull(victimNames)) throw new RuntimeException("데미지 로그 정리를 진행할 수 없습니다.");
+        victimDamageLog = new HashMap<>();
+
+        for (LogPlayerTakeDamage logPlayerTakeDamage : rosterLogPlayerTakeDamages) {
             if (!victimNames.contains(logPlayerTakeDamage.getVictimName())) continue;
 
             String vitim = logPlayerTakeDamage.getVictimName();
@@ -58,9 +79,10 @@ public class Analyzer {
     }
 
     private void calculateDamageDealt() {
-        if (victimPlayerDamageDealt == null) victimPlayerDamageDealt = new HashMap<>();
+        if (Objects.isNull(victimNames) || Objects.isNull(rosterLogPlayerTakeDamages)) throw new RuntimeException("데미지 계산을 진행할 수 없습니다.");
+        victimPlayerDamageDealt = new HashMap<>();
 
-        for (LogPlayerTakeDamage logPlayerTakeDamage : logPlayerTakeDamages) {
+        for (LogPlayerTakeDamage logPlayerTakeDamage : rosterLogPlayerTakeDamages) {
             if (!victimNames.contains(logPlayerTakeDamage.getVictimName())) continue;
 
             String vitim = logPlayerTakeDamage.getVictimName();
@@ -74,28 +96,41 @@ public class Analyzer {
         }
     }
 
-
-    public Analyzer filterByKiller(String nickname) {
-        List<LogPlayerKillV2> filteredLogPlayerKills = this.logPlayerKills.stream()
-                .filter(log -> log.getKillerName() != null && log.getKillerName().equals(nickname))
-                .collect(Collectors.toList());
-
-        List<LogPlayerTakeDamage> filteredLogPlayerTakeDamages = this.logPlayerTakeDamages.stream()
-                .filter(logPlayerTakeDamage -> nickname.equals(logPlayerTakeDamage.getAttackerName()))
-                .collect(Collectors.toList());
-
-        this.logPlayerKills = filteredLogPlayerKills;
-        this.logPlayerTakeDamages = filteredLogPlayerTakeDamages;
-
-        countKillsPlayerBot();
-
-        return this;
-    }
-
     private void countKillsPlayerBot() {
+        if (Objects.isNull(logPlayerKills)) throw new RuntimeException("봇 수를 계산할 수 없습니다.");
+
+        count = countInit();
+
         for (LogPlayerKillV2 logPlayerKill : logPlayerKills) {
-            String victimType = logPlayerKill.getVictimAccountId().startsWith("ai") ? "bot" : "player";
+            String victimType = logPlayerKill.isVictimBot() ? "bot" : "player";
             count.put(victimType, count.get(victimType) + 1);
         }
+    }
+
+    private Map<String, Integer> countInit() {
+        Map<String, Integer> init = new HashMap<>();
+        init.put("bot", 0);
+        init.put("player", 0);
+
+        return init;
+    }
+
+    public List<LogPlayerKillV2> getLogPlayerKills() {
+        if (Objects.isNull(logPlayerKills)) return Collections.emptyList();
+        return logPlayerKills;
+    }
+
+    public List<LogPlayerTakeDamage> getRosterLogPlayerTakeDamages() {
+        if (Objects.isNull(rosterLogPlayerTakeDamages)) return Collections.emptyList();
+        return rosterLogPlayerTakeDamages;
+    }
+
+    public Set<String> getVictimNames() {
+        return Objects.requireNonNull(victimNames);
+    }
+
+    public List<LogPlayerTakeDamage> getTotalLogPlayerTakeDamages() {
+        if (Objects.isNull(totalLogPlayerTakeDamages)) return Collections.emptyList();
+        return totalLogPlayerTakeDamages;
     }
 }

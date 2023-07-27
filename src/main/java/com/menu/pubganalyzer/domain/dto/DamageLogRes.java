@@ -1,15 +1,18 @@
 package com.menu.pubganalyzer.domain.dto;
 
-import com.menu.pubganalyzer.domain.model.LogPlayerTakeDamage;
 import com.menu.pubganalyzer.domain.model.enums.DamageCauserName;
 import com.menu.pubganalyzer.domain.model.enums.DamageReason;
 import com.menu.pubganalyzer.domain.model.enums.DamageTypeCategory;
+import com.menu.pubganalyzer.domain.model.telemetries.LogPlayerTakeDamage;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Builder
+@AllArgsConstructor
 public class DamageLogRes {
     private final LocalDateTime timestamp;
     private final CharacterInfo attacker;
@@ -19,18 +22,6 @@ public class DamageLogRes {
     private final Float damage;
     private final DamageCauserName damageCauserName;
     private final Integer phase;
-
-    @Builder
-    public DamageLogRes(LocalDateTime timestamp, CharacterInfo attacker, CharacterInfo victim, DamageTypeCategory damageTypeCategory, DamageReason damageReason, Float damage, DamageCauserName damageCauserName, Integer phase) {
-        this.timestamp = timestamp;
-        this.attacker = attacker;
-        this.victim = victim;
-        this.damageTypeCategory = damageTypeCategory;
-        this.damageReason = damageReason;
-        this.damage = damage;
-        this.damageCauserName = damageCauserName;
-        this.phase = phase;
-    }
 
     public static DamageLogRes of(LogPlayerTakeDamage logPlayerTakeDamage) {
         CharacterInfo attacker = CharacterInfo.builder()
@@ -53,10 +44,10 @@ public class DamageLogRes {
                 .timestamp(logPlayerTakeDamage.getTimestamp())
                 .attacker(attacker)
                 .victim(victim)
-                .damageTypeCategory(DamageTypeCategory.of(logPlayerTakeDamage.getDamageTypeCategory()))
-                .damageReason(DamageReason.of(logPlayerTakeDamage.getDamageReason()))
+                .damageTypeCategory(logPlayerTakeDamage.getDamageTypeCategory())
+                .damageReason(logPlayerTakeDamage.getDamageReason())
                 .damage(logPlayerTakeDamage.getDamage())
-                .damageCauserName(DamageCauserName.of(logPlayerTakeDamage.getDamageCauserName()))
+                .damageCauserName(logPlayerTakeDamage.getDamageCauserName())
                 .phase(logPlayerTakeDamage.getPhase())
                 .build();
     }

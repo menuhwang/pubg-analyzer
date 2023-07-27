@@ -1,26 +1,20 @@
 package com.menu.pubganalyzer.domain.dto;
 
-import com.menu.pubganalyzer.domain.SearchPlayer;
-import com.menu.pubganalyzer.domain.model.Participant;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import org.springframework.data.domain.Page;
 
 @Getter
+@Builder
+@AllArgsConstructor
 public class SearchPlayerRes {
     private final String player;
-    private final PageDTO<ParticipantRes> matches;
+    private final PageDTO<MatchStatsRes> matches;
 
-    private SearchPlayerRes(String player, PageDTO<ParticipantRes> matches) {
-        this.player = player;
-        this.matches = matches;
-    }
-
-    public static SearchPlayerRes of(SearchPlayer searchPlayer) {
-        Page<Participant> participantPage = searchPlayer.getParticipants();
-
-        return new SearchPlayerRes(
-                searchPlayer.getPlayer().getName(),
-                PageDTO.of(participantPage.map(ParticipantRes::of))
-        );
+    public static SearchPlayerRes of(String player, PageDTO<MatchStatsRes> matches) {
+        return SearchPlayerRes.builder()
+                .player(player)
+                .matches(matches)
+                .build();
     }
 }

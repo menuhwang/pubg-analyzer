@@ -1,43 +1,43 @@
 package com.menu.pubganalyzer.controller.api;
 
-import com.jayway.jsonpath.JsonPath;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
+import com.menu.pubganalyzer.service.FetchAPIService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static com.menu.pubganalyzer.support.fixture.MatchFixture.MATCH_ID;
+import static com.menu.pubganalyzer.support.fixture.pubgapi.MatchResponseFixture.MATCH_RESPONSE;
+import static com.menu.pubganalyzer.support.fixture.pubgapi.PlayerResponseFixture.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-@SpringBootTest
-@ActiveProfiles("test")
-@AutoConfigureMockMvc
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@WebMvcTest(controllers = FetchPubgAPIRestController.class)
 class FetchPubgAPIRestControllerTest {
     private static final String FETCH_API_URL = "/fetch";
     @Autowired
     private MockMvc mockMvc;
-
-    private static final String SHARD = "STEAM";
-    private static final String PLAYER_NICKNAME = "WackyJacky101";
-    private static String MATCH_ID;
+    @MockBean
+    private FetchAPIService fetchAPIService;
 
     @Test
-    @Order(1)
     void fetchPlayer() throws Exception {
+        given(fetchAPIService.player(PLAYER_SHARD, PLAYER_NAME))
+                .willReturn(PLAYERS_RESPONSE);
+
         ResultActions result = mockMvc.perform(
                 get(FETCH_API_URL + "/player")
-                        .param("shard", SHARD)
-                        .param("nickname", PLAYER_NICKNAME)
+                        .param("shard", PLAYER_SHARD)
+                        .param("nickname", PLAYER_NAME)
         );
+
+        verify(fetchAPIService).player(PLAYER_SHARD, PLAYER_NAME);
 
         result.andDo(print())
                 .andExpect(handler().handlerType(FetchPubgAPIRestController.class))
@@ -45,21 +45,23 @@ class FetchPubgAPIRestControllerTest {
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.result.data").isArray())
                 .andExpect(jsonPath("$.result.data.length()").value(1))
-                .andExpect(jsonPath("$.result.data[0].attributes.name").value(PLAYER_NICKNAME))
+                .andExpect(jsonPath("$.result.data[0].attributes.name").value(PLAYER_NAME))
                 .andExpect(jsonPath("$.result.data[0].relationships.matches.data").isArray())
         ;
-
-        MATCH_ID = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.result.data[0].relationships.matches.data[0].id");
     }
 
     @Test
-    @Order(2)
     void fetchMatch() throws Exception {
+        given(fetchAPIService.match(PLAYER_SHARD, MATCH_ID))
+                .willReturn(MATCH_RESPONSE);
+
         ResultActions result = mockMvc.perform(
                 get(FETCH_API_URL + "/match")
-                        .param("shard", SHARD)
+                        .param("shard", PLAYER_SHARD)
                         .param("id", MATCH_ID)
         );
+
+        verify(fetchAPIService).match(PLAYER_SHARD, MATCH_ID);
 
         result.andDo(print())
                 .andExpect(handler().handlerType(FetchPubgAPIRestController.class))

@@ -1,14 +1,19 @@
 package com.menu.pubganalyzer.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.menu.pubganalyzer.domain.model.Match;
-import com.menu.pubganalyzer.domain.model.Participant;
+import com.menu.pubganalyzer.domain.model.matches.Match;
+import com.menu.pubganalyzer.domain.model.matches.Participant;
+import com.menu.pubganalyzer.domain.model.matches.Roster;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Builder
+@AllArgsConstructor
 public class MatchResultRes {
     private final int rank;
     private final int rosters;
@@ -19,29 +24,11 @@ public class MatchResultRes {
     private final float damageDealt;
     private final int revives;
 
-    @Builder
-    public MatchResultRes(
-            int rank,
-            int rosters,
-            List<String> member,
-            int kills,
-            int assists,
-            float damageDealt,
-            int revives) {
-        this.rank = rank;
-        this.rosters = rosters;
-        this.member = member;
-        this.kills = kills;
-        this.assists = assists;
-        this.damageDealt = damageDealt;
-        this.revives = revives;
-    }
-
-    public static MatchResultRes of(Match match, Participant participant) {
+    public static MatchResultRes of(Match match, Roster roster, Participant participant) {
         return MatchResultRes.builder()
                 .rank(participant.getWinPlace())
                 .rosters(match.getRosters().size())
-                .member(participant.getMember())
+                .member(new ArrayList<>(roster.extractParticipantNameWithout(participant.getName())))
                 .kills(participant.getKills())
                 .assists(participant.getAssists())
                 .damageDealt(participant.getDamageDealt())
