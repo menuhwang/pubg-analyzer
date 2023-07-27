@@ -47,7 +47,7 @@ public class AnalyzerRes {
             );
         }
         Map<String, Object> charts = new HashMap<>();
-        charts.put("phaseDamageChart", ChartUtil.phaseDamageChart(analyzer.getRosterLogPlayerTakeDamages()));
+        charts.put("phaseDamageChart", ChartUtil.phaseDamageChart(analyzer.getTotalLogPlayerTakeDamages()));
         charts.put("contributeDamageChart", ChartUtil.contributeDamageChart(analyzer.getLogPlayerKills(), analyzer.analysisDamageDealt()));
 
         return AnalyzerRes.builder()
