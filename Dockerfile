@@ -14,7 +14,7 @@ ENTRYPOINT [                                                \
    "-Dsun.net.inetaddr.ttl=0",                             \
    "-Dcom.amazonaws.sdk.disableEc2Metadata=true",          \
    "-Djava.net.preferIPv4Stack=true",          \
-   "-Xms512m",               \
-   "-Xmx512m",               \
+   "-Xms1024m",               \
+   "-Xmx1024m",               \
    "app.jar"              \
 ]
