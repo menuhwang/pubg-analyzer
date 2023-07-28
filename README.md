@@ -22,3 +22,8 @@
    ![매치_결과_분석_페이지](./assets/analyze.png)
    - 킬 정보 제공
    - 플레이어, 봇 구분
+
+# Usage
+
+## Page
+   - [페이지 사용 팁](https://github.com/menuhwang/pubg-analyzer/wiki/Usage)
