@@ -52,6 +52,6 @@ public class TelemetryService {
     private void fetchTelemetry(Match match) {
         List<Telemetry> telemetries = pubgService.fetchTelemetry(match);
 
-        telemetryRepository.saveAll(telemetries);
+        telemetryRepository.saveAll(match.getId(), telemetries);
     }
 }
