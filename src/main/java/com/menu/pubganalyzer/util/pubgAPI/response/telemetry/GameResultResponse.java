@@ -1,5 +1,6 @@
 package com.menu.pubganalyzer.util.pubgAPI.response.telemetry;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 @Getter
@@ -7,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GameResultResponse {
     private int rank;
     private String gameResult;

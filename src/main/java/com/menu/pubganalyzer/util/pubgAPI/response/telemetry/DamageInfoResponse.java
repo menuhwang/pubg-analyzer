@@ -1,5 +1,6 @@
 package com.menu.pubganalyzer.util.pubgAPI.response.telemetry;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import java.util.List;
@@ -9,13 +10,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DamageInfoResponse {
     private String damageReason;
     private String damageTypeCategory;
     private String damageCauserName;
     private List<String> additionalInfo;
     private float distance;
-    private boolean isThroughPenetrableWall;
+    private Boolean isThroughPenetrableWall;
 
     public String getDamageReason() {
         return damageReason == null ? null : damageReason.toUpperCase();
@@ -27,5 +29,9 @@ public class DamageInfoResponse {
 
     public String getDamageCauserName() {
         return damageCauserName == null ? null : damageCauserName.replaceAll("-", "_").toUpperCase();
+    }
+
+    public boolean isThroughPenetrableWall() {
+        return isThroughPenetrableWall;
     }
 }

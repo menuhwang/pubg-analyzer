@@ -1,5 +1,6 @@
 package com.menu.pubganalyzer.util.pubgAPI.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.*;
 import lombok.*;
@@ -16,7 +17,10 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@JsonIgnoreProperties(value = {"PingQuality"}, ignoreUnknown = true)
 public class TelemetryResponse {
+    @JsonProperty(value = "MatchId")
+    String _id;
     @CommonField
     @JsonProperty(value = "_D")
     LocalDateTime timestamp;
@@ -101,6 +105,10 @@ public class TelemetryResponse {
     List<CharacterResponse> fellowPassengers;
     String weaponId;
     Integer fireCount;
+    List<String> playersInWhiteCircle;
+    String carePackageName;
+    Integer wheelIndex;
+    List<WeaponStatsWrapperResponse> allWeaponStats;
 
     public String getDamageTypeCategory() {
         return damageTypeCategory == null ? null : damageTypeCategory.toUpperCase();

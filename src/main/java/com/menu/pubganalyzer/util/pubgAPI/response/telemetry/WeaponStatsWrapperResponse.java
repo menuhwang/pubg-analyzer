@@ -1,16 +1,15 @@
 package com.menu.pubganalyzer.util.pubgAPI.response.telemetry;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
+import lombok.Getter;
+import lombok.ToString;
+
+import java.util.List;
 
 @Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LocationResponse {
-    private float x;
-    private float y;
-    private float z;
+public class WeaponStatsWrapperResponse {
+    private String accountId;
+    private List<WeaponStatsResponse> stats;
 }
