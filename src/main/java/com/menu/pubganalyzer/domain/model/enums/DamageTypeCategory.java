@@ -62,6 +62,7 @@ public enum DamageTypeCategory {
     }
 
     public static DamageTypeCategory of(String name) {
+        if (name.isBlank()) return null;
         for (DamageTypeCategory damageTypeCategory : values()) {
             if (damageTypeCategory.name().equals(name)) return damageTypeCategory;
         }

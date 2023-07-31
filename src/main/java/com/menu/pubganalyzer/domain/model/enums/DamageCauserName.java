@@ -227,6 +227,7 @@ public enum DamageCauserName {
     }
 
     public static DamageCauserName of(String name) {
+        if (name.isBlank()) return null;
         for (DamageCauserName damageCauserName : values()) {
             if (damageCauserName.name().equals(name)) return damageCauserName;
         }

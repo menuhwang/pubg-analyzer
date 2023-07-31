@@ -6,6 +6,7 @@ import com.menu.pubganalyzer.domain.model.enums.DamageTypeCategory;
 import com.menu.pubganalyzer.domain.model.telemetries.DamageInfo;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.DamageInfoResponse;
 
+import java.util.Map;
 import java.util.Objects;
 
 public class DamageInfoImpl implements DamageInfo {
@@ -23,7 +24,20 @@ public class DamageInfoImpl implements DamageInfo {
         this.throughPenetrableWall = damageInfo.isThroughPenetrableWall();
     }
 
+    private DamageInfoImpl(Map<String, Object> damageInfo) {
+        this.damageReason = DamageReason.of(((String) damageInfo.getOrDefault("damageReason", "")).toUpperCase());
+        this.damageTypeCategory = DamageTypeCategory.of(((String) damageInfo.getOrDefault("damageTypeCategory", "")).toUpperCase());
+        this.damageCauserName = DamageCauserName.of(((String) damageInfo.getOrDefault("damageCauserName", "")).replaceAll("-", "_").toUpperCase());
+        this.distance = ((Double) damageInfo.getOrDefault("distance", -1D)).floatValue();
+        this.throughPenetrableWall = (boolean) damageInfo.getOrDefault("isThroughPenetrableWall", false);
+    }
+
     public static DamageInfo from(DamageInfoResponse damageInfo) {
+        if (Objects.isNull(damageInfo)) return null;
+        return new DamageInfoImpl(damageInfo);
+    }
+
+    public static DamageInfo from(Map<String, Object> damageInfo) {
         if (Objects.isNull(damageInfo)) return null;
         return new DamageInfoImpl(damageInfo);
     }

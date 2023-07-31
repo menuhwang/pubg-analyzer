@@ -7,7 +7,6 @@ import com.menu.pubganalyzer.domain.model.enums.DamageTypeCategory;
 import java.time.LocalDateTime;
 
 public interface LogPlayerTakeDamage {
-    String getMatchId();
     String getType();
     LocalDateTime getTimestamp();
     Common getCommon();
