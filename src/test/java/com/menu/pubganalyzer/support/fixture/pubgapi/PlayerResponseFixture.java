@@ -9,7 +9,7 @@ import static com.menu.pubganalyzer.support.fixture.pubgapi.MatchResponseFixture
 
 public class PlayerResponseFixture {
     public static final String PLAYER_ID = "test-player-id";
-    public static final String PLAYER_NAME = "test-player";
+    public static final String PLAYER_NAME = "WackyJacky101";
     public static final String PLAYER_SHARD = Shard.STEAM.name();
 
     private static final PlayersResponse.Attribute RES_ATTRIBUTE = PlayersResponse.Attribute.builder()

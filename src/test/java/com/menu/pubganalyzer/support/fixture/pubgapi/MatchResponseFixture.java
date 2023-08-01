@@ -1,76 +1,45 @@
 package com.menu.pubganalyzer.support.fixture.pubgapi;
 
-import com.menu.pubganalyzer.domain.model.enums.Shard;
-import com.menu.pubganalyzer.domain.model.enums.match.GameMode;
-import com.menu.pubganalyzer.domain.model.enums.match.MapName;
-import com.menu.pubganalyzer.domain.model.enums.match.MatchType;
-import com.menu.pubganalyzer.domain.model.enums.match.SeasonState;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
+import org.springframework.core.io.ClassPathResource;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
 
 public class MatchResponseFixture {
-    public static final String MATCH_ID = "test-match";
-    public static final String MATCH_SHARD = Shard.STEAM.name();
-    public static final String MATCH_ASSET_URL = "test-telemetry-url";
+    public static final String MATCH_ID = "2bf96de2-2cb9-4ce0-a23c-9149eb164a52";
+    public static final String MATCH_SHARD;
+    public static final String MATCH_ASSET_URL;
+    public static final MatchResponse MATCH_RESPONSE;
 
-    private static final MatchResponse.Attribute RES_ATTRIBUTE = MatchResponse.Attribute.builder()
-            .gameMode(GameMode.DUO.getEng())
-            .seasonState(SeasonState.PROGRESS.name())
-            .duration(1000)
-            .titleId("")
-            .shardId(MATCH_SHARD)
-            .mapName(MapName.BALTIC_MAIN.name())
-            .isCustomMatch(false)
-            .matchType(MatchType.OFFICIAL.name())
-            .createdAt(LocalDateTime.now())
-            .build();
+    static {
+        try {
+            ClassPathResource classpath = new ClassPathResource("matches" + File.separator + "response");
+            File responseDir = classpath.getFile();
 
-    private static final MatchResponse.Included RES_ROSTERS = MatchResponse.Included.builder()
-            .data(List.of())
-            .build();
+            MATCH_RESPONSE = read(new File(responseDir, MATCH_ID + ".json"));
+            MATCH_SHARD = MATCH_RESPONSE.getAttributes().getShardId();
+            MATCH_ASSET_URL = MATCH_RESPONSE.getIncluded().stream()
+                    .filter(element -> element.getType().equals("asset"))
+                    .findFirst().orElseThrow().getAttributes().getURL();
 
-    private static final MatchResponse.Attribute RES_ASSET_ELEMENT_ATTRIBUTE = MatchResponse.Attribute.builder()
-            .name("test-asset")
-            .description("")
-            .URL(MATCH_ASSET_URL)
-            .createdAt(LocalDateTime.now())
-            .build();
+        } catch (IOException e) {
+            System.err.println(e);
+            throw new RuntimeException();
+        }
+    }
 
-    private static final MatchResponse.Element RES_ASSET_ELEMENT = MatchResponse.Element.builder()
-            .id("test-asset-id")
-            .type("asset")
-            .attributes(RES_ASSET_ELEMENT_ATTRIBUTE)
-            .build();
+    private static MatchResponse read(File file) {
+        ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+        MatchResponse result = null;
+        try {
+            result = objectMapper.readValue(file, MatchResponse.class);
+        } catch (IOException e) {
+            throw new RuntimeException();
+        }
 
-    private static final MatchResponse.Included RES_ASSET = MatchResponse.Included.builder()
-            .data(List.of(RES_ASSET_ELEMENT))
-            .build();
-
-    private static final MatchResponse.Included RES_PARTICIPANTS = MatchResponse.Included.builder()
-            .data(List.of())
-            .build();
-
-    private static final MatchResponse.Included RES_TEAM = MatchResponse.Included.builder()
-            .data(List.of())
-            .build();
-
-    private static final MatchResponse.Relationship RES_RELATIONSHIP = MatchResponse.Relationship.builder()
-            .rosters(RES_ROSTERS)
-            .assets(RES_ASSET)
-            .participants(RES_PARTICIPANTS)
-            .team(RES_TEAM)
-            .build();
-
-    private static final MatchResponse.Data RES_DATA = MatchResponse.Data.builder()
-            .id(MATCH_ID)
-            .attributes(RES_ATTRIBUTE)
-            .relationships(RES_RELATIONSHIP)
-            .build();
-
-    public static final MatchResponse MATCH_RESPONSE = MatchResponse.builder()
-            .data(RES_DATA)
-            .included(List.of(RES_ASSET_ELEMENT))
-            .build();
+        return result;
+    }
 }
