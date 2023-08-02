@@ -75,7 +75,7 @@ public class TelemetryRepositoryImpl implements TelemetryRepository {
         return telemetries.stream()
                 .filter(telemetry -> telemetry.getType().equals(LOG_PLAYER_TAKE_DAMAGE))
                 .filter(telemetry -> filterByAttackerName(telemetry, attacker))
-                .filter(this::filterByVictimEqualAttacker)
+                .filter(telemetry -> !filterByVictimEqualAttacker(telemetry))
                 .collect(Collectors.toList());
     }
 
