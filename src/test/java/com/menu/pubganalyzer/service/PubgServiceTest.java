@@ -20,7 +20,7 @@ import static com.menu.pubganalyzer.support.fixture.PlayerFixture.PLAYER_SHARD;
 import static com.menu.pubganalyzer.support.fixture.pubgapi.MatchResponseFixture.MATCH_ASSET_URL;
 import static com.menu.pubganalyzer.support.fixture.pubgapi.MatchResponseFixture.MATCH_RESPONSE;
 import static com.menu.pubganalyzer.support.fixture.pubgapi.PlayerResponseFixture.PLAYERS_RESPONSE;
-import static com.menu.pubganalyzer.support.fixture.pubgapi.TelemetryResponseFixture.TELEMETRY_RESPONSES;
+import static com.menu.pubganalyzer.support.fixture.pubgapi.TelemetryResponseFixture.OFFICIAL_TELEMETRY_RESPONSE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -90,7 +90,7 @@ class PubgServiceTest {
     @Test
     void fetchTelemetry() {
         given(pubgAPI.telemetry(MATCH_ASSET_URL))
-                .willReturn(TELEMETRY_RESPONSES);
+                .willReturn(OFFICIAL_TELEMETRY_RESPONSE);
 
         List<Telemetry> result = assertDoesNotThrow(() ->pubgService.fetchTelemetry(MATCH));
 

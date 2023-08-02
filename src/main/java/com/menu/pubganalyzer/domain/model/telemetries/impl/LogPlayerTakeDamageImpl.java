@@ -7,13 +7,11 @@ import com.menu.pubganalyzer.domain.model.telemetries.Character;
 import com.menu.pubganalyzer.domain.model.telemetries.Common;
 import com.menu.pubganalyzer.domain.model.telemetries.LogPlayerTakeDamage;
 import com.menu.pubganalyzer.domain.model.telemetries.Telemetry;
-import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.CharacterResponse;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 
 public class LogPlayerTakeDamageImpl implements LogPlayerTakeDamage {
-    private final String matchId;
     private final String type;
     private final LocalDateTime timestamp;
     private final Common common;
@@ -27,7 +25,6 @@ public class LogPlayerTakeDamageImpl implements LogPlayerTakeDamage {
 
     public LogPlayerTakeDamageImpl(Telemetry telemetry) {
         Map<String, Object> attribute = telemetry.getAttribute();
-        this.matchId = telemetry.getMatchId();
         this.type = telemetry.getType();
         this.timestamp = telemetry.getTimestamp();
         this.common = telemetry.getCommon();
@@ -36,13 +33,8 @@ public class LogPlayerTakeDamageImpl implements LogPlayerTakeDamage {
         this.damageReason = DamageReason.of(((String) attribute.get("damageReason")).toUpperCase());
         this.damage = ((Double) attribute.get("damage")).floatValue();
         this.throughPenetrableWall = (boolean) attribute.get("isThroughPenetrableWall");
-        this.attacker = CharacterImpl.from((CharacterResponse) attribute.get("attacker"));
-        this.victim = CharacterImpl.from((CharacterResponse) attribute.get("victim"));
-    }
-
-    @Override
-    public String getMatchId() {
-        return matchId;
+        this.attacker = CharacterImpl.from((Map<String, Object>) attribute.get("attacker"));
+        this.victim = CharacterImpl.from((Map<String, Object>) attribute.get("victim"));
     }
 
     @Override

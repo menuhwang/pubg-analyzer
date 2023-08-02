@@ -13,6 +13,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(value = ServerException.class)
+    public ResponseEntity<ApiResult<?>> serverExceptionHandler(ServerException serverException) {
+        Throwable cause = serverException.getCause();
+        log.error("{}", cause.getMessage(), cause);
+
+        return errorResponse(serverException, serverException.getHttpStatus());
+    }
+
     @ExceptionHandler(value = AbstractApplicationException.class)
     public ResponseEntity<ApiResult<?>> badRequestExceptionHandler(AbstractApplicationException e) {
         log.warn("{}", e.getMessage(), e);

@@ -9,6 +9,11 @@ public abstract class AbstractApplicationException extends RuntimeException {
         this.httpStatus = errorCode.getHttpStatus();
     }
 
+    public AbstractApplicationException(ErrorCode errorCode, Throwable cause) {
+        super(errorCode.getMessage(), cause);
+        this.httpStatus = errorCode.getHttpStatus();
+    }
+
     public HttpStatus getHttpStatus() {
         return httpStatus;
     }

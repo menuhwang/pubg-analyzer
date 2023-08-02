@@ -30,6 +30,7 @@ public enum DamageReason {
     }
 
     public static DamageReason of(String name) {
+        if (name.isBlank()) return null;
         for (DamageReason damageReason : values()) {
             if (damageReason.name().equals(name)) return damageReason;
         }

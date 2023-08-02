@@ -1,5 +1,6 @@
 package com.menu.pubganalyzer.util.pubgAPI.response.telemetry;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 /**
@@ -17,6 +18,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CommonResponse {
     private float isGame;
 }

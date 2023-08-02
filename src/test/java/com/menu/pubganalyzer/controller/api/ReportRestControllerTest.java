@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import static com.menu.pubganalyzer.support.fixture.MatchFixture.MATCH;
 import static com.menu.pubganalyzer.support.fixture.MatchFixture.MATCH_ID;
 import static com.menu.pubganalyzer.support.fixture.PlayerFixture.PLAYER_NAME;
-import static com.menu.pubganalyzer.support.fixture.ReportFixture.REPORT;
+import static com.menu.pubganalyzer.support.fixture.ReportFixture.OFFICIAL_REPORT;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -36,7 +36,7 @@ class ReportRestControllerTest {
                 .willReturn(MATCH);
 
         given(reportService.getMatchReport(eq(MATCH), eq(PLAYER_NAME)))
-                .willReturn(REPORT);
+                .willReturn(OFFICIAL_REPORT);
 
         ResultActions result = mockMvc.perform(
                 get(REPORT_API_URL + "/match/" + MATCH_ID + "/player/" + PLAYER_NAME)

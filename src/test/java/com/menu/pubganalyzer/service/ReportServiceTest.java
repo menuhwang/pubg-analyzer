@@ -4,8 +4,8 @@ import com.menu.pubganalyzer.domain.model.matches.Match;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static com.menu.pubganalyzer.support.fixture.LogPlayerKillFixture.LOG_PLAYER_KILLS;
-import static com.menu.pubganalyzer.support.fixture.LogPlayerTakeDamageFixture.LOG_PLAYER_TAKE_DAMAGES;
+import static com.menu.pubganalyzer.support.fixture.LogPlayerKillFixture.OFFICIAL_LOG_PLAYER_KILLS;
+import static com.menu.pubganalyzer.support.fixture.LogPlayerTakeDamageFixture.OFFICIAL_LOG_PLAYER_TAKE_DAMAGES;
 import static com.menu.pubganalyzer.support.fixture.MatchFixture.MATCH;
 import static com.menu.pubganalyzer.support.fixture.PlayerFixture.PLAYER_NAME;
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,11 +20,11 @@ class ReportServiceTest {
     @Test
     void getMatchReport() {
         given(telemetryService.findKillLogs(any(Match.class), eq(PLAYER_NAME)))
-                .willReturn(LOG_PLAYER_KILLS);
+                .willReturn(OFFICIAL_LOG_PLAYER_KILLS);
         given(telemetryService.findDamageLogs(any(Match.class),  anyCollection(), anyCollection()))
-                .willReturn(LOG_PLAYER_TAKE_DAMAGES);
+                .willReturn(OFFICIAL_LOG_PLAYER_TAKE_DAMAGES);
         given(telemetryService.findDamageLogs(any(Match.class),  eq(PLAYER_NAME)))
-                .willReturn(LOG_PLAYER_TAKE_DAMAGES);
+                .willReturn(OFFICIAL_LOG_PLAYER_TAKE_DAMAGES);
 
         assertDoesNotThrow(() -> reportService.getMatchReport(MATCH, PLAYER_NAME));
 

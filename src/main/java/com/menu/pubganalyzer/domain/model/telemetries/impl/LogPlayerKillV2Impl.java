@@ -1,15 +1,12 @@
 package com.menu.pubganalyzer.domain.model.telemetries.impl;
 
-import com.menu.pubganalyzer.domain.model.telemetries.*;
 import com.menu.pubganalyzer.domain.model.telemetries.Character;
-import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.CharacterResponse;
-import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.DamageInfoResponse;
+import com.menu.pubganalyzer.domain.model.telemetries.*;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 
 public class LogPlayerKillV2Impl implements LogPlayerKillV2 {
-    private final String matchId;
     private final String type;
     private final LocalDateTime timestamp;
     private final Common common;
@@ -25,23 +22,17 @@ public class LogPlayerKillV2Impl implements LogPlayerKillV2 {
 
     public LogPlayerKillV2Impl(Telemetry telemetry) {
         Map<String, Object> attribute = telemetry.getAttribute();
-        this.matchId = telemetry.getMatchId();
         this.type = telemetry.getType();
         this.timestamp = telemetry.getTimestamp();
         this.common = telemetry.getCommon();
         this.suicide = (boolean) attribute.get("isSuicide");
-        this.victim = CharacterImpl.from((CharacterResponse) attribute.get("victim"));
-        this.dBNOMaker = CharacterImpl.from((CharacterResponse) attribute.get("dBNOMaker"));
-        this.dBNODamageInfo = DamageInfoImpl.from((DamageInfoResponse) attribute.get("dBNODamageInfo"));
-        this.killer = CharacterImpl.from((CharacterResponse) attribute.get("killer"));
-        this.killerDamageInfo = DamageInfoImpl.from((DamageInfoResponse) attribute.get("killerDamageInfo"));
-        this.finisher = CharacterImpl.from((CharacterResponse) attribute.get("finisher"));
-        this.finisherDamageInfo = DamageInfoImpl.from((DamageInfoResponse) attribute.get("finisherDamageInfo"));
-    }
-
-    @Override
-    public String getMatchId() {
-        return matchId;
+        this.victim = CharacterImpl.from((Map<String, Object>) attribute.get("victim"));
+        this.dBNOMaker = CharacterImpl.from((Map<String, Object>) attribute.get("dBNOMaker"));
+        this.dBNODamageInfo = DamageInfoImpl.from((Map<String, Object>) attribute.get("dBNODamageInfo"));
+        this.killer = CharacterImpl.from((Map<String, Object>) attribute.get("killer"));
+        this.killerDamageInfo = DamageInfoImpl.from((Map<String, Object>) attribute.get("killerDamageInfo"));
+        this.finisher = CharacterImpl.from((Map<String, Object>) attribute.get("finisher"));
+        this.finisherDamageInfo = DamageInfoImpl.from((Map<String, Object>) attribute.get("finisherDamageInfo"));
     }
 
     @Override

@@ -81,7 +81,7 @@ public class PubgService {
         List<TelemetryResponse> telemetryResponses = pubgAPI.telemetry(telemetryUrl);
 
         return telemetryResponses.stream()
-                .map(telemetryResponse -> Telemetry.of(match.getId(), telemetryResponse))
+                .map(Telemetry::from)
                 .collect(Collectors.toList());
     }
 }

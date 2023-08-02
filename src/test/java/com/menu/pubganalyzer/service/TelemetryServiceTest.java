@@ -28,16 +28,16 @@ class TelemetryServiceTest {
                 .willReturn(false);
 
         given(pubgService.fetchTelemetry(any(Match.class)))
-                .willReturn(TELEMETRIES);
+                .willReturn(OFFICIAL_TELEMETRIES);
 
         given(telemetryRepository.findLogPlayerKillByMatchIdAndPlayerName(MATCH_ID, PLAYER_NAME))
-                .willReturn(TELEMETRY_LOG_PLAYER_KILLS);
+                .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_KILLS);
 
         assertDoesNotThrow(() -> telemetryService.findKillLogs(MATCH, PLAYER_NAME));
 
         verify(telemetryRepository).existsByMatchId(MATCH_ID);
         verify(pubgService).fetchTelemetry(any(Match.class));
-        verify(telemetryRepository).saveAll(anyCollection());
+        verify(telemetryRepository).saveAll(eq(MATCH_ID), anyCollection());
         verify(telemetryRepository).findLogPlayerKillByMatchIdAndPlayerName(MATCH_ID, PLAYER_NAME);
     }
 
@@ -47,13 +47,13 @@ class TelemetryServiceTest {
                 .willReturn(true);
 
         given(telemetryRepository.findLogPlayerKillByMatchIdAndPlayerName(MATCH_ID, PLAYER_NAME))
-                .willReturn(TELEMETRY_LOG_PLAYER_KILLS);
+                .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_KILLS);
 
         assertDoesNotThrow(() -> telemetryService.findKillLogs(MATCH, PLAYER_NAME));
 
         verify(telemetryRepository).existsByMatchId(MATCH_ID);
         verify(pubgService, never()).fetchTelemetry(any(Match.class));
-        verify(telemetryRepository, never()).saveAll(anyCollection());
+        verify(telemetryRepository, never()).saveAll(eq(MATCH_ID), anyCollection());
         verify(telemetryRepository).findLogPlayerKillByMatchIdAndPlayerName(MATCH_ID, PLAYER_NAME);
     }
 
@@ -63,16 +63,16 @@ class TelemetryServiceTest {
                 .willReturn(false);
 
         given(pubgService.fetchTelemetry(any(Match.class)))
-                .willReturn(TELEMETRIES);
+                .willReturn(OFFICIAL_TELEMETRIES);
 
         given(telemetryRepository.findLogPlayerTakeDamageByVictimsAndAttacker(eq(MATCH_ID), anyCollection(), anyCollection()))
-                .willReturn(TELEMETRY_LOG_PLAYER_TAKE_DAMAGES);
+                .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_TAKE_DAMAGES);
 
         assertDoesNotThrow(() -> telemetryService.findDamageLogs(MATCH, List.of("victim"), List.of("member")));
 
         verify(telemetryRepository).existsByMatchId(MATCH_ID);
         verify(pubgService).fetchTelemetry(any(Match.class));
-        verify(telemetryRepository).saveAll(anyCollection());
+        verify(telemetryRepository).saveAll(eq(MATCH_ID), anyCollection());
         verify(telemetryRepository).findLogPlayerTakeDamageByVictimsAndAttacker(eq(MATCH_ID), anyCollection(), anyCollection());
     }
 
@@ -82,13 +82,13 @@ class TelemetryServiceTest {
                 .willReturn(true);
 
         given(telemetryRepository.findLogPlayerTakeDamageByVictimsAndAttacker(eq(MATCH_ID), anyCollection(), anyCollection()))
-                .willReturn(TELEMETRY_LOG_PLAYER_TAKE_DAMAGES);
+                .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_TAKE_DAMAGES);
 
         assertDoesNotThrow(() -> telemetryService.findDamageLogs(MATCH, List.of("victim"), List.of("member")));
 
         verify(telemetryRepository).existsByMatchId(MATCH_ID);
         verify(pubgService, never()).fetchTelemetry(any(Match.class));
-        verify(telemetryRepository, never()).saveAll(anyCollection());
+        verify(telemetryRepository, never()).saveAll(eq(MATCH_ID), anyCollection());
         verify(telemetryRepository).findLogPlayerTakeDamageByVictimsAndAttacker(eq(MATCH_ID), anyCollection(), anyCollection());
     }
 
@@ -98,16 +98,16 @@ class TelemetryServiceTest {
                 .willReturn(false);
 
         given(pubgService.fetchTelemetry(any(Match.class)))
-                .willReturn(TELEMETRIES);
+                .willReturn(OFFICIAL_TELEMETRIES);
 
         given(telemetryRepository.findLogPlayerTakeDamageByAttacker(MATCH_ID, PLAYER_NAME))
-                .willReturn(TELEMETRY_LOG_PLAYER_TAKE_DAMAGES);
+                .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_TAKE_DAMAGES);
 
         assertDoesNotThrow(() -> telemetryService.findDamageLogs(MATCH, PLAYER_NAME));
 
         verify(telemetryRepository).existsByMatchId(MATCH_ID);
         verify(pubgService).fetchTelemetry(any(Match.class));
-        verify(telemetryRepository).saveAll(anyCollection());
+        verify(telemetryRepository).saveAll(eq(MATCH_ID), anyCollection());
         verify(telemetryRepository).findLogPlayerTakeDamageByAttacker(MATCH_ID, PLAYER_NAME);
     }
 
@@ -117,13 +117,13 @@ class TelemetryServiceTest {
                 .willReturn(true);
 
         given(telemetryRepository.findLogPlayerTakeDamageByAttacker(MATCH_ID, PLAYER_NAME))
-                .willReturn(TELEMETRY_LOG_PLAYER_TAKE_DAMAGES);
+                .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_TAKE_DAMAGES);
 
         assertDoesNotThrow(() -> telemetryService.findDamageLogs(MATCH, PLAYER_NAME));
 
         verify(telemetryRepository).existsByMatchId(MATCH_ID);
         verify(pubgService, never()).fetchTelemetry(any(Match.class));
-        verify(telemetryRepository, never()).saveAll(anyCollection());
+        verify(telemetryRepository, never()).saveAll(eq(MATCH_ID), anyCollection());
         verify(telemetryRepository).findLogPlayerTakeDamageByAttacker(MATCH_ID, PLAYER_NAME);
     }
 }

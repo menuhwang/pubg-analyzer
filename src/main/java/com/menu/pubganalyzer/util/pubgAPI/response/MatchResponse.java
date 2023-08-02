@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties({"empty"})
+@JsonIgnoreProperties({"meta"})
 public class MatchResponse {
     @Delegate
     private Data data;
@@ -39,6 +39,7 @@ public class MatchResponse {
     @ToString
     public static class Link {
         String self;
+        String schema;
     }
 
     @Getter

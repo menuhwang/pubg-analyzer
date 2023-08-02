@@ -3,7 +3,6 @@ package com.menu.pubganalyzer.domain.model.telemetries;
 import java.time.LocalDateTime;
 
 public interface LogPlayerKillV2 {
-    String getMatchId();
     String getType();
     LocalDateTime getTimestamp();
     Common getCommon();
