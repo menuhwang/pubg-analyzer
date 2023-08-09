@@ -1,11 +1,15 @@
 package com.menu.pubganalyzer.domain.model.matches;
 
+import com.menu.pubganalyzer.exception.IllegalPlayerNameException;
 import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
 import lombok.Builder;
 import lombok.Getter;
 
-import javax.persistence.*;
-import java.util.*;
+import javax.persistence.Column;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
@@ -56,7 +60,7 @@ public class Roster {
 
     public Participant getParticipantByName(String playerName) {
         return findParticipantByName(playerName)
-                .orElseThrow(() -> new IllegalArgumentException("wrong player name."));
+                .orElseThrow(IllegalPlayerNameException::new);
     }
 
     public Set<String> extractParticipantName() {
