@@ -22,7 +22,7 @@ class TelemetryFileSystemManagerTest {
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
     private final String TEST_RESOURCE_TELEMETRIES_DIR = Objects.requireNonNull(this.getClass().getResource("/telemetries")).getFile();
 
-    private final FileManager telemetryFileSystemManager = FileManagerFactory.getFileManager(TEST_RESOURCE_TELEMETRIES_DIR);
+    private final FileManager telemetryFileSystemManager = FileManagerFactory.getFileSystemManager(TEST_RESOURCE_TELEMETRIES_DIR);
 
     @Test
     @Order(1)
