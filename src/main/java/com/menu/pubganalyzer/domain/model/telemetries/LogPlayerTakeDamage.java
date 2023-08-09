@@ -17,15 +17,7 @@ public interface LogPlayerTakeDamage {
     boolean isThroughPenetrableWall();
     Character getAttacker();
     String getAttackerName();
-    int getAttackerTeamId();
-    float getAttackerHealth();
-    int getAttackerRanking();
-    String getAttackerAccountId();
     Character getVictim();
     String getVictimName();
-    int getVictimTeamId();
-    float getVictimHealth();
-    int getVictimRanking();
-    String getVictimAccountId();
     int getPhase();
 }
