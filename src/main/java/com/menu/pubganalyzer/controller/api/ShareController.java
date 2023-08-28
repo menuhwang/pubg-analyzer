@@ -20,7 +20,7 @@ public class ShareController {
     }
 
     @PostMapping
-    public ShareLinkRes createShortLink(ShareLinkReq req) {
+    public ShareLinkRes createShortLink(@RequestBody ShareLinkReq req) {
         String shortLink = shortLinkService.create(req);
 
         return ShareLinkRes.shortLinkOf("/share", shortLink);
