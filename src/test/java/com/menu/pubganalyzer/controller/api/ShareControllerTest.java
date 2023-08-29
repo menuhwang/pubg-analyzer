@@ -48,7 +48,8 @@ class ShareControllerTest {
         result.andDo(print())
                 .andExpect(handler().handlerType(ShareController.class))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.path").value(SHARE_API_URL + "/" + shortLink.getId()))
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.result.path").value(SHARE_API_URL + "/" + shortLink.getId()))
         ;
 
         verify(shortLinkService).create(any(ShareLinkReq.class));
@@ -69,7 +70,8 @@ class ShareControllerTest {
         result.andDo(print())
                 .andExpect(handler().handlerType(ShareController.class))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.path").value(link))
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.result.path").value(link))
         ;
 
         verify(shortLinkService).findOriginalPath(shortLink.getId());
@@ -87,6 +89,7 @@ class ShareControllerTest {
         result.andDo(print())
                 .andExpect(handler().handlerType(ShareController.class))
                 .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.success").value(false))
         ;
     }
 }
