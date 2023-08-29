@@ -88,26 +88,6 @@ public class LogPlayerTakeDamageImpl implements LogPlayerTakeDamage {
     }
 
     @Override
-    public int getAttackerTeamId() {
-        return attacker.getTeamId();
-    }
-
-    @Override
-    public float getAttackerHealth() {
-        return attacker.getHealth();
-    }
-
-    @Override
-    public int getAttackerRanking() {
-        return attacker.getRanking();
-    }
-
-    @Override
-    public String getAttackerAccountId() {
-        return attacker.getAccountId();
-    }
-
-    @Override
     public Character getVictim() {
         return victim;
     }
@@ -115,26 +95,6 @@ public class LogPlayerTakeDamageImpl implements LogPlayerTakeDamage {
     @Override
     public String getVictimName() {
         return victim.getName();
-    }
-
-    @Override
-    public int getVictimTeamId() {
-        return victim.getTeamId();
-    }
-
-    @Override
-    public float getVictimHealth() {
-        return victim.getHealth();
-    }
-
-    @Override
-    public int getVictimRanking() {
-        return victim.getRanking();
-    }
-
-    @Override
-    public String getVictimAccountId() {
-        return victim.getAccountId();
     }
 
     @Override

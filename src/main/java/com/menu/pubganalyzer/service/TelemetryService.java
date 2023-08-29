@@ -22,34 +22,28 @@ public class TelemetryService {
 
 
     public List<LogPlayerKillV2> findKillLogs(Match match, String playerName){
-        if(!existsTelemetry(match)) fetchTelemetry(match);
-
         return telemetryRepository.findLogPlayerKillByMatchIdAndPlayerName(match.getId(), playerName).stream()
                 .map(LogPlayerKillV2Impl::new)
                 .collect(Collectors.toList());
     }
 
     public List<LogPlayerTakeDamage> findDamageLogs(Match match, Collection<String> victims, Collection<String> member) {
-        if(!existsTelemetry(match)) fetchTelemetry(match);
-
         return telemetryRepository.findLogPlayerTakeDamageByVictimsAndAttacker(match.getId(), victims, member).stream()
                 .map(LogPlayerTakeDamageImpl::new)
                 .collect(Collectors.toList());
     }
 
     public List<LogPlayerTakeDamage> findDamageLogs(Match match, String attackerName) {
-        if(!existsTelemetry(match)) fetchTelemetry(match);
-
         return telemetryRepository.findLogPlayerTakeDamageByAttacker(match.getId(), attackerName).stream()
                 .map(LogPlayerTakeDamageImpl::new)
                 .collect(Collectors.toList());
     }
 
-    private boolean existsTelemetry(Match match) {
+    public boolean existsTelemetry(Match match) {
         return telemetryRepository.existsByMatchId(match.getId());
     }
 
-    private void fetchTelemetry(Match match) {
+    public void fetchTelemetry(Match match) {
         List<Telemetry> telemetries = pubgService.fetchTelemetry(match);
 
         telemetryRepository.saveAll(match.getId(), telemetries);

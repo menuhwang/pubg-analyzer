@@ -29,6 +29,10 @@ public class ReportService {
         Roster roster = match.getRosterByName(nickname);
         Participant participant = roster.getParticipantByName(nickname);
 
+        if (!telemetryService.existsTelemetry(match)) {
+            telemetryService.fetchTelemetry(match);
+        }
+
         Analyzer analyzer = Analyzer.init();
 
         List<LogPlayerKillV2> logPlayerKillV2s = telemetryService.findKillLogs(match, nickname);

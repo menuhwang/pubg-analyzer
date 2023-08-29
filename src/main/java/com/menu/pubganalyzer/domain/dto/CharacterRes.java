@@ -12,6 +12,9 @@ import java.util.Objects;
 @AllArgsConstructor
 public class CharacterRes {
     private final String name;
+    private final Integer teamId;
+    private final float health;
+    private final Integer ranking;
     private final String accountId;
     private final boolean bot;
 
@@ -19,6 +22,9 @@ public class CharacterRes {
         if (Objects.isNull(character)) return null;
         return CharacterRes.builder()
                 .name(character.getName())
+                .teamId(character.getTeamId())
+                .health(character.getHealth())
+                .ranking(character.getRanking())
                 .accountId(character.getAccountId())
                 .bot(character.isBot())
                 .build();

@@ -1,7 +1,6 @@
 package com.menu.pubganalyzer.domain.model.matches;
 
-import com.menu.pubganalyzer.domain.model.Player;
-import com.menu.pubganalyzer.exception.ParticipantNotFoundException;
+import com.menu.pubganalyzer.exception.IllegalPlayerNameException;
 import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -61,7 +60,7 @@ public class Match {
         return rosters.stream()
                 .filter(roster -> roster.contains(playerName))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("wrong player name."));
+                .orElseThrow(IllegalPlayerNameException::new);
     }
 
     public String getTelemetryUrl() {
