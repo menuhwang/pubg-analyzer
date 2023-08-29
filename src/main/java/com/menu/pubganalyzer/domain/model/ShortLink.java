@@ -8,6 +8,15 @@ import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
 
+/*
+CREATE TABLE short_link
+(
+    id               VARCHAR(255) NOT NULL,
+    link             VARCHAR(255) NULL,
+    created_datetime datetime     NULL,
+    CONSTRAINT pk_short_link PRIMARY KEY (id)
+);
+*/
 @Entity(name = "short_link")
 @EntityListeners(AuditingEntityListener.class)
 public class ShortLink {

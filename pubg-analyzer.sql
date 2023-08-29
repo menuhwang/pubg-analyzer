@@ -15,3 +15,12 @@ CREATE TABLE player
 );
 
 CREATE UNIQUE INDEX player_name_shard_index ON player (name, shard_id);
+
+-- ShortLink
+CREATE TABLE short_link
+(
+    id               VARCHAR(255) NOT NULL,
+    link             VARCHAR(255) NULL,
+    created_datetime datetime     NULL,
+    CONSTRAINT pk_short_link PRIMARY KEY (id)
+);
