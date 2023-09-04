@@ -1,16 +1,18 @@
 package com.menu.pubganalyzer.domain.dto;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 
-public class PageDTO<T> extends PageImpl<T> {
+import java.util.List;
+
+public class PageDTO<T> {
     private static final int DEFAULT_DISPLAY_PAGES_NUM = 5;
+    private final Page<T> page;
     private final int displayPagesNum;
     private final int paginationStartNum;
     private final int paginationEndNum;
 
     private PageDTO(Page<T> page, int displayPagesNum) {
-        super(page.getContent(), page.getPageable(), page.getTotalElements());
+        this.page = page;
         boolean isPaged = page.getPageable().isPaged();
         this.displayPagesNum = displayPagesNum;
         int currentPageNum = isPaged ? page.getPageable().getPageNumber() : 0;
@@ -30,12 +32,40 @@ public class PageDTO<T> extends PageImpl<T> {
         return PageDTO.of(Page.empty());
     }
 
+    public List<T> getContent() {
+        return page.getContent();
+    }
+
+    public int getSize() {
+        return page.getSize();
+    }
+
+    public int getNumber() {
+        return page.getNumber();
+    }
+
+    public boolean isFirst() {
+        return page.isFirst();
+    }
+
+    public boolean isLast() {
+        return page.isLast();
+    }
+
+    public int getTotalPages() {
+        return page.getTotalPages();
+    }
+
+    public long getTotalElements() {
+        return page.getTotalElements();
+    }
+
     public int getPreviousPageNum() {
-        return getPageable().isPaged() ? this.previousOrFirstPageable().getPageNumber() : -1;
+        return page.getPageable().isPaged() ? page.previousOrFirstPageable().getPageNumber() : -1;
     }
 
     public int getNextPageNum() {
-        return getPageable().isPaged() ? this.nextOrLastPageable().getPageNumber() : -1;
+        return page.getPageable().isPaged() ? page.nextOrLastPageable().getPageNumber() : -1;
     }
 
     public int getPaginationStartNum() {
