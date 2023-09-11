@@ -216,6 +216,7 @@ public enum DamageCauserName {
     WEAPWIN94_C("Win94", "Win94"),
     WEAPWINCHESTER_C("S1897", "S1897"),
     WEAPVZ61SKORPION_C("Skorpion", "Skorpion"),
+    WEAPDRAGUNOV_C("Dragunov", "드라구노프"),
     ;
 
     private final String eng;
