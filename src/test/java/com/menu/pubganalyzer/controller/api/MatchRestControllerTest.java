@@ -1,6 +1,7 @@
 package com.menu.pubganalyzer.controller.api;
 
 import com.menu.pubganalyzer.domain.dto.MatchInfoRes;
+import com.menu.pubganalyzer.domain.dto.MatchResultRes;
 import com.menu.pubganalyzer.service.MatchService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,6 +123,29 @@ class MatchRestControllerTest {
                 .andExpect(jsonPath("$.result.gameMode.eng").isString())
                 .andExpect(jsonPath("result.createdAt").isString())
                 .andExpect(jsonPath("result.duration").isNumber())
+        ;
+    }
+
+    @Test
+    void findMatchResultByPlayer() throws Exception {
+        given(matchService.findMatchResultByPlayer(eq(MATCH_ID), eq(PLAYER_NAME)))
+                .willReturn(MatchResultRes.of(MATCH, ROSTER, PARTICIPANT));
+
+        ResultActions result = mockMvc.perform(
+                get(MATCH_API_URL + "/" + MATCH_ID + "/player/" + PLAYER_NAME + "/result")
+        );
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(MatchRestController.class))
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.result.rank").isNumber())
+                .andExpect(jsonPath("$.result.rosters").isNumber())
+                .andExpect(jsonPath("$.result.kills").isNumber())
+                .andExpect(jsonPath("$.result.assists").isNumber())
+                .andExpect(jsonPath("$.result.damageDealt").isNumber())
+                .andExpect(jsonPath("$.result.revives").isNumber())
         ;
     }
 }

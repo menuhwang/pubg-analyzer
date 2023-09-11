@@ -1,6 +1,7 @@
 package com.menu.pubganalyzer.service;
 
 import com.menu.pubganalyzer.domain.dto.MatchInfoRes;
+import com.menu.pubganalyzer.domain.dto.MatchResultRes;
 import com.menu.pubganalyzer.domain.repository.MatchRepository;
 import com.menu.pubganalyzer.exception.MatchNotFoundException;
 import com.menu.pubganalyzer.support.fixture.MatchFixture;
@@ -87,5 +88,15 @@ class MatchServiceTest {
         MatchInfoRes result = assertDoesNotThrow(() -> matchService.findMatchInfo(MATCH_ID));
 
         logger.info("match info: {}", result);
+    }
+
+    @Test
+    void findMatchResultByPlayer() {
+        given(matchRepository.findById(MATCH_ID))
+                .willReturn(Optional.of(MatchFixture.MATCH));
+
+        MatchResultRes result = assertDoesNotThrow(() -> matchService.findMatchResultByPlayer(MATCH_ID, PLAYER_NAME));
+
+        logger.info("match result: {}", result);
     }
 }
