@@ -1,5 +1,6 @@
 package com.menu.pubganalyzer.controller.api;
 
+import com.menu.pubganalyzer.domain.dto.MatchInfoRes;
 import com.menu.pubganalyzer.service.MatchService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static com.menu.pubganalyzer.support.fixture.MatchFixture.MATCH_ID;
-import static com.menu.pubganalyzer.support.fixture.MatchFixture.MATCH_PAGE;
+import static com.menu.pubganalyzer.support.fixture.MatchFixture.*;
 import static com.menu.pubganalyzer.support.fixture.PlayerFixture.PLAYER_NAME;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.mockito.ArgumentMatchers.*;
@@ -93,6 +93,35 @@ class MatchRestControllerTest {
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.result.player").value(PLAYER_NAME))
                 .andExpect(jsonPath("$.result.matches.content").isArray())
+        ;
+    }
+
+    @Test
+    void findMatchInfo() throws Exception {
+        given(matchService.findMatchInfo(eq(MATCH_ID)))
+                .willReturn(MatchInfoRes.from(MATCH));
+
+        ResultActions result = mockMvc.perform(
+                get(MATCH_API_URL + "/" + MATCH_ID + "/info")
+        );
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(MatchRestController.class))
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.result.id").isString())
+                .andExpect(jsonPath("$.result.matchType").isMap())
+                .andExpect(jsonPath("$.result.matchType.kor").isString())
+                .andExpect(jsonPath("$.result.matchType.eng").isString())
+                .andExpect(jsonPath("$.result.mapName").isMap())
+                .andExpect(jsonPath("$.result.mapName.kor").isString())
+                .andExpect(jsonPath("$.result.mapName.eng").isString())
+                .andExpect(jsonPath("$.result.gameMode").isMap())
+                .andExpect(jsonPath("$.result.gameMode.kor").isString())
+                .andExpect(jsonPath("$.result.gameMode.eng").isString())
+                .andExpect(jsonPath("result.createdAt").isString())
+                .andExpect(jsonPath("result.duration").isNumber())
         ;
     }
 }

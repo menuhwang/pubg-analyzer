@@ -1,10 +1,13 @@
 package com.menu.pubganalyzer.service;
 
+import com.menu.pubganalyzer.domain.dto.MatchInfoRes;
 import com.menu.pubganalyzer.domain.repository.MatchRepository;
 import com.menu.pubganalyzer.exception.MatchNotFoundException;
 import com.menu.pubganalyzer.support.fixture.MatchFixture;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,14 +17,14 @@ import java.util.UUID;
 import static com.menu.pubganalyzer.support.fixture.MatchFixture.MATCH_ID;
 import static com.menu.pubganalyzer.support.fixture.MatchFixture.PAGEABLE;
 import static com.menu.pubganalyzer.support.fixture.PlayerFixture.PLAYER_NAME;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 class MatchServiceTest {
     private final MatchRepository matchRepository = Mockito.mock(MatchRepository.class);
     private final MatchService matchService = new MatchService(matchRepository);
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Test
     void findAll() {
@@ -74,5 +77,15 @@ class MatchServiceTest {
         assertDoesNotThrow(() -> matchService.deleteById(ids));
 
         ids.forEach(id -> verify(matchRepository).deleteById(id));
+    }
+
+    @Test
+    void findMatchInfo() {
+        given(matchRepository.findById(MATCH_ID))
+                .willReturn(Optional.of(MatchFixture.MATCH));
+
+        MatchInfoRes result = assertDoesNotThrow(() -> matchService.findMatchInfo(MATCH_ID));
+
+        logger.info("match info: {}", result);
     }
 }
