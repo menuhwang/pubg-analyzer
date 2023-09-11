@@ -2,6 +2,7 @@ package com.menu.pubganalyzer.controller.api;
 
 import com.menu.pubganalyzer.domain.dto.MatchInfoRes;
 import com.menu.pubganalyzer.domain.dto.MatchResultRes;
+import com.menu.pubganalyzer.domain.dto.RosterRes;
 import com.menu.pubganalyzer.service.MatchService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,6 +147,24 @@ class MatchRestControllerTest {
                 .andExpect(jsonPath("$.result.assists").isNumber())
                 .andExpect(jsonPath("$.result.damageDealt").isNumber())
                 .andExpect(jsonPath("$.result.revives").isNumber())
+        ;
+    }
+
+    @Test
+    void findRosterWhenJustSelf() throws Exception {
+        given(matchService.findRoster(eq(MATCH_ID), eq(PLAYER_NAME)))
+                .willReturn(RosterRes.from(ROSTER));
+
+        ResultActions result = mockMvc.perform(
+                get(MATCH_API_URL + "/" + MATCH_ID + "/player/" + PLAYER_NAME + "/roster")
+        );
+
+        result.andDo(print())
+                .andExpect(handler().handlerType(MatchRestController.class))
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.result.won").isBoolean())
+                .andExpect(jsonPath("$.result.participants").isArray())
         ;
     }
 }
