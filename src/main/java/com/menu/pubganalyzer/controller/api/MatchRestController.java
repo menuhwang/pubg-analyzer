@@ -70,4 +70,14 @@ public class MatchRestController {
 
         return ResponseEntity.ok(success(result));
     }
+
+    @GetMapping("/{id}/player/{playerName}/roster")
+    public ResponseEntity<ApiResult<RosterRes>> findRoster(
+            @PathVariable String id,
+            @PathVariable String playerName
+    ) {
+        RosterRes result = matchService.findRoster(id, playerName);
+
+        return ResponseEntity.ok(success(result));
+    }
 }

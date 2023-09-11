@@ -4,7 +4,9 @@ import com.menu.pubganalyzer.domain.model.matches.Participant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 @Builder
 @AllArgsConstructor
