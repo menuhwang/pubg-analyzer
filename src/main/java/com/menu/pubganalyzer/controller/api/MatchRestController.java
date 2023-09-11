@@ -1,9 +1,6 @@
 package com.menu.pubganalyzer.controller.api;
 
-import com.menu.pubganalyzer.domain.dto.MatchRes;
-import com.menu.pubganalyzer.domain.dto.MatchStatsRes;
-import com.menu.pubganalyzer.domain.dto.PageDTO;
-import com.menu.pubganalyzer.domain.dto.SearchPlayerRes;
+import com.menu.pubganalyzer.domain.dto.*;
 import com.menu.pubganalyzer.domain.model.matches.Match;
 import com.menu.pubganalyzer.service.MatchService;
 import com.menu.pubganalyzer.support.admin.AdminOnly;
@@ -53,5 +50,14 @@ public class MatchRestController {
         PageDTO<MatchStatsRes> matchResPageDTO = PageDTO.of(matchStatsResPage);
 
         return ResponseEntity.ok(success(SearchPlayerRes.of(playerName, matchResPageDTO)));
+    }
+
+    @GetMapping("/{id}/info")
+    public ResponseEntity<ApiResult<MatchInfoRes>> findMatchInfo(
+            @PathVariable final String id
+    ) {
+        MatchInfoRes result = matchService.findMatchInfo(id);
+
+        return ResponseEntity.ok(success(result));
     }
 }

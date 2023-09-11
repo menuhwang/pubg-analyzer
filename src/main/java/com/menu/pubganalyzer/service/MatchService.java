@@ -1,5 +1,6 @@
 package com.menu.pubganalyzer.service;
 
+import com.menu.pubganalyzer.domain.dto.MatchInfoRes;
 import com.menu.pubganalyzer.domain.model.matches.Match;
 import com.menu.pubganalyzer.domain.repository.MatchRepository;
 import com.menu.pubganalyzer.exception.MatchNotFoundException;
@@ -28,6 +29,12 @@ public class MatchService {
             final String playerName,
             final Pageable pageable) {
         return matchRepository.findByRosters_Participants_Name(playerName, pageable);
+    }
+
+    public MatchInfoRes findMatchInfo(final String id) {
+        return matchRepository.findById(id)
+                .map(MatchInfoRes::from)
+                .orElseThrow(MatchNotFoundException::new);
     }
 
     @Transactional

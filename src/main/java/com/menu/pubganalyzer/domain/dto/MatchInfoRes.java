@@ -6,10 +6,12 @@ import com.menu.pubganalyzer.domain.model.enums.match.MatchType;
 import com.menu.pubganalyzer.domain.model.matches.Match;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Getter
+@ToString
 public class MatchInfoRes {
     private final String id;
     private final MatchType matchType;
