@@ -60,4 +60,14 @@ public class MatchRestController {
 
         return ResponseEntity.ok(success(result));
     }
+
+    @GetMapping("/{id}/player/{playerName}/result")
+    public ResponseEntity<ApiResult<MatchResultRes>> findMatchResultByPlayer(
+            @PathVariable final String id,
+            @PathVariable final String playerName
+    ) {
+        MatchResultRes result = matchService.findMatchResultByPlayer(id, playerName);
+
+        return ResponseEntity.ok(success(result));
+    }
 }

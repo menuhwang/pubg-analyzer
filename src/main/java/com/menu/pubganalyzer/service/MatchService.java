@@ -1,7 +1,10 @@
 package com.menu.pubganalyzer.service;
 
 import com.menu.pubganalyzer.domain.dto.MatchInfoRes;
+import com.menu.pubganalyzer.domain.dto.MatchResultRes;
 import com.menu.pubganalyzer.domain.model.matches.Match;
+import com.menu.pubganalyzer.domain.model.matches.Participant;
+import com.menu.pubganalyzer.domain.model.matches.Roster;
 import com.menu.pubganalyzer.domain.repository.MatchRepository;
 import com.menu.pubganalyzer.exception.MatchNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +38,17 @@ public class MatchService {
         return matchRepository.findById(id)
                 .map(MatchInfoRes::from)
                 .orElseThrow(MatchNotFoundException::new);
+    }
+
+    public MatchResultRes findMatchResultByPlayer(
+            final String id,
+            final String playerName) {
+        Match match = matchRepository.findById(id)
+                .orElseThrow(MatchNotFoundException::new);
+        Roster roster = match.getRosterByName(playerName);
+        Participant participant = roster.getParticipantByName(playerName);
+
+        return MatchResultRes.of(match, roster, participant);
     }
 
     @Transactional
