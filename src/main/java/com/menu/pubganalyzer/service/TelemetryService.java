@@ -1,5 +1,6 @@
 package com.menu.pubganalyzer.service;
 
+import com.menu.pubganalyzer.domain.dto.ContributeDamageChartRes;
 import com.menu.pubganalyzer.domain.dto.DamageLogRes;
 import com.menu.pubganalyzer.domain.dto.KillLogRes;
 import com.menu.pubganalyzer.domain.model.matches.Match;
@@ -12,6 +13,7 @@ import com.menu.pubganalyzer.domain.model.telemetries.impl.LogPlayerTakeDamageIm
 import com.menu.pubganalyzer.domain.repository.MatchRepository;
 import com.menu.pubganalyzer.domain.repository.TelemetryRepository;
 import com.menu.pubganalyzer.exception.MatchNotFoundException;
+import com.menu.pubganalyzer.util.ChartUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -86,6 +88,30 @@ public class TelemetryService {
                 .map(LogPlayerTakeDamageImpl::new)
                 .map(DamageLogRes::of)
                 .collect(Collectors.toList());
+    }
+
+    public ContributeDamageChartRes getContributeDamageChart(
+            final String id,
+            final String playerName) {
+        Match match = matchRepository.findById(id)
+                .orElseThrow(MatchNotFoundException::new);
+
+        Set<String> members = match.getRosterByName(playerName)
+                .extractParticipantName();
+
+        List<LogPlayerKillV2> logPlayerKills = telemetryRepository.findLogPlayerKillByMatchIdAndPlayerName(id, playerName).stream()
+                .map(LogPlayerKillV2Impl::new)
+                .collect(Collectors.toList());
+
+        Set<String> victims = logPlayerKills.stream()
+                .map(LogPlayerKillV2::getVictimName)
+                .collect(Collectors.toSet());
+
+        List<LogPlayerTakeDamage> logPlayerTakeDamages = telemetryRepository.findLogPlayerTakeDamageByVictimsAndAttacker(id, victims, members).stream()
+                .map(LogPlayerTakeDamageImpl::new)
+                .collect(Collectors.toList());
+
+        return ChartUtil.contributeDamageChart(playerName, members, logPlayerKills, logPlayerTakeDamages);
     }
 
     public boolean existsTelemetry(Match match) {

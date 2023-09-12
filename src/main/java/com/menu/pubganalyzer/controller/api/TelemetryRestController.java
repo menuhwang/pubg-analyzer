@@ -1,5 +1,6 @@
 package com.menu.pubganalyzer.controller.api;
 
+import com.menu.pubganalyzer.domain.dto.ContributeDamageChartRes;
 import com.menu.pubganalyzer.domain.dto.DamageLogRes;
 import com.menu.pubganalyzer.domain.dto.KillLogRes;
 import com.menu.pubganalyzer.service.TelemetryService;
@@ -47,6 +48,16 @@ public class TelemetryRestController {
             @PathVariable String playerName
     ) {
         List<KillLogRes> result = telemetryService.findKillLogs(id, playerName);
+
+        return ResponseEntity.ok(success(result));
+    }
+
+    @GetMapping("/{id}/player/{playerName}/contribute-damage-chart")
+    public ResponseEntity<ApiResult<ContributeDamageChartRes>> getContributeDamageChart(
+            @PathVariable String id,
+            @PathVariable String playerName
+    ) {
+        ContributeDamageChartRes result = telemetryService.getContributeDamageChart(id, playerName);
 
         return ResponseEntity.ok(success(result));
     }
