@@ -30,17 +30,6 @@ class TelemetryServiceTest {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Test
-    void findKillLogs() {
-        given(telemetryRepository.findLogPlayerKillByMatchIdAndPlayerName(MATCH_ID, PLAYER_NAME))
-                .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_KILLS);
-
-        assertDoesNotThrow(() -> telemetryService.findKillLogs(MATCH, PLAYER_NAME));
-
-        verify(telemetryRepository, never()).saveAll(eq(MATCH_ID), anyCollection());
-        verify(telemetryRepository).findLogPlayerKillByMatchIdAndPlayerName(MATCH_ID, PLAYER_NAME);
-    }
-
-    @Test
     void findDamageLogsByVictimsAndMember() {
         given(telemetryRepository.findLogPlayerTakeDamageByVictimsAndAttacker(eq(MATCH_ID), anyCollection(), anyCollection()))
                 .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_TAKE_DAMAGES);
@@ -143,11 +132,11 @@ class TelemetryServiceTest {
     }
 
     @Test
-    void findKillLogsReturnKillLogResList() {
+    void findKillLogs() {
         given(telemetryRepository.findLogPlayerKillByMatchIdAndPlayerName(MATCH_ID, PLAYER_NAME))
                 .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_KILLS);
 
-        assertDoesNotThrow(() -> telemetryService.findKillLogs(MATCH, PLAYER_NAME));
+        assertDoesNotThrow(() -> telemetryService.findKillLogs(MATCH_ID, PLAYER_NAME));
     }
 
     @Test
