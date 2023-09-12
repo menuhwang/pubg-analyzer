@@ -1,6 +1,7 @@
 package com.menu.pubganalyzer.controller.api;
 
 import com.menu.pubganalyzer.domain.dto.DamageLogRes;
+import com.menu.pubganalyzer.domain.dto.KillLogRes;
 import com.menu.pubganalyzer.service.TelemetryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.stream.Collectors;
 
+import static com.menu.pubganalyzer.support.fixture.LogPlayerKillFixture.OFFICIAL_LOG_PLAYER_KILLS;
 import static com.menu.pubganalyzer.support.fixture.LogPlayerTakeDamageFixture.OFFICIAL_LOG_PLAYER_TAKE_DAMAGES;
 import static com.menu.pubganalyzer.support.fixture.MatchFixture.MATCH_ID;
 import static com.menu.pubganalyzer.support.fixture.PlayerFixture.PLAYER_NAME;
@@ -61,6 +63,28 @@ class TelemetryRestControllerTest {
 
         ResultActions result = mockMvc.perform(
                 get(TELEMETRY_API_URL + "/" + MATCH_ID + "/player/" + PLAYER_NAME + "/damages")
+        );
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(TelemetryRestController.class))
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.result").isArray())
+        ;
+    }
+
+    @Test
+    void findKillLogs() throws Exception {
+        given(telemetryService.findKillLogs(MATCH_ID, PLAYER_NAME))
+                .willReturn(
+                        OFFICIAL_LOG_PLAYER_KILLS.stream()
+                                .map(KillLogRes::of)
+                                .collect(Collectors.toList())
+                );
+
+        ResultActions result = mockMvc.perform(
+                get(TELEMETRY_API_URL + "/" + MATCH_ID + "/player/" + PLAYER_NAME + "/kills")
         );
 
         result.andDo(print())

@@ -136,4 +136,12 @@ class TelemetryServiceTest {
 
         assertDoesNotThrow(() -> telemetryService.findDamageLogByPlayer(MATCH_ID, PLAYER_NAME));
     }
+
+    @Test
+    void findKillLogsReturnKillLogResList() {
+        given(telemetryRepository.findLogPlayerKillByMatchIdAndPlayerName(MATCH_ID, PLAYER_NAME))
+                .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_KILLS);
+
+        assertDoesNotThrow(() -> telemetryService.findKillLogs(MATCH, PLAYER_NAME));
+    }
 }
