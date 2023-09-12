@@ -30,13 +30,6 @@ public class TelemetryService {
     private final MatchRepository matchRepository;
     private final TelemetryRepository telemetryRepository;
 
-
-    public List<LogPlayerKillV2> findKillLogs(Match match, String playerName) {
-        return telemetryRepository.findLogPlayerKillByMatchIdAndPlayerName(match.getId(), playerName).stream()
-                .map(LogPlayerKillV2Impl::new)
-                .collect(Collectors.toList());
-    }
-
     public List<KillLogRes> findKillLogs(
             final String id,
             final String playerName) {
