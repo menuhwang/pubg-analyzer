@@ -27,14 +27,14 @@ public class TelemetryService {
                 .collect(Collectors.toList());
     }
 
-    public List<LogPlayerTakeDamage> findDamageLogs(Match match, Collection<String> victims, Collection<String> member) {
-        return telemetryRepository.findLogPlayerTakeDamageByVictimsAndAttacker(match.getId(), victims, member).stream()
+    public List<LogPlayerTakeDamage> findDamageLogs(Match match, Collection<String> victims, Collection<String> attackers) {
+        return telemetryRepository.findLogPlayerTakeDamageByVictimsAndAttacker(match.getId(), victims, attackers).stream()
                 .map(LogPlayerTakeDamageImpl::new)
                 .collect(Collectors.toList());
     }
 
-    public List<LogPlayerTakeDamage> findDamageLogs(Match match, String attackerName) {
-        return telemetryRepository.findLogPlayerTakeDamageByAttacker(match.getId(), attackerName).stream()
+    public List<LogPlayerTakeDamage> findDamageLogs(Match match, String attacker) {
+        return telemetryRepository.findLogPlayerTakeDamageByAttacker(match.getId(), attacker).stream()
                 .map(LogPlayerTakeDamageImpl::new)
                 .collect(Collectors.toList());
     }
