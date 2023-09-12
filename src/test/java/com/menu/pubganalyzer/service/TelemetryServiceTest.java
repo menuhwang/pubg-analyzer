@@ -1,9 +1,12 @@
 package com.menu.pubganalyzer.service;
 
+import com.menu.pubganalyzer.domain.dto.ContributeDamageChartRes;
 import com.menu.pubganalyzer.domain.repository.MatchRepository;
 import com.menu.pubganalyzer.domain.repository.TelemetryRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +26,7 @@ class TelemetryServiceTest {
     private final MatchRepository matchRepository = Mockito.mock(MatchRepository.class);
     private final TelemetryRepository telemetryRepository = Mockito.mock(TelemetryRepository.class);
     private final TelemetryService telemetryService = new TelemetryService(pubgService, matchRepository ,telemetryRepository);
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Test
     void findKillLogs() {
@@ -143,5 +147,20 @@ class TelemetryServiceTest {
                 .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_KILLS);
 
         assertDoesNotThrow(() -> telemetryService.findKillLogs(MATCH, PLAYER_NAME));
+    }
+
+    @Test
+    void getContributeDamageChart() {
+        given(matchRepository.findById(MATCH_ID))
+                .willReturn(Optional.of(MATCH));
+
+        given(telemetryRepository.findLogPlayerKillByMatchIdAndPlayerName(MATCH_ID, PLAYER_NAME))
+                .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_KILLS);
+
+        given(telemetryRepository.findLogPlayerTakeDamageByVictimsAndAttacker(eq(MATCH_ID), anyCollection(), anyCollection()))
+                .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_TAKE_DAMAGES);
+
+        ContributeDamageChartRes result = assertDoesNotThrow(() -> telemetryService.getContributeDamageChart(MATCH_ID, PLAYER_NAME));
+        logger.info("contribute damage chart: {}", result);
     }
 }
