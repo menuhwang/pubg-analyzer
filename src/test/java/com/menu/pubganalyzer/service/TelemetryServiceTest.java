@@ -1,6 +1,7 @@
 package com.menu.pubganalyzer.service;
 
 import com.menu.pubganalyzer.domain.dto.ContributeDamageChartRes;
+import com.menu.pubganalyzer.domain.dto.PhaseDamageChartRes;
 import com.menu.pubganalyzer.domain.repository.MatchRepository;
 import com.menu.pubganalyzer.domain.repository.TelemetryRepository;
 import org.junit.jupiter.api.Test;
@@ -147,6 +148,16 @@ class TelemetryServiceTest {
                 .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_KILLS);
 
         assertDoesNotThrow(() -> telemetryService.findKillLogs(MATCH, PLAYER_NAME));
+    }
+
+    @Test
+    void getPhaseDamageChart() {
+        given(telemetryRepository.findLogPlayerTakeDamageByAttacker(MATCH_ID, PLAYER_NAME))
+                .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_TAKE_DAMAGES);
+
+        PhaseDamageChartRes result = assertDoesNotThrow(() -> telemetryService.getPhaseDamageChart(MATCH_ID, PLAYER_NAME));
+
+        logger.info("phase damage chart: {}", result);
     }
 
     @Test
