@@ -12,15 +12,14 @@ public class ChartUtil {
     public static Map<String, Object> phaseDamageChart(Collection<LogPlayerTakeDamage> logPlayerTakeDamages) {
         Map<String, Object> result = new HashMap<>();
 
-        Float[] phaseDamageDealt = new Float[PHASE_SIZE];
-        for (int i = 0; i < PHASE_SIZE; i++) phaseDamageDealt[i] = 0F;
+        float[] phaseDamageDealt = new float[PHASE_SIZE];
 
         for (LogPlayerTakeDamage logPlayerTakeDamage : logPlayerTakeDamages) {
             int phase = logPlayerTakeDamage.getPhase();
             phaseDamageDealt[phase] += logPlayerTakeDamage.getDamage();
         }
 
-        result.put("datasets", Map.of("data", Arrays.stream(phaseDamageDealt).collect(Collectors.toList())));
+        result.put("datasets", Map.of("data", phaseDamageDealt));
 
         return result;
     }
