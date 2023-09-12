@@ -29,4 +29,14 @@ public class TelemetryRestController {
 
         return ResponseEntity.ok(success(result));
     }
+
+    @GetMapping("/{id}/player/{playerName}/damages")
+    public ResponseEntity<ApiResult<List<DamageLogRes>>> findDamageLogByPlayer(
+            @PathVariable String id,
+            @PathVariable String playerName
+    ) {
+        List<DamageLogRes> result = telemetryService.findDamageLogByPlayer(id, playerName);
+
+        return ResponseEntity.ok(success(result));
+    }
 }

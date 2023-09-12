@@ -69,6 +69,15 @@ public class TelemetryService {
                 .collect(Collectors.toList());
     }
 
+    public List<DamageLogRes> findDamageLogByPlayer(
+            final String id,
+            final String playerName) {
+        return telemetryRepository.findLogPlayerTakeDamageByAttacker(id, playerName).stream()
+                .map(LogPlayerTakeDamageImpl::new)
+                .map(DamageLogRes::of)
+                .collect(Collectors.toList());
+    }
+
     public boolean existsTelemetry(Match match) {
         return telemetryRepository.existsByMatchId(match.getId());
     }
