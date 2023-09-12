@@ -128,4 +128,12 @@ class TelemetryServiceTest {
         verify(pubgService, never()).fetchTelemetry(any());
         verify(telemetryRepository, never()).saveAll(any(), any());
     }
+
+    @Test
+    void findDamageLogByPlayer() {
+        given(telemetryRepository.findLogPlayerTakeDamageByAttacker(MATCH_ID, PLAYER_NAME))
+                .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_TAKE_DAMAGES);
+
+        assertDoesNotThrow(() -> telemetryService.findDamageLogByPlayer(MATCH_ID, PLAYER_NAME));
+    }
 }

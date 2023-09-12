@@ -49,4 +49,26 @@ class TelemetryRestControllerTest {
                 .andExpect(jsonPath("$.result").isArray())
         ;
     }
+
+    @Test
+    void findDamageLogByPlayer() throws Exception {
+        given(telemetryService.findDamageLogByPlayer(MATCH_ID, PLAYER_NAME))
+                .willReturn(
+                        OFFICIAL_LOG_PLAYER_TAKE_DAMAGES.stream()
+                                .map(DamageLogRes::of)
+                                .collect(Collectors.toList())
+                );
+
+        ResultActions result = mockMvc.perform(
+                get(TELEMETRY_API_URL + "/" + MATCH_ID + "/player/" + PLAYER_NAME + "/damages")
+        );
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(TelemetryRestController.class))
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.result").isArray())
+        ;
+    }
 }
