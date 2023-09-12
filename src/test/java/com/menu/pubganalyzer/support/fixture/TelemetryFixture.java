@@ -2,6 +2,7 @@ package com.menu.pubganalyzer.support.fixture;
 
 import com.menu.pubganalyzer.domain.model.telemetries.Telemetry;
 import com.menu.pubganalyzer.support.fixture.pubgapi.TelemetryResponseFixture;
+import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.CharacterResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -19,10 +20,10 @@ public class TelemetryFixture {
             .filter(telemetry -> "LogPlayerKillV2".equals(telemetry.getType()))
             .filter(telemetry -> {
                 Map<String, Object> attribute = telemetry.getAttribute();
-                if (attribute.containsKey("killer")) return false;
-                Map<String, Object> killer = (Map<String, Object>) attribute.get("killer");
+                if (!attribute.containsKey("killer")) return false;
+                CharacterResponse killer = (CharacterResponse) attribute.get("killer");
                 if (Objects.isNull(killer)) return false;
-                return killer.get("name").equals(PLAYER_NAME);
+                return killer.getName().equals(PLAYER_NAME);
             })
             .collect(Collectors.toList());
 
@@ -31,17 +32,17 @@ public class TelemetryFixture {
             .filter(telemetry -> {
                 Map<String, Object> attribute = telemetry.getAttribute();
 
-                if (attribute.containsKey("attacker")) return false;
-                Map<String, Object> attacker = (Map<String, Object>) attribute.get("attacker");
+                if (!attribute.containsKey("attacker")) return false;
+                CharacterResponse attacker = (CharacterResponse) attribute.get("attacker");
                 if (Objects.isNull(attacker)) return false;
 
-                if (attribute.containsKey("victim")) return false;
-                Map<String, Object> victim = (Map<String, Object>) attribute.get("victim");
+                if (!attribute.containsKey("victim")) return false;
+                CharacterResponse victim = (CharacterResponse) attribute.get("victim");
                 if (Objects.isNull(victim)) return false;
 
-                if (!attacker.get("name").equals(PLAYER_NAME)) return false;
+                if (!attacker.getName().equals(PLAYER_NAME)) return false;
 
-                return !victim.get("name").equals(PLAYER_NAME);
+                return !victim.getName().equals(PLAYER_NAME);
             })
             .collect(Collectors.toList());
 }
