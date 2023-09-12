@@ -2,6 +2,7 @@ package com.menu.pubganalyzer.util;
 
 import com.menu.pubganalyzer.domain.dto.ContributeDamageChartDataset;
 import com.menu.pubganalyzer.domain.dto.ContributeDamageChartRes;
+import com.menu.pubganalyzer.domain.dto.PhaseDamageChartRes;
 import com.menu.pubganalyzer.domain.model.telemetries.LogPlayerKillV2;
 import com.menu.pubganalyzer.domain.model.telemetries.LogPlayerTakeDamage;
 
@@ -68,6 +69,17 @@ public class ChartUtil {
         result.put("datasets", datasets);
 
         return result;
+    }
+
+    public static PhaseDamageChartRes phaseDamageChart(final List<LogPlayerTakeDamage> logPlayerTakeDamages) {
+        float[] phaseDamageDealt = new float[PHASE_SIZE];
+
+        for (LogPlayerTakeDamage logPlayerTakeDamage : logPlayerTakeDamages) {
+            int phase = logPlayerTakeDamage.getPhase();
+            phaseDamageDealt[phase] += logPlayerTakeDamage.getDamage();
+        }
+
+        return new PhaseDamageChartRes(phaseDamageDealt);
     }
 
     public static ContributeDamageChartRes contributeDamageChart(

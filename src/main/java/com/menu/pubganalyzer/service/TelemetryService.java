@@ -3,6 +3,7 @@ package com.menu.pubganalyzer.service;
 import com.menu.pubganalyzer.domain.dto.ContributeDamageChartRes;
 import com.menu.pubganalyzer.domain.dto.DamageLogRes;
 import com.menu.pubganalyzer.domain.dto.KillLogRes;
+import com.menu.pubganalyzer.domain.dto.PhaseDamageChartRes;
 import com.menu.pubganalyzer.domain.model.matches.Match;
 import com.menu.pubganalyzer.domain.model.matches.Roster;
 import com.menu.pubganalyzer.domain.model.telemetries.LogPlayerKillV2;
@@ -88,6 +89,16 @@ public class TelemetryService {
                 .map(LogPlayerTakeDamageImpl::new)
                 .map(DamageLogRes::of)
                 .collect(Collectors.toList());
+    }
+
+    public PhaseDamageChartRes getPhaseDamageChart(
+            final String id,
+            final String playerName) {
+        List<LogPlayerTakeDamage> logPlayerTakeDamages = telemetryRepository.findLogPlayerTakeDamageByAttacker(id, playerName).stream()
+                .map(LogPlayerTakeDamageImpl::new)
+                .collect(Collectors.toList());
+
+        return ChartUtil.phaseDamageChart(logPlayerTakeDamages);
     }
 
     public ContributeDamageChartRes getContributeDamageChart(
