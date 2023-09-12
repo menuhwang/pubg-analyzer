@@ -1,10 +1,12 @@
 package com.menu.pubganalyzer.service;
 
+import com.menu.pubganalyzer.domain.repository.MatchRepository;
 import com.menu.pubganalyzer.domain.repository.TelemetryRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.menu.pubganalyzer.support.fixture.MatchFixture.MATCH;
 import static com.menu.pubganalyzer.support.fixture.MatchFixture.MATCH_ID;
@@ -18,8 +20,9 @@ import static org.mockito.Mockito.verify;
 
 class TelemetryServiceTest {
     private final PubgService pubgService = Mockito.mock(PubgService.class);
+    private final MatchRepository matchRepository = Mockito.mock(MatchRepository.class);
     private final TelemetryRepository telemetryRepository = Mockito.mock(TelemetryRepository.class);
-    private final TelemetryService telemetryService = new TelemetryService(pubgService, telemetryRepository);
+    private final TelemetryService telemetryService = new TelemetryService(pubgService, matchRepository ,telemetryRepository);
 
     @Test
     void findKillLogs() {
@@ -84,5 +87,45 @@ class TelemetryServiceTest {
 
         verify(pubgService).fetchTelemetry(MATCH);
         verify(telemetryRepository).saveAll(eq(MATCH_ID), anyCollection());
+    }
+
+    @Test
+    void findDamagesOfKillWithFetchAPI() {
+        given(matchRepository.findById(MATCH_ID))
+                .willReturn(Optional.of(MATCH));
+
+        given(telemetryRepository.existsByMatchId(MATCH_ID))
+                .willReturn(false);
+
+        given(telemetryRepository.findLogPlayerKillByMatchIdAndPlayerName(MATCH_ID, PLAYER_NAME))
+                .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_KILLS);
+
+        given(telemetryRepository.findLogPlayerTakeDamageByVictimsAndAttacker(eq(MATCH_ID), any(), any()))
+                .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_TAKE_DAMAGES);
+
+        assertDoesNotThrow(() -> telemetryService.findDamagesOfKill(MATCH_ID, PLAYER_NAME));
+
+        verify(pubgService).fetchTelemetry(any());
+        verify(telemetryRepository).saveAll(any(), any());
+    }
+
+    @Test
+    void findDamagesOfKill() {
+        given(matchRepository.findById(MATCH_ID))
+                .willReturn(Optional.of(MATCH));
+
+        given(telemetryRepository.existsByMatchId(MATCH_ID))
+                .willReturn(true);
+
+        given(telemetryRepository.findLogPlayerKillByMatchIdAndPlayerName(MATCH_ID, PLAYER_NAME))
+                .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_KILLS);
+
+        given(telemetryRepository.findLogPlayerTakeDamageByVictimsAndAttacker(eq(MATCH_ID), any(), any()))
+                .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_TAKE_DAMAGES);
+
+        assertDoesNotThrow(() -> telemetryService.findDamagesOfKill(MATCH_ID, PLAYER_NAME));
+
+        verify(pubgService, never()).fetchTelemetry(any());
+        verify(telemetryRepository, never()).saveAll(any(), any());
     }
 }
