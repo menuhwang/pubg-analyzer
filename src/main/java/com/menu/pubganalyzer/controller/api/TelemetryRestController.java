@@ -1,6 +1,7 @@
 package com.menu.pubganalyzer.controller.api;
 
 import com.menu.pubganalyzer.domain.dto.DamageLogRes;
+import com.menu.pubganalyzer.domain.dto.KillLogRes;
 import com.menu.pubganalyzer.service.TelemetryService;
 import com.menu.pubganalyzer.support.apiResult.ApiResult;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,16 @@ public class TelemetryRestController {
             @PathVariable String playerName
     ) {
         List<DamageLogRes> result = telemetryService.findDamageLogByPlayer(id, playerName);
+
+        return ResponseEntity.ok(success(result));
+    }
+
+    @GetMapping("/{id}/player/{playerName}/kills")
+    public ResponseEntity<ApiResult<List<KillLogRes>>> findKillLogs(
+            @PathVariable String id,
+            @PathVariable String playerName
+    ) {
+        List<KillLogRes> result = telemetryService.findKillLogs(id, playerName);
 
         return ResponseEntity.ok(success(result));
     }

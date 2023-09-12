@@ -1,6 +1,7 @@
 package com.menu.pubganalyzer.service;
 
 import com.menu.pubganalyzer.domain.dto.DamageLogRes;
+import com.menu.pubganalyzer.domain.dto.KillLogRes;
 import com.menu.pubganalyzer.domain.model.matches.Match;
 import com.menu.pubganalyzer.domain.model.matches.Roster;
 import com.menu.pubganalyzer.domain.model.telemetries.LogPlayerKillV2;
@@ -30,6 +31,15 @@ public class TelemetryService {
     public List<LogPlayerKillV2> findKillLogs(Match match, String playerName) {
         return telemetryRepository.findLogPlayerKillByMatchIdAndPlayerName(match.getId(), playerName).stream()
                 .map(LogPlayerKillV2Impl::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<KillLogRes> findKillLogs(
+            final String id,
+            final String playerName) {
+        return telemetryRepository.findLogPlayerKillByMatchIdAndPlayerName(id, playerName).stream()
+                .map(LogPlayerKillV2Impl::new)
+                .map(KillLogRes::of)
                 .collect(Collectors.toList());
     }
 
