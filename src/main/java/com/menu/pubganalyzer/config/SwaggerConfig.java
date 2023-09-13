@@ -31,7 +31,7 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .info(new Info().title("Battlestats API")
                         .description("Battlestat(PUBG Analyzer) API 명세서")
-                        .version("beta-v3.1.1")
+                        .version("beta")
                 );
     }
 }
