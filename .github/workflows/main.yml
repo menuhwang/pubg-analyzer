@@ -13,7 +13,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  TAG: beta-3.1.1
+  TAG: beta-3.1.2
 
 
 jobs:
