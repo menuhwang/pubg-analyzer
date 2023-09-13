@@ -1,6 +1,11 @@
 package com.menu.pubganalyzer.service;
 
+import com.menu.pubganalyzer.domain.dto.MatchInfoRes;
+import com.menu.pubganalyzer.domain.dto.MatchResultRes;
+import com.menu.pubganalyzer.domain.dto.RosterRes;
 import com.menu.pubganalyzer.domain.model.matches.Match;
+import com.menu.pubganalyzer.domain.model.matches.Participant;
+import com.menu.pubganalyzer.domain.model.matches.Roster;
 import com.menu.pubganalyzer.domain.repository.MatchRepository;
 import com.menu.pubganalyzer.exception.MatchNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +33,33 @@ public class MatchService {
             final String playerName,
             final Pageable pageable) {
         return matchRepository.findByRosters_Participants_Name(playerName, pageable);
+    }
+
+    public MatchInfoRes findMatchInfo(final String id) {
+        return matchRepository.findById(id)
+                .map(MatchInfoRes::from)
+                .orElseThrow(MatchNotFoundException::new);
+    }
+
+    public MatchResultRes findMatchResultByPlayer(
+            final String id,
+            final String playerName) {
+        Match match = matchRepository.findById(id)
+                .orElseThrow(MatchNotFoundException::new);
+        Roster roster = match.getRosterByName(playerName);
+        Participant participant = roster.getParticipantByName(playerName);
+
+        return MatchResultRes.of(match, roster, participant);
+    }
+
+    public RosterRes findRoster(
+            final String id,
+            final String playerName) {
+        Match match = matchRepository.findById(id)
+                .orElseThrow(MatchNotFoundException::new);
+        Roster roster = match.getRosterByName(playerName);
+
+        return RosterRes.from(roster);
     }
 
     @Transactional

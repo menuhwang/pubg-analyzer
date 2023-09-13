@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class MatchResponseFixture {
-    public static final String MATCH_ID = "2bf96de2-2cb9-4ce0-a23c-9149eb164a52";
+    public static final String MATCH_ID = "f4b8690c-d165-4a0e-8292-db2bd894006e";
     public static final String MATCH_SHARD;
     public static final String MATCH_ASSET_URL;
     public static final MatchResponse MATCH_RESPONSE;

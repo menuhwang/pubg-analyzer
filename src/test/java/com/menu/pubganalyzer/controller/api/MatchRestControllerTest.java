@@ -1,5 +1,8 @@
 package com.menu.pubganalyzer.controller.api;
 
+import com.menu.pubganalyzer.domain.dto.MatchInfoRes;
+import com.menu.pubganalyzer.domain.dto.MatchResultRes;
+import com.menu.pubganalyzer.domain.dto.RosterRes;
 import com.menu.pubganalyzer.service.MatchService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static com.menu.pubganalyzer.support.fixture.MatchFixture.MATCH_ID;
-import static com.menu.pubganalyzer.support.fixture.MatchFixture.MATCH_PAGE;
+import static com.menu.pubganalyzer.support.fixture.MatchFixture.*;
 import static com.menu.pubganalyzer.support.fixture.PlayerFixture.PLAYER_NAME;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.mockito.ArgumentMatchers.*;
@@ -93,6 +95,76 @@ class MatchRestControllerTest {
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.result.player").value(PLAYER_NAME))
                 .andExpect(jsonPath("$.result.matches.content").isArray())
+        ;
+    }
+
+    @Test
+    void findMatchInfo() throws Exception {
+        given(matchService.findMatchInfo(eq(MATCH_ID)))
+                .willReturn(MatchInfoRes.from(MATCH));
+
+        ResultActions result = mockMvc.perform(
+                get(MATCH_API_URL + "/" + MATCH_ID + "/info")
+        );
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(MatchRestController.class))
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.result.id").isString())
+                .andExpect(jsonPath("$.result.matchType").isMap())
+                .andExpect(jsonPath("$.result.matchType.kor").isString())
+                .andExpect(jsonPath("$.result.matchType.eng").isString())
+                .andExpect(jsonPath("$.result.mapName").isMap())
+                .andExpect(jsonPath("$.result.mapName.kor").isString())
+                .andExpect(jsonPath("$.result.mapName.eng").isString())
+                .andExpect(jsonPath("$.result.gameMode").isMap())
+                .andExpect(jsonPath("$.result.gameMode.kor").isString())
+                .andExpect(jsonPath("$.result.gameMode.eng").isString())
+                .andExpect(jsonPath("result.createdAt").isString())
+                .andExpect(jsonPath("result.duration").isNumber())
+        ;
+    }
+
+    @Test
+    void findMatchResultByPlayer() throws Exception {
+        given(matchService.findMatchResultByPlayer(eq(MATCH_ID), eq(PLAYER_NAME)))
+                .willReturn(MatchResultRes.of(MATCH, ROSTER, PARTICIPANT));
+
+        ResultActions result = mockMvc.perform(
+                get(MATCH_API_URL + "/" + MATCH_ID + "/player/" + PLAYER_NAME + "/result")
+        );
+
+        result.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(MatchRestController.class))
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.result.rank").isNumber())
+                .andExpect(jsonPath("$.result.rosters").isNumber())
+                .andExpect(jsonPath("$.result.kills").isNumber())
+                .andExpect(jsonPath("$.result.assists").isNumber())
+                .andExpect(jsonPath("$.result.damageDealt").isNumber())
+                .andExpect(jsonPath("$.result.revives").isNumber())
+        ;
+    }
+
+    @Test
+    void findRosterWhenJustSelf() throws Exception {
+        given(matchService.findRoster(eq(MATCH_ID), eq(PLAYER_NAME)))
+                .willReturn(RosterRes.from(ROSTER));
+
+        ResultActions result = mockMvc.perform(
+                get(MATCH_API_URL + "/" + MATCH_ID + "/player/" + PLAYER_NAME + "/roster")
+        );
+
+        result.andDo(print())
+                .andExpect(handler().handlerType(MatchRestController.class))
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.result.won").isBoolean())
+                .andExpect(jsonPath("$.result.participants").isArray())
         ;
     }
 }

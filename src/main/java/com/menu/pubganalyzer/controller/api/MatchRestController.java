@@ -1,13 +1,12 @@
 package com.menu.pubganalyzer.controller.api;
 
-import com.menu.pubganalyzer.domain.dto.MatchRes;
-import com.menu.pubganalyzer.domain.dto.MatchStatsRes;
-import com.menu.pubganalyzer.domain.dto.PageDTO;
-import com.menu.pubganalyzer.domain.dto.SearchPlayerRes;
+import com.menu.pubganalyzer.domain.dto.*;
 import com.menu.pubganalyzer.domain.model.matches.Match;
 import com.menu.pubganalyzer.service.MatchService;
 import com.menu.pubganalyzer.support.admin.AdminOnly;
 import com.menu.pubganalyzer.support.apiResult.ApiResult;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +20,10 @@ import java.util.Map;
 
 import static com.menu.pubganalyzer.support.apiResult.ApiResultUtil.success;
 
+@Tag(
+        name = "매치",
+        description = "매치 정보 조회 및 관리 API"
+)
 @RestController
 @RequestMapping("/matches")
 @RequiredArgsConstructor
@@ -29,6 +32,10 @@ public class MatchRestController {
 
     @AdminOnly
     @GetMapping
+    @Operation(
+            summary = "매치 조회",
+            description = "관리자만 접근 가능합니다."
+    )
     public ResponseEntity<ApiResult<PageDTO<MatchRes>>> findAll(@PageableDefault(size = 20, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Match> matchPage = matchService.findAll(pageable);
         Page<MatchRes> matchResPage = matchPage.map(MatchRes::from);
@@ -38,6 +45,10 @@ public class MatchRestController {
 
     @AdminOnly
     @DeleteMapping("{id}")
+    @Operation(
+            summary = "매치 삭제",
+            description = "관리자만 접근 가능합니다."
+    )
     public ResponseEntity<ApiResult<Map<String, String>>> deleteById(@PathVariable final String id) {
         matchService.deleteById(List.of(id));
 
@@ -45,6 +56,9 @@ public class MatchRestController {
     }
 
     @GetMapping("/player/{playerName}")
+    @Operation(
+            summary = "플레이어 매치 리스트 조회"
+    )
     public ResponseEntity<ApiResult<SearchPlayerRes>> findByPlayerName(
             @PathVariable final String playerName,
             @PageableDefault(size = 20, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -53,5 +67,43 @@ public class MatchRestController {
         PageDTO<MatchStatsRes> matchResPageDTO = PageDTO.of(matchStatsResPage);
 
         return ResponseEntity.ok(success(SearchPlayerRes.of(playerName, matchResPageDTO)));
+    }
+
+    @GetMapping("/{id}/info")
+    @Operation(
+            summary = "매치 정보 조회"
+    )
+    public ResponseEntity<ApiResult<MatchInfoRes>> findMatchInfo(
+            @PathVariable final String id
+    ) {
+        MatchInfoRes result = matchService.findMatchInfo(id);
+
+        return ResponseEntity.ok(success(result));
+    }
+
+    @GetMapping("/{id}/player/{playerName}/result")
+    @Operation(
+            summary = "플레이어의 매치 결과 조회"
+    )
+    public ResponseEntity<ApiResult<MatchResultRes>> findMatchResultByPlayer(
+            @PathVariable final String id,
+            @PathVariable final String playerName
+    ) {
+        MatchResultRes result = matchService.findMatchResultByPlayer(id, playerName);
+
+        return ResponseEntity.ok(success(result));
+    }
+
+    @GetMapping("/{id}/player/{playerName}/roster")
+    @Operation(
+            summary = "매치를 함께한 팀원 리스트 조회"
+    )
+    public ResponseEntity<ApiResult<RosterRes>> findRoster(
+            @PathVariable String id,
+            @PathVariable String playerName
+    ) {
+        RosterRes result = matchService.findRoster(id, playerName);
+
+        return ResponseEntity.ok(success(result));
     }
 }
