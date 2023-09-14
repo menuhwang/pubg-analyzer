@@ -2,10 +2,17 @@
    게임 배틀그라운드의 매치 로그를 분석해주는 서비스입니다.
 
 # 🔗 Site
+   - [API 명세서](https://docs.battlestats.site/swagger-ui/index.html?urls.primaryName=public)
    - [홈페이지](https://www.battlestats.site)
    - [Demo 플레이어 조회](https://www.battlestats.site/player/WackyJacky101)
 
-# 📄 Page
+# 🏢 Infra Architecture
+### AWS
+![aws-architecture](./assets/pubg-analyzer.aws.png)
+### On-premise 
+![on-premise-architecture](./assets/pubg-analyzer.onpremise.png)
+
+# 🌁 View
 
 ## Home
    유저 검색 및 북마크 기능 제공
