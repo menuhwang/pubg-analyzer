@@ -18,7 +18,6 @@ import com.menu.pubganalyzer.util.ChartUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,33 +32,21 @@ public class TelemetryService {
     public List<KillLogRes> findKillLogs(
             final String id,
             final String playerName) {
+        fetchTelemetryIfAbsent(id);
+
         return telemetryRepository.findLogPlayerKillByMatchIdAndPlayerName(id, playerName).stream()
                 .map(LogPlayerKillV2Impl::new)
                 .map(KillLogRes::of)
                 .collect(Collectors.toList());
     }
 
-    public List<LogPlayerTakeDamage> findDamageLogs(Match match, Collection<String> victims, Collection<String> attackers) {
-        return telemetryRepository.findLogPlayerTakeDamageByVictimsAndAttacker(match.getId(), victims, attackers).stream()
-                .map(LogPlayerTakeDamageImpl::new)
-                .collect(Collectors.toList());
-    }
-
-    public List<LogPlayerTakeDamage> findDamageLogs(Match match, String attacker) {
-        return telemetryRepository.findLogPlayerTakeDamageByAttacker(match.getId(), attacker).stream()
-                .map(LogPlayerTakeDamageImpl::new)
-                .collect(Collectors.toList());
-    }
-
     public List<DamageLogRes> findDamagesOfKill(
             final String id,
             final String playerName) {
+        fetchTelemetryIfAbsent(id);
+
         Match match = matchRepository.findById(id)
                 .orElseThrow(MatchNotFoundException::new);
-        if (!telemetryRepository.existsByMatchId(id)) {
-            List<Telemetry> telemetries = pubgService.fetchTelemetry(match);
-            telemetryRepository.saveAll(id, telemetries);
-        }
 
         Set<String> victims = telemetryRepository.findLogPlayerKillByMatchIdAndPlayerName(id, playerName).stream()
                 .map(LogPlayerKillV2Impl::new)
@@ -78,6 +65,8 @@ public class TelemetryService {
     public List<DamageLogRes> findDamageLogByPlayer(
             final String id,
             final String playerName) {
+        fetchTelemetryIfAbsent(id);
+
         return telemetryRepository.findLogPlayerTakeDamageByAttacker(id, playerName).stream()
                 .map(LogPlayerTakeDamageImpl::new)
                 .map(DamageLogRes::of)
@@ -87,6 +76,8 @@ public class TelemetryService {
     public PhaseDamageChartRes getPhaseDamageChart(
             final String id,
             final String playerName) {
+        fetchTelemetryIfAbsent(id);
+
         List<LogPlayerTakeDamage> logPlayerTakeDamages = telemetryRepository.findLogPlayerTakeDamageByAttacker(id, playerName).stream()
                 .map(LogPlayerTakeDamageImpl::new)
                 .collect(Collectors.toList());
@@ -97,6 +88,8 @@ public class TelemetryService {
     public ContributeDamageChartRes getContributeDamageChart(
             final String id,
             final String playerName) {
+        fetchTelemetryIfAbsent(id);
+
         Match match = matchRepository.findById(id)
                 .orElseThrow(MatchNotFoundException::new);
 
@@ -118,13 +111,15 @@ public class TelemetryService {
         return ChartUtil.contributeDamageChart(playerName, members, logPlayerKills, logPlayerTakeDamages);
     }
 
-    public boolean existsTelemetry(Match match) {
-        return telemetryRepository.existsByMatchId(match.getId());
-    }
+    private void fetchTelemetryIfAbsent(String id) {
+        Match match = matchRepository.findById(id)
+                .orElseThrow(MatchNotFoundException::new);
 
-    public void fetchTelemetry(Match match) {
-        List<Telemetry> telemetries = pubgService.fetchTelemetry(match);
-
-        telemetryRepository.saveAll(match.getId(), telemetries);
+        synchronized (this) {
+            if (!telemetryRepository.existsByMatchId(id)) {
+                List<Telemetry> telemetries = pubgService.fetchTelemetry(match);
+                telemetryRepository.saveAll(id, telemetries);
+            }
+        }
     }
 }

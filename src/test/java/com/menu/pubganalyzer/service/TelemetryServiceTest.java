@@ -9,8 +9,12 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static com.menu.pubganalyzer.support.fixture.MatchFixture.MATCH;
 import static com.menu.pubganalyzer.support.fixture.MatchFixture.MATCH_ID;
@@ -19,8 +23,7 @@ import static com.menu.pubganalyzer.support.fixture.TelemetryFixture.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 class TelemetryServiceTest {
     private final PubgService pubgService = Mockito.mock(PubgService.class);
@@ -28,60 +31,6 @@ class TelemetryServiceTest {
     private final TelemetryRepository telemetryRepository = Mockito.mock(TelemetryRepository.class);
     private final TelemetryService telemetryService = new TelemetryService(pubgService, matchRepository ,telemetryRepository);
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    @Test
-    void findDamageLogsByVictimsAndMember() {
-        given(telemetryRepository.findLogPlayerTakeDamageByVictimsAndAttacker(eq(MATCH_ID), anyCollection(), anyCollection()))
-                .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_TAKE_DAMAGES);
-
-        assertDoesNotThrow(() -> telemetryService.findDamageLogs(MATCH, List.of("victim"), List.of("member")));
-
-        verify(telemetryRepository, never()).saveAll(eq(MATCH_ID), anyCollection());
-        verify(telemetryRepository).findLogPlayerTakeDamageByVictimsAndAttacker(eq(MATCH_ID), anyCollection(), anyCollection());
-    }
-
-    @Test
-    void findDamageLogsByAttacker() {
-        given(telemetryRepository.findLogPlayerTakeDamageByAttacker(MATCH_ID, PLAYER_NAME))
-                .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_TAKE_DAMAGES);
-
-        assertDoesNotThrow(() -> telemetryService.findDamageLogs(MATCH, PLAYER_NAME));
-
-        verify(telemetryRepository, never()).saveAll(eq(MATCH_ID), anyCollection());
-        verify(telemetryRepository).findLogPlayerTakeDamageByAttacker(MATCH_ID, PLAYER_NAME);
-    }
-
-    @Test
-    void existsTelemetry() {
-        given(telemetryRepository.existsByMatchId(anyString()))
-                .willReturn(true);
-
-        boolean result = assertDoesNotThrow(() -> telemetryService.existsTelemetry(MATCH));
-
-        assertTrue(result);
-
-        verify(telemetryRepository).existsByMatchId(anyString());
-    }
-
-    @Test
-    void notExistsTelemetry() {
-        given(telemetryRepository.existsByMatchId(anyString()))
-                .willReturn(false);
-
-        boolean result = assertDoesNotThrow(() -> telemetryService.existsTelemetry(MATCH));
-
-        assertFalse(result);
-
-        verify(telemetryRepository).existsByMatchId(anyString());
-    }
-
-    @Test
-    void fetchTelemetry() {
-        assertDoesNotThrow(() -> telemetryService.fetchTelemetry(MATCH));
-
-        verify(pubgService).fetchTelemetry(MATCH);
-        verify(telemetryRepository).saveAll(eq(MATCH_ID), anyCollection());
-    }
 
     @Test
     void findDamagesOfKillWithFetchAPI() {
@@ -125,6 +74,12 @@ class TelemetryServiceTest {
 
     @Test
     void findDamageLogByPlayer() {
+        given(matchRepository.findById(MATCH_ID))
+                .willReturn(Optional.of(MATCH));
+
+        given(telemetryRepository.existsByMatchId(MATCH_ID))
+                .willReturn(true);
+
         given(telemetryRepository.findLogPlayerTakeDamageByAttacker(MATCH_ID, PLAYER_NAME))
                 .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_TAKE_DAMAGES);
 
@@ -133,6 +88,12 @@ class TelemetryServiceTest {
 
     @Test
     void findKillLogs() {
+        given(matchRepository.findById(MATCH_ID))
+                .willReturn(Optional.of(MATCH));
+
+        given(telemetryRepository.existsByMatchId(MATCH_ID))
+                .willReturn(true);
+
         given(telemetryRepository.findLogPlayerKillByMatchIdAndPlayerName(MATCH_ID, PLAYER_NAME))
                 .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_KILLS);
 
@@ -141,6 +102,12 @@ class TelemetryServiceTest {
 
     @Test
     void getPhaseDamageChart() {
+        given(matchRepository.findById(MATCH_ID))
+                .willReturn(Optional.of(MATCH));
+
+        given(telemetryRepository.existsByMatchId(MATCH_ID))
+                .willReturn(true);
+
         given(telemetryRepository.findLogPlayerTakeDamageByAttacker(MATCH_ID, PLAYER_NAME))
                 .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_TAKE_DAMAGES);
 
@@ -154,6 +121,9 @@ class TelemetryServiceTest {
         given(matchRepository.findById(MATCH_ID))
                 .willReturn(Optional.of(MATCH));
 
+        given(telemetryRepository.existsByMatchId(MATCH_ID))
+                .willReturn(true);
+
         given(telemetryRepository.findLogPlayerKillByMatchIdAndPlayerName(MATCH_ID, PLAYER_NAME))
                 .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_KILLS);
 
@@ -162,5 +132,49 @@ class TelemetryServiceTest {
 
         ContributeDamageChartRes result = assertDoesNotThrow(() -> telemetryService.getContributeDamageChart(MATCH_ID, PLAYER_NAME));
         logger.info("contribute damage chart: {}", result);
+    }
+
+    @Test
+    void fetchMultiThread() throws InterruptedException {
+        given(matchRepository.findById(MATCH_ID))
+                .willReturn(Optional.of(MATCH));
+
+        given(telemetryRepository.existsByMatchId(MATCH_ID))
+                .willReturn(false, true);
+        List<Runnable> jobs = new ArrayList<>();
+        CountDownLatch countDownLatch = new CountDownLatch(5);
+
+        jobs.add(() -> {
+            telemetryService.findKillLogs(MATCH_ID, PLAYER_NAME);
+            countDownLatch.countDown();
+        });
+
+        jobs.add(() -> {
+            telemetryService.findDamageLogByPlayer(MATCH_ID, PLAYER_NAME);
+            countDownLatch.countDown();
+        });
+
+        jobs.add(() -> {
+            telemetryService.findDamagesOfKill(MATCH_ID, PLAYER_NAME);
+            countDownLatch.countDown();
+        });
+
+        jobs.add(() -> {
+            telemetryService.getPhaseDamageChart(MATCH_ID, PLAYER_NAME);
+            countDownLatch.countDown();
+        });
+
+        jobs.add(() -> {
+            telemetryService.getContributeDamageChart(MATCH_ID, PLAYER_NAME);
+            countDownLatch.countDown();
+        });
+
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+
+        jobs.forEach(executorService::execute);
+
+        countDownLatch.await();
+
+        verify(pubgService, times(1)).fetchTelemetry(any());
     }
 }
