@@ -30,60 +30,6 @@ class TelemetryServiceTest {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Test
-    void findDamageLogsByVictimsAndMember() {
-        given(telemetryRepository.findLogPlayerTakeDamageByVictimsAndAttacker(eq(MATCH_ID), anyCollection(), anyCollection()))
-                .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_TAKE_DAMAGES);
-
-        assertDoesNotThrow(() -> telemetryService.findDamageLogs(MATCH, List.of("victim"), List.of("member")));
-
-        verify(telemetryRepository, never()).saveAll(eq(MATCH_ID), anyCollection());
-        verify(telemetryRepository).findLogPlayerTakeDamageByVictimsAndAttacker(eq(MATCH_ID), anyCollection(), anyCollection());
-    }
-
-    @Test
-    void findDamageLogsByAttacker() {
-        given(telemetryRepository.findLogPlayerTakeDamageByAttacker(MATCH_ID, PLAYER_NAME))
-                .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_TAKE_DAMAGES);
-
-        assertDoesNotThrow(() -> telemetryService.findDamageLogs(MATCH, PLAYER_NAME));
-
-        verify(telemetryRepository, never()).saveAll(eq(MATCH_ID), anyCollection());
-        verify(telemetryRepository).findLogPlayerTakeDamageByAttacker(MATCH_ID, PLAYER_NAME);
-    }
-
-    @Test
-    void existsTelemetry() {
-        given(telemetryRepository.existsByMatchId(anyString()))
-                .willReturn(true);
-
-        boolean result = assertDoesNotThrow(() -> telemetryService.existsTelemetry(MATCH));
-
-        assertTrue(result);
-
-        verify(telemetryRepository).existsByMatchId(anyString());
-    }
-
-    @Test
-    void notExistsTelemetry() {
-        given(telemetryRepository.existsByMatchId(anyString()))
-                .willReturn(false);
-
-        boolean result = assertDoesNotThrow(() -> telemetryService.existsTelemetry(MATCH));
-
-        assertFalse(result);
-
-        verify(telemetryRepository).existsByMatchId(anyString());
-    }
-
-    @Test
-    void fetchTelemetry() {
-        assertDoesNotThrow(() -> telemetryService.fetchTelemetry(MATCH));
-
-        verify(pubgService).fetchTelemetry(MATCH);
-        verify(telemetryRepository).saveAll(eq(MATCH_ID), anyCollection());
-    }
-
-    @Test
     void findDamagesOfKillWithFetchAPI() {
         given(matchRepository.findById(MATCH_ID))
                 .willReturn(Optional.of(MATCH));

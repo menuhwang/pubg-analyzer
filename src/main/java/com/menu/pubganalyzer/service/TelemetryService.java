@@ -18,7 +18,6 @@ import com.menu.pubganalyzer.util.ChartUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -39,27 +38,11 @@ public class TelemetryService {
                 .collect(Collectors.toList());
     }
 
-    public List<LogPlayerTakeDamage> findDamageLogs(Match match, Collection<String> victims, Collection<String> attackers) {
-        return telemetryRepository.findLogPlayerTakeDamageByVictimsAndAttacker(match.getId(), victims, attackers).stream()
-                .map(LogPlayerTakeDamageImpl::new)
-                .collect(Collectors.toList());
-    }
-
-    public List<LogPlayerTakeDamage> findDamageLogs(Match match, String attacker) {
-        return telemetryRepository.findLogPlayerTakeDamageByAttacker(match.getId(), attacker).stream()
-                .map(LogPlayerTakeDamageImpl::new)
-                .collect(Collectors.toList());
-    }
-
     public List<DamageLogRes> findDamagesOfKill(
             final String id,
             final String playerName) {
         Match match = matchRepository.findById(id)
                 .orElseThrow(MatchNotFoundException::new);
-        if (!telemetryRepository.existsByMatchId(id)) {
-            List<Telemetry> telemetries = pubgService.fetchTelemetry(match);
-            telemetryRepository.saveAll(id, telemetries);
-        }
 
         Set<String> victims = telemetryRepository.findLogPlayerKillByMatchIdAndPlayerName(id, playerName).stream()
                 .map(LogPlayerKillV2Impl::new)
