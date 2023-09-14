@@ -32,6 +32,8 @@ public class TelemetryService {
     public List<KillLogRes> findKillLogs(
             final String id,
             final String playerName) {
+        fetchTelemetryIfAbsent(id);
+
         return telemetryRepository.findLogPlayerKillByMatchIdAndPlayerName(id, playerName).stream()
                 .map(LogPlayerKillV2Impl::new)
                 .map(KillLogRes::of)
@@ -41,6 +43,8 @@ public class TelemetryService {
     public List<DamageLogRes> findDamagesOfKill(
             final String id,
             final String playerName) {
+        fetchTelemetryIfAbsent(id);
+
         Match match = matchRepository.findById(id)
                 .orElseThrow(MatchNotFoundException::new);
 
@@ -61,6 +65,8 @@ public class TelemetryService {
     public List<DamageLogRes> findDamageLogByPlayer(
             final String id,
             final String playerName) {
+        fetchTelemetryIfAbsent(id);
+
         return telemetryRepository.findLogPlayerTakeDamageByAttacker(id, playerName).stream()
                 .map(LogPlayerTakeDamageImpl::new)
                 .map(DamageLogRes::of)
@@ -70,6 +76,8 @@ public class TelemetryService {
     public PhaseDamageChartRes getPhaseDamageChart(
             final String id,
             final String playerName) {
+        fetchTelemetryIfAbsent(id);
+
         List<LogPlayerTakeDamage> logPlayerTakeDamages = telemetryRepository.findLogPlayerTakeDamageByAttacker(id, playerName).stream()
                 .map(LogPlayerTakeDamageImpl::new)
                 .collect(Collectors.toList());
@@ -80,6 +88,8 @@ public class TelemetryService {
     public ContributeDamageChartRes getContributeDamageChart(
             final String id,
             final String playerName) {
+        fetchTelemetryIfAbsent(id);
+
         Match match = matchRepository.findById(id)
                 .orElseThrow(MatchNotFoundException::new);
 
@@ -101,13 +111,15 @@ public class TelemetryService {
         return ChartUtil.contributeDamageChart(playerName, members, logPlayerKills, logPlayerTakeDamages);
     }
 
-    public boolean existsTelemetry(Match match) {
-        return telemetryRepository.existsByMatchId(match.getId());
-    }
+    private void fetchTelemetryIfAbsent(String id) {
+        Match match = matchRepository.findById(id)
+                .orElseThrow(MatchNotFoundException::new);
 
-    public void fetchTelemetry(Match match) {
-        List<Telemetry> telemetries = pubgService.fetchTelemetry(match);
-
-        telemetryRepository.saveAll(match.getId(), telemetries);
+        synchronized (this) {
+            if (!telemetryRepository.existsByMatchId(id)) {
+                List<Telemetry> telemetries = pubgService.fetchTelemetry(match);
+                telemetryRepository.saveAll(id, telemetries);
+            }
+        }
     }
 }
