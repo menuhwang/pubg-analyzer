@@ -1,7 +1,7 @@
 package com.menu.pubganalyzer.support.fixture;
 
-import com.menu.pubganalyzer.domain.model.telemetries.LogPlayerKillV2;
-import com.menu.pubganalyzer.domain.model.telemetries.impl.LogPlayerKillV2Impl;
+import com.menu.pubganalyzer.telemetries.model.LogPlayerKillV2;
+import com.menu.pubganalyzer.telemetries.model.impl.LogPlayerKillV2Impl;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,9 +1,10 @@
 package com.menu.pubganalyzer.service;
 
 import com.menu.pubganalyzer.config.tasks.CustomThreadPoolConfig;
-import com.menu.pubganalyzer.domain.model.Player;
-import com.menu.pubganalyzer.domain.model.matches.Match;
-import com.menu.pubganalyzer.domain.model.telemetries.Telemetry;
+import com.menu.pubganalyzer.players.model.Player;
+import com.menu.pubganalyzer.fetch.service.PubgService;
+import com.menu.pubganalyzer.matches.model.Match;
+import com.menu.pubganalyzer.telemetries.model.Telemetry;
 import com.menu.pubganalyzer.util.pubgAPI.PubgAPI;
 import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.PlayersResponse;

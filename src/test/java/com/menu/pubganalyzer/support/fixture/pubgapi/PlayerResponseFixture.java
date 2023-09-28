@@ -1,6 +1,6 @@
 package com.menu.pubganalyzer.support.fixture.pubgapi;
 
-import com.menu.pubganalyzer.domain.model.enums.Shard;
+import com.menu.pubganalyzer.common.enums.Shard;
 import com.menu.pubganalyzer.util.pubgAPI.response.PlayersResponse;
 
 import java.util.List;

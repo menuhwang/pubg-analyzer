@@ -1,9 +1,10 @@
 package com.menu.pubganalyzer.service;
 
-import com.menu.pubganalyzer.domain.dto.ShareLinkReq;
-import com.menu.pubganalyzer.domain.model.ShortLink;
-import com.menu.pubganalyzer.domain.repository.ShortLinkRepository;
-import com.menu.pubganalyzer.exception.LinkNotFoundException;
+import com.menu.pubganalyzer.share.dto.request.ShareLinkReq;
+import com.menu.pubganalyzer.share.model.ShortLink;
+import com.menu.pubganalyzer.share.repository.ShortLinkRepository;
+import com.menu.pubganalyzer.common.exception.LinkNotFoundException;
+import com.menu.pubganalyzer.share.service.ShortLinkService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 

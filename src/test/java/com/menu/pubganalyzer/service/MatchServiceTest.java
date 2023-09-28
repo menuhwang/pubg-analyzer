@@ -1,10 +1,11 @@
 package com.menu.pubganalyzer.service;
 
-import com.menu.pubganalyzer.domain.dto.MatchInfoRes;
-import com.menu.pubganalyzer.domain.dto.MatchResultRes;
-import com.menu.pubganalyzer.domain.dto.RosterRes;
-import com.menu.pubganalyzer.domain.repository.MatchRepository;
-import com.menu.pubganalyzer.exception.MatchNotFoundException;
+import com.menu.pubganalyzer.matches.dto.response.MatchInfoRes;
+import com.menu.pubganalyzer.matches.dto.response.MatchResultRes;
+import com.menu.pubganalyzer.matches.dto.response.RosterRes;
+import com.menu.pubganalyzer.matches.repository.MatchRepository;
+import com.menu.pubganalyzer.common.exception.MatchNotFoundException;
+import com.menu.pubganalyzer.matches.service.MatchService;
 import com.menu.pubganalyzer.support.fixture.MatchFixture;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

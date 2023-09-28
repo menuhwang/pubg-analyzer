@@ -1,6 +1,7 @@
 package com.menu.pubganalyzer.controller.api;
 
-import com.menu.pubganalyzer.service.PlayerService;
+import com.menu.pubganalyzer.players.controller.PlayerRestController;
+import com.menu.pubganalyzer.players.service.PlayerService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

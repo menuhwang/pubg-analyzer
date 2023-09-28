@@ -1,6 +1,7 @@
 package com.menu.pubganalyzer.controller.api;
 
-import com.menu.pubganalyzer.service.FetchAPIService;
+import com.menu.pubganalyzer.fetch.controller.FetchPubgAPIRestController;
+import com.menu.pubganalyzer.fetch.service.FetchAPIService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

@@ -3,7 +3,7 @@ package com.menu.pubganalyzer.util.filemanager;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.menu.pubganalyzer.domain.model.telemetries.Telemetry;
+import com.menu.pubganalyzer.telemetries.model.Telemetry;
 import com.menu.pubganalyzer.util.pubgAPI.response.TelemetryResponse;
 import org.junit.jupiter.api.*;
 

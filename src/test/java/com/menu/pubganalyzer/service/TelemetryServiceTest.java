@@ -1,9 +1,11 @@
 package com.menu.pubganalyzer.service;
 
-import com.menu.pubganalyzer.domain.dto.ContributeDamageChartRes;
-import com.menu.pubganalyzer.domain.dto.PhaseDamageChartRes;
-import com.menu.pubganalyzer.domain.repository.MatchRepository;
-import com.menu.pubganalyzer.domain.repository.TelemetryRepository;
+import com.menu.pubganalyzer.telemetries.dto.response.ContributeDamageChartRes;
+import com.menu.pubganalyzer.telemetries.dto.response.PhaseDamageChartRes;
+import com.menu.pubganalyzer.fetch.service.PubgService;
+import com.menu.pubganalyzer.matches.repository.MatchRepository;
+import com.menu.pubganalyzer.telemetries.repository.TelemetryRepository;
+import com.menu.pubganalyzer.telemetries.service.TelemetryService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;

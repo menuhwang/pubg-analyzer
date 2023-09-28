@@ -1,10 +1,10 @@
 package com.menu.pubganalyzer.util;
 
-import com.menu.pubganalyzer.domain.dto.ContributeDamageChartDataset;
-import com.menu.pubganalyzer.domain.dto.ContributeDamageChartRes;
-import com.menu.pubganalyzer.domain.dto.PhaseDamageChartRes;
-import com.menu.pubganalyzer.domain.model.telemetries.LogPlayerKillV2;
-import com.menu.pubganalyzer.domain.model.telemetries.LogPlayerTakeDamage;
+import com.menu.pubganalyzer.telemetries.dto.response.ContributeDamageChartDataset;
+import com.menu.pubganalyzer.telemetries.dto.response.ContributeDamageChartRes;
+import com.menu.pubganalyzer.telemetries.dto.response.PhaseDamageChartRes;
+import com.menu.pubganalyzer.telemetries.model.LogPlayerKillV2;
+import com.menu.pubganalyzer.telemetries.model.LogPlayerTakeDamage;
 
 import java.util.*;
 import java.util.stream.Collectors;

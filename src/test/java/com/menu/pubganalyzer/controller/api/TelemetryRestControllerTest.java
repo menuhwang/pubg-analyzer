@@ -1,8 +1,9 @@
 package com.menu.pubganalyzer.controller.api;
 
-import com.menu.pubganalyzer.domain.dto.DamageLogRes;
-import com.menu.pubganalyzer.domain.dto.KillLogRes;
-import com.menu.pubganalyzer.service.TelemetryService;
+import com.menu.pubganalyzer.telemetries.dto.response.DamageLogRes;
+import com.menu.pubganalyzer.telemetries.dto.response.KillLogRes;
+import com.menu.pubganalyzer.telemetries.controller.TelemetryRestController;
+import com.menu.pubganalyzer.telemetries.service.TelemetryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

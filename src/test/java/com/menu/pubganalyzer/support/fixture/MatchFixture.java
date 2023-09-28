@@ -1,8 +1,8 @@
 package com.menu.pubganalyzer.support.fixture;
 
-import com.menu.pubganalyzer.domain.model.matches.Match;
-import com.menu.pubganalyzer.domain.model.matches.Participant;
-import com.menu.pubganalyzer.domain.model.matches.Roster;
+import com.menu.pubganalyzer.matches.model.Match;
+import com.menu.pubganalyzer.matches.model.Participant;
+import com.menu.pubganalyzer.matches.model.Roster;
 import com.menu.pubganalyzer.support.fixture.pubgapi.MatchResponseFixture;
 import com.menu.pubganalyzer.support.fixture.pubgapi.PlayerResponseFixture;
 import org.springframework.data.domain.*;

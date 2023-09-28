@@ -1,5 +1,6 @@
 package com.menu.pubganalyzer.domain.model;
 
+import com.menu.pubganalyzer.share.model.ShortLink;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

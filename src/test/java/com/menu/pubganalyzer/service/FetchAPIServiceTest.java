@@ -1,5 +1,7 @@
 package com.menu.pubganalyzer.service;
 
+import com.menu.pubganalyzer.fetch.service.FetchAPIService;
+import com.menu.pubganalyzer.fetch.service.PubgService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 

@@ -1,9 +1,10 @@
 package com.menu.pubganalyzer.controller.api;
 
-import com.menu.pubganalyzer.domain.dto.MatchInfoRes;
-import com.menu.pubganalyzer.domain.dto.MatchResultRes;
-import com.menu.pubganalyzer.domain.dto.RosterRes;
-import com.menu.pubganalyzer.service.MatchService;
+import com.menu.pubganalyzer.matches.dto.response.MatchInfoRes;
+import com.menu.pubganalyzer.matches.dto.response.MatchResultRes;
+import com.menu.pubganalyzer.matches.dto.response.RosterRes;
+import com.menu.pubganalyzer.matches.controller.MatchRestController;
+import com.menu.pubganalyzer.matches.service.MatchService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

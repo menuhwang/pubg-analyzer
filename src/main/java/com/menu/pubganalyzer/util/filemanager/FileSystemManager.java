@@ -1,6 +1,6 @@
 package com.menu.pubganalyzer.util.filemanager;
 
-import com.menu.pubganalyzer.exception.ServerException;
+import com.menu.pubganalyzer.common.exception.ServerException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;

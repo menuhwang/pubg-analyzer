@@ -1,8 +1,11 @@
 package com.menu.pubganalyzer.controller.api;
 
-import com.menu.pubganalyzer.service.FetchAPIService;
-import com.menu.pubganalyzer.service.MatchService;
-import com.menu.pubganalyzer.service.PlayerService;
+import com.menu.pubganalyzer.fetch.controller.FetchPubgAPIRestController;
+import com.menu.pubganalyzer.fetch.service.FetchAPIService;
+import com.menu.pubganalyzer.matches.controller.MatchRestController;
+import com.menu.pubganalyzer.matches.service.MatchService;
+import com.menu.pubganalyzer.players.controller.PlayerRestController;
+import com.menu.pubganalyzer.players.service.PlayerService;
 import com.menu.pubganalyzer.support.admin.AdminInterceptor;
 import com.menu.pubganalyzer.support.fixture.admin.AdminEnvTest;
 import org.junit.jupiter.api.Test;

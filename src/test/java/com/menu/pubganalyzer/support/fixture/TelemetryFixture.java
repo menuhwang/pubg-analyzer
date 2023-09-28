@@ -1,6 +1,6 @@
 package com.menu.pubganalyzer.support.fixture;
 
-import com.menu.pubganalyzer.domain.model.telemetries.Telemetry;
+import com.menu.pubganalyzer.telemetries.model.Telemetry;
 import com.menu.pubganalyzer.support.fixture.pubgapi.TelemetryResponseFixture;
 
 import java.util.List;
