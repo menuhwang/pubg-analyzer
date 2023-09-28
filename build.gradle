@@ -55,13 +55,14 @@ jacocoTestReport {
 			fileTree(
 					dir: it,
 					includes: [
-							'com/menu/pubganalyzer/domain/dao/impl/*',
+							'com/menu/pubganalyzer/*/controller/**',
+							'com/menu/pubganalyzer/*/service/**',
+							'com/menu/pubganalyzer/*/model/**',
 							'com/menu/pubganalyzer/util/*',
 							'com/menu/pubganalyzer/util/pubgAPI/DefaultPubgAPI.class',
-							'com/menu/pubganalyzer/service/**',
-							'com/menu/pubganalyzer/controller/**',
 					],
 					excludes: [
+							'com/menu/pubganalyzer/telemetries/model/**'
 					])
 		}))
 	}
