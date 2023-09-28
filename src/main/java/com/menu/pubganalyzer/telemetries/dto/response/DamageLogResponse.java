@@ -13,21 +13,21 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 @AllArgsConstructor
-public class DamageLogRes {
+public class DamageLogResponse {
     private final LocalDateTime timestamp;
-    private final CharacterRes attacker;
-    private final CharacterRes victim;
+    private final CharacterResponse attacker;
+    private final CharacterResponse victim;
     private final DamageTypeCategory damageTypeCategory;
     private final DamageReason damageReason;
     private final Float damage;
     private final DamageCauserName damageCauserName;
     private final Integer phase;
 
-    public static DamageLogRes of(LogPlayerTakeDamage logPlayerTakeDamage) {
-        return DamageLogRes.builder()
+    public static DamageLogResponse of(LogPlayerTakeDamage logPlayerTakeDamage) {
+        return DamageLogResponse.builder()
                 .timestamp(logPlayerTakeDamage.getTimestamp())
-                .attacker(CharacterRes.from(logPlayerTakeDamage.getAttacker()))
-                .victim(CharacterRes.from(logPlayerTakeDamage.getVictim()))
+                .attacker(CharacterResponse.from(logPlayerTakeDamage.getAttacker()))
+                .victim(CharacterResponse.from(logPlayerTakeDamage.getVictim()))
                 .damageTypeCategory(logPlayerTakeDamage.getDamageTypeCategory())
                 .damageReason(logPlayerTakeDamage.getDamageReason())
                 .damage(logPlayerTakeDamage.getDamage())

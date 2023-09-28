@@ -7,11 +7,11 @@ import java.util.List;
 
 @ToString
 @Getter
-public class ContributeDamageChartRes {
+public class ContributeDamageChartResponse {
     private final List<String> labels;
     private final List<ContributeDamageChartDataset> datasets;
 
-    public ContributeDamageChartRes(List<String> labels, List<ContributeDamageChartDataset> datasets) {
+    public ContributeDamageChartResponse(List<String> labels, List<ContributeDamageChartDataset> datasets) {
         this.labels = labels;
         this.datasets = datasets;
     }

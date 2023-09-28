@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 @AllArgsConstructor
-public class MatchRes {
+public class MatchResponse {
     private String id;
     private GameMode gameMode;
     private int duration;
@@ -23,11 +23,11 @@ public class MatchRes {
     private int rosters;
     private LocalDateTime createdAt;
 
-    private MatchRes() {
+    private MatchResponse() {
     }
 
-    public static MatchRes from(Match match) {
-        return MatchRes.builder()
+    public static MatchResponse from(Match match) {
+        return MatchResponse.builder()
                 .id(match.getId())
                 .gameMode(GameMode.of(match.getGameMode()))
                 .duration(match.getDuration())

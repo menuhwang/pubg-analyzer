@@ -37,9 +37,9 @@ public class MatchRestController {
             summary = "매치 조회",
             description = "관리자만 접근 가능합니다."
     )
-    public ResponseEntity<ApiResult<PageDTO<MatchRes>>> findAll(@PageableDefault(size = 20, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<ApiResult<PageDTO<MatchResponse>>> findAll(@PageableDefault(size = 20, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Match> matchPage = matchService.findAll(pageable);
-        Page<MatchRes> matchResPage = matchPage.map(MatchRes::from);
+        Page<MatchResponse> matchResPage = matchPage.map(MatchResponse::from);
 
         return ResponseEntity.ok(success(PageDTO.of(matchResPage)));
     }
@@ -60,24 +60,24 @@ public class MatchRestController {
     @Operation(
             summary = "플레이어 매치 리스트 조회"
     )
-    public ResponseEntity<ApiResult<SearchPlayerRes>> findByPlayerName(
+    public ResponseEntity<ApiResult<SearchPlayerResponse>> findByPlayerName(
             @PathVariable final String playerName,
             @PageableDefault(size = 20, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Match> matchPage = matchService.findByPlayerName(playerName, pageable);
-        Page<MatchStatsRes> matchStatsResPage = matchPage.map(match -> MatchStatsRes.of(match, playerName));
-        PageDTO<MatchStatsRes> matchResPageDTO = PageDTO.of(matchStatsResPage);
+        Page<MatchStatsResponse> matchStatsResPage = matchPage.map(match -> MatchStatsResponse.of(match, playerName));
+        PageDTO<MatchStatsResponse> matchResPageDTO = PageDTO.of(matchStatsResPage);
 
-        return ResponseEntity.ok(success(SearchPlayerRes.of(playerName, matchResPageDTO)));
+        return ResponseEntity.ok(success(SearchPlayerResponse.of(playerName, matchResPageDTO)));
     }
 
     @GetMapping("/{id}/info")
     @Operation(
             summary = "매치 정보 조회"
     )
-    public ResponseEntity<ApiResult<MatchInfoRes>> findMatchInfo(
+    public ResponseEntity<ApiResult<MatchInfoResponse>> findMatchInfo(
             @PathVariable final String id
     ) {
-        MatchInfoRes result = matchService.findMatchInfo(id);
+        MatchInfoResponse result = matchService.findMatchInfo(id);
 
         return ResponseEntity.ok(success(result));
     }
@@ -86,11 +86,11 @@ public class MatchRestController {
     @Operation(
             summary = "플레이어의 매치 결과 조회"
     )
-    public ResponseEntity<ApiResult<MatchResultRes>> findMatchResultByPlayer(
+    public ResponseEntity<ApiResult<MatchResultResponse>> findMatchResultByPlayer(
             @PathVariable final String id,
             @PathVariable final String playerName
     ) {
-        MatchResultRes result = matchService.findMatchResultByPlayer(id, playerName);
+        MatchResultResponse result = matchService.findMatchResultByPlayer(id, playerName);
 
         return ResponseEntity.ok(success(result));
     }
@@ -99,11 +99,11 @@ public class MatchRestController {
     @Operation(
             summary = "매치를 함께한 팀원 리스트 조회"
     )
-    public ResponseEntity<ApiResult<RosterRes>> findRoster(
+    public ResponseEntity<ApiResult<RosterResponse>> findRoster(
             @PathVariable String id,
             @PathVariable String playerName
     ) {
-        RosterRes result = matchService.findRoster(id, playerName);
+        RosterResponse result = matchService.findRoster(id, playerName);
 
         return ResponseEntity.ok(success(result));
     }

@@ -1,7 +1,7 @@
 package com.menu.pubganalyzer.service;
 
-import com.menu.pubganalyzer.telemetries.dto.response.ContributeDamageChartRes;
-import com.menu.pubganalyzer.telemetries.dto.response.PhaseDamageChartRes;
+import com.menu.pubganalyzer.telemetries.dto.response.ContributeDamageChartResponse;
+import com.menu.pubganalyzer.telemetries.dto.response.PhaseDamageChartResponse;
 import com.menu.pubganalyzer.fetch.service.PubgService;
 import com.menu.pubganalyzer.matches.repository.MatchRepository;
 import com.menu.pubganalyzer.telemetries.repository.TelemetryRepository;
@@ -113,7 +113,7 @@ class TelemetryServiceTest {
         given(telemetryRepository.findLogPlayerTakeDamageByAttacker(MATCH_ID, PLAYER_NAME))
                 .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_TAKE_DAMAGES);
 
-        PhaseDamageChartRes result = assertDoesNotThrow(() -> telemetryService.getPhaseDamageChart(MATCH_ID, PLAYER_NAME));
+        PhaseDamageChartResponse result = assertDoesNotThrow(() -> telemetryService.getPhaseDamageChart(MATCH_ID, PLAYER_NAME));
 
         logger.info("phase damage chart: {}", result);
     }
@@ -132,7 +132,7 @@ class TelemetryServiceTest {
         given(telemetryRepository.findLogPlayerTakeDamageByVictimsAndAttacker(eq(MATCH_ID), anyCollection(), anyCollection()))
                 .willReturn(OFFICIAL_TELEMETRIES_LOG_PLAYER_TAKE_DAMAGES);
 
-        ContributeDamageChartRes result = assertDoesNotThrow(() -> telemetryService.getContributeDamageChart(MATCH_ID, PLAYER_NAME));
+        ContributeDamageChartResponse result = assertDoesNotThrow(() -> telemetryService.getContributeDamageChart(MATCH_ID, PLAYER_NAME));
         logger.info("contribute damage chart: {}", result);
     }
 

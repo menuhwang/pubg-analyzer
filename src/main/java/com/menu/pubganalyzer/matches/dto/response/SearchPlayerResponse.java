@@ -8,12 +8,12 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class SearchPlayerRes {
+public class SearchPlayerResponse {
     private final String player;
-    private final PageDTO<MatchStatsRes> matches;
+    private final PageDTO<MatchStatsResponse> matches;
 
-    public static SearchPlayerRes of(String player, PageDTO<MatchStatsRes> matches) {
-        return SearchPlayerRes.builder()
+    public static SearchPlayerResponse of(String player, PageDTO<MatchStatsResponse> matches) {
+        return SearchPlayerResponse.builder()
                 .player(player)
                 .matches(matches)
                 .build();

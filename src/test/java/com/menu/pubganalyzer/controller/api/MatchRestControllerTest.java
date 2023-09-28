@@ -1,8 +1,8 @@
 package com.menu.pubganalyzer.controller.api;
 
-import com.menu.pubganalyzer.matches.dto.response.MatchInfoRes;
-import com.menu.pubganalyzer.matches.dto.response.MatchResultRes;
-import com.menu.pubganalyzer.matches.dto.response.RosterRes;
+import com.menu.pubganalyzer.matches.dto.response.MatchInfoResponse;
+import com.menu.pubganalyzer.matches.dto.response.MatchResultResponse;
+import com.menu.pubganalyzer.matches.dto.response.RosterResponse;
 import com.menu.pubganalyzer.matches.controller.MatchRestController;
 import com.menu.pubganalyzer.matches.service.MatchService;
 import org.junit.jupiter.api.Test;
@@ -102,7 +102,7 @@ class MatchRestControllerTest {
     @Test
     void findMatchInfo() throws Exception {
         given(matchService.findMatchInfo(eq(MATCH_ID)))
-                .willReturn(MatchInfoRes.from(MATCH));
+                .willReturn(MatchInfoResponse.from(MATCH));
 
         ResultActions result = mockMvc.perform(
                 get(MATCH_API_URL + "/" + MATCH_ID + "/info")
@@ -131,7 +131,7 @@ class MatchRestControllerTest {
     @Test
     void findMatchResultByPlayer() throws Exception {
         given(matchService.findMatchResultByPlayer(eq(MATCH_ID), eq(PLAYER_NAME)))
-                .willReturn(MatchResultRes.of(MATCH, ROSTER, PARTICIPANT));
+                .willReturn(MatchResultResponse.of(MATCH, ROSTER, PARTICIPANT));
 
         ResultActions result = mockMvc.perform(
                 get(MATCH_API_URL + "/" + MATCH_ID + "/player/" + PLAYER_NAME + "/result")
@@ -154,7 +154,7 @@ class MatchRestControllerTest {
     @Test
     void findRosterWhenJustSelf() throws Exception {
         given(matchService.findRoster(eq(MATCH_ID), eq(PLAYER_NAME)))
-                .willReturn(RosterRes.from(ROSTER));
+                .willReturn(RosterResponse.from(ROSTER));
 
         ResultActions result = mockMvc.perform(
                 get(MATCH_API_URL + "/" + MATCH_ID + "/player/" + PLAYER_NAME + "/roster")

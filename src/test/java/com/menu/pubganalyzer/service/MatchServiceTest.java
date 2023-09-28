@@ -1,8 +1,8 @@
 package com.menu.pubganalyzer.service;
 
-import com.menu.pubganalyzer.matches.dto.response.MatchInfoRes;
-import com.menu.pubganalyzer.matches.dto.response.MatchResultRes;
-import com.menu.pubganalyzer.matches.dto.response.RosterRes;
+import com.menu.pubganalyzer.matches.dto.response.MatchInfoResponse;
+import com.menu.pubganalyzer.matches.dto.response.MatchResultResponse;
+import com.menu.pubganalyzer.matches.dto.response.RosterResponse;
 import com.menu.pubganalyzer.matches.repository.MatchRepository;
 import com.menu.pubganalyzer.common.exception.MatchNotFoundException;
 import com.menu.pubganalyzer.matches.service.MatchService;
@@ -87,7 +87,7 @@ class MatchServiceTest {
         given(matchRepository.findById(MATCH_ID))
                 .willReturn(Optional.of(MatchFixture.MATCH));
 
-        MatchInfoRes result = assertDoesNotThrow(() -> matchService.findMatchInfo(MATCH_ID));
+        MatchInfoResponse result = assertDoesNotThrow(() -> matchService.findMatchInfo(MATCH_ID));
 
         logger.info("match info: {}", result);
     }
@@ -97,7 +97,7 @@ class MatchServiceTest {
         given(matchRepository.findById(MATCH_ID))
                 .willReturn(Optional.of(MatchFixture.MATCH));
 
-        MatchResultRes result = assertDoesNotThrow(() -> matchService.findMatchResultByPlayer(MATCH_ID, PLAYER_NAME));
+        MatchResultResponse result = assertDoesNotThrow(() -> matchService.findMatchResultByPlayer(MATCH_ID, PLAYER_NAME));
 
         logger.info("match result: {}", result);
     }
@@ -107,7 +107,7 @@ class MatchServiceTest {
         given(matchRepository.findById(MATCH_ID))
                 .willReturn(Optional.of(MatchFixture.MATCH));
 
-        RosterRes result = assertDoesNotThrow(() -> matchService.findRoster(MATCH_ID, PLAYER_NAME));
+        RosterResponse result = assertDoesNotThrow(() -> matchService.findRoster(MATCH_ID, PLAYER_NAME));
 
         logger.info("roster result: {}", result);
     }

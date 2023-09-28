@@ -1,9 +1,9 @@
 package com.menu.pubganalyzer.telemetries.service;
 
-import com.menu.pubganalyzer.telemetries.dto.response.ContributeDamageChartRes;
-import com.menu.pubganalyzer.telemetries.dto.response.DamageLogRes;
-import com.menu.pubganalyzer.telemetries.dto.response.KillLogRes;
-import com.menu.pubganalyzer.telemetries.dto.response.PhaseDamageChartRes;
+import com.menu.pubganalyzer.telemetries.dto.response.ContributeDamageChartResponse;
+import com.menu.pubganalyzer.telemetries.dto.response.DamageLogResponse;
+import com.menu.pubganalyzer.telemetries.dto.response.KillLogResponse;
+import com.menu.pubganalyzer.telemetries.dto.response.PhaseDamageChartResponse;
 import com.menu.pubganalyzer.fetch.service.PubgService;
 import com.menu.pubganalyzer.matches.model.Match;
 import com.menu.pubganalyzer.matches.model.Roster;
@@ -30,18 +30,18 @@ public class TelemetryService {
     private final MatchRepository matchRepository;
     private final TelemetryRepository telemetryRepository;
 
-    public List<KillLogRes> findKillLogs(
+    public List<KillLogResponse> findKillLogs(
             final String id,
             final String playerName) {
         fetchTelemetryIfAbsent(id);
 
         return telemetryRepository.findLogPlayerKillByMatchIdAndPlayerName(id, playerName).stream()
                 .map(LogPlayerKillV2Impl::new)
-                .map(KillLogRes::of)
+                .map(KillLogResponse::of)
                 .collect(Collectors.toList());
     }
 
-    public List<DamageLogRes> findDamagesOfKill(
+    public List<DamageLogResponse> findDamagesOfKill(
             final String id,
             final String playerName) {
         fetchTelemetryIfAbsent(id);
@@ -59,22 +59,22 @@ public class TelemetryService {
 
         return telemetryRepository.findLogPlayerTakeDamageByVictimsAndAttacker(id, victims, roster.extractParticipantName()).stream()
                 .map(LogPlayerTakeDamageImpl::new)
-                .map(DamageLogRes::of)
+                .map(DamageLogResponse::of)
                 .collect(Collectors.toList());
     }
 
-    public List<DamageLogRes> findDamageLogByPlayer(
+    public List<DamageLogResponse> findDamageLogByPlayer(
             final String id,
             final String playerName) {
         fetchTelemetryIfAbsent(id);
 
         return telemetryRepository.findLogPlayerTakeDamageByAttacker(id, playerName).stream()
                 .map(LogPlayerTakeDamageImpl::new)
-                .map(DamageLogRes::of)
+                .map(DamageLogResponse::of)
                 .collect(Collectors.toList());
     }
 
-    public PhaseDamageChartRes getPhaseDamageChart(
+    public PhaseDamageChartResponse getPhaseDamageChart(
             final String id,
             final String playerName) {
         fetchTelemetryIfAbsent(id);
@@ -86,7 +86,7 @@ public class TelemetryService {
         return ChartUtil.phaseDamageChart(logPlayerTakeDamages);
     }
 
-    public ContributeDamageChartRes getContributeDamageChart(
+    public ContributeDamageChartResponse getContributeDamageChart(
             final String id,
             final String playerName) {
         fetchTelemetryIfAbsent(id);

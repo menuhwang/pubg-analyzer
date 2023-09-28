@@ -1,6 +1,6 @@
 package com.menu.pubganalyzer.service;
 
-import com.menu.pubganalyzer.share.dto.request.ShareLinkReq;
+import com.menu.pubganalyzer.share.dto.request.ShareLinkRequest;
 import com.menu.pubganalyzer.share.model.ShortLink;
 import com.menu.pubganalyzer.share.repository.ShortLinkRepository;
 import com.menu.pubganalyzer.common.exception.LinkNotFoundException;
@@ -45,7 +45,7 @@ class ShortLinkServiceTest {
 
     @Test
     void create() {
-        ShareLinkReq req = new ShareLinkReq("/matches/0001/player/abcde");
+        ShareLinkRequest req = new ShareLinkRequest("/matches/0001/player/abcde");
         when(shortLinkRepository.save(any(ShortLink.class)))
                 .thenReturn(req.toShortLink());
         String shortLink = shortLinkService.create(req);

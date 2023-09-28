@@ -4,9 +4,9 @@ import com.menu.pubganalyzer.matches.model.Match;
 import com.menu.pubganalyzer.matches.model.Participant;
 import com.menu.pubganalyzer.matches.model.Roster;
 import com.menu.pubganalyzer.common.exception.MatchNotFoundException;
-import com.menu.pubganalyzer.matches.dto.response.MatchInfoRes;
-import com.menu.pubganalyzer.matches.dto.response.MatchResultRes;
-import com.menu.pubganalyzer.matches.dto.response.RosterRes;
+import com.menu.pubganalyzer.matches.dto.response.MatchInfoResponse;
+import com.menu.pubganalyzer.matches.dto.response.MatchResultResponse;
+import com.menu.pubganalyzer.matches.dto.response.RosterResponse;
 import com.menu.pubganalyzer.matches.repository.MatchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,13 +35,13 @@ public class MatchService {
         return matchRepository.findByRosters_Participants_Name(playerName, pageable);
     }
 
-    public MatchInfoRes findMatchInfo(final String id) {
+    public MatchInfoResponse findMatchInfo(final String id) {
         return matchRepository.findById(id)
-                .map(MatchInfoRes::from)
+                .map(MatchInfoResponse::from)
                 .orElseThrow(MatchNotFoundException::new);
     }
 
-    public MatchResultRes findMatchResultByPlayer(
+    public MatchResultResponse findMatchResultByPlayer(
             final String id,
             final String playerName) {
         Match match = matchRepository.findById(id)
@@ -49,17 +49,17 @@ public class MatchService {
         Roster roster = match.getRosterByName(playerName);
         Participant participant = roster.getParticipantByName(playerName);
 
-        return MatchResultRes.of(match, roster, participant);
+        return MatchResultResponse.of(match, roster, participant);
     }
 
-    public RosterRes findRoster(
+    public RosterResponse findRoster(
             final String id,
             final String playerName) {
         Match match = matchRepository.findById(id)
                 .orElseThrow(MatchNotFoundException::new);
         Roster roster = match.getRosterByName(playerName);
 
-        return RosterRes.from(roster);
+        return RosterResponse.from(roster);
     }
 
     @Transactional

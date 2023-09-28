@@ -13,14 +13,14 @@ import java.util.stream.Collectors;
 @Getter
 @Builder
 @AllArgsConstructor
-public class RosterRes {
+public class RosterResponse {
     private final boolean won;
-    private final List<ParticipantRes> participants;
+    private final List<ParticipantResponse> participants;
 
-    public static RosterRes from(Roster roster) {
-        List<ParticipantRes> participantRes = roster.getParticipants().stream().map(ParticipantRes::from).collect(Collectors.toList());
+    public static RosterResponse from(Roster roster) {
+        List<ParticipantResponse> participantRes = roster.getParticipants().stream().map(ParticipantResponse::from).collect(Collectors.toList());
 
-        return RosterRes.builder()
+        return RosterResponse.builder()
                 .won(roster.isWon())
                 .participants(participantRes)
                 .build();

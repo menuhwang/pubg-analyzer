@@ -1,7 +1,7 @@
 package com.menu.pubganalyzer.controller.api;
 
-import com.menu.pubganalyzer.telemetries.dto.response.DamageLogRes;
-import com.menu.pubganalyzer.telemetries.dto.response.KillLogRes;
+import com.menu.pubganalyzer.telemetries.dto.response.DamageLogResponse;
+import com.menu.pubganalyzer.telemetries.dto.response.KillLogResponse;
 import com.menu.pubganalyzer.telemetries.controller.TelemetryRestController;
 import com.menu.pubganalyzer.telemetries.service.TelemetryService;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ class TelemetryRestControllerTest {
         given(telemetryService.findDamagesOfKill(MATCH_ID, PLAYER_NAME))
                 .willReturn(
                         OFFICIAL_LOG_PLAYER_TAKE_DAMAGES.stream()
-                                .map(DamageLogRes::of)
+                                .map(DamageLogResponse::of)
                                 .collect(Collectors.toList())
                 );
 
@@ -58,7 +58,7 @@ class TelemetryRestControllerTest {
         given(telemetryService.findDamageLogByPlayer(MATCH_ID, PLAYER_NAME))
                 .willReturn(
                         OFFICIAL_LOG_PLAYER_TAKE_DAMAGES.stream()
-                                .map(DamageLogRes::of)
+                                .map(DamageLogResponse::of)
                                 .collect(Collectors.toList())
                 );
 
@@ -80,7 +80,7 @@ class TelemetryRestControllerTest {
         given(telemetryService.findKillLogs(MATCH_ID, PLAYER_NAME))
                 .willReturn(
                         OFFICIAL_LOG_PLAYER_KILLS.stream()
-                                .map(KillLogRes::of)
+                                .map(KillLogResponse::of)
                                 .collect(Collectors.toList())
                 );
 

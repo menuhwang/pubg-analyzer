@@ -10,7 +10,7 @@ import java.util.Objects;
 @Getter
 @Builder
 @AllArgsConstructor
-public class CharacterRes {
+public class CharacterResponse {
     private final String name;
     private final Integer teamId;
     private final float health;
@@ -18,9 +18,9 @@ public class CharacterRes {
     private final String accountId;
     private final boolean bot;
 
-    public static CharacterRes from(Character character) {
+    public static CharacterResponse from(Character character) {
         if (Objects.isNull(character)) return null;
-        return CharacterRes.builder()
+        return CharacterResponse.builder()
                 .name(character.getName())
                 .teamId(character.getTeamId())
                 .health(character.getHealth())

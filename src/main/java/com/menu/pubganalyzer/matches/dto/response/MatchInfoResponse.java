@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @ToString
-public class MatchInfoRes {
+public class MatchInfoResponse {
     private final String id;
     private final MatchType matchType;
     private final MapName mapName;
@@ -21,7 +21,7 @@ public class MatchInfoRes {
     private final Integer duration;
 
     @Builder
-    public MatchInfoRes(String id, MatchType matchType, MapName mapName, GameMode gameMode, LocalDateTime createdAt, Integer duration) {
+    public MatchInfoResponse(String id, MatchType matchType, MapName mapName, GameMode gameMode, LocalDateTime createdAt, Integer duration) {
         this.id = id;
         this.matchType = matchType;
         this.mapName = mapName;
@@ -30,8 +30,8 @@ public class MatchInfoRes {
         this.duration = duration;
     }
 
-    public static MatchInfoRes from(Match match) {
-        return MatchInfoRes.builder()
+    public static MatchInfoResponse from(Match match) {
+        return MatchInfoResponse.builder()
                 .id(match.getId())
                 .matchType(MatchType.of(match.getMatchType()))
                 .mapName(MapName.of(match.getMapName()))

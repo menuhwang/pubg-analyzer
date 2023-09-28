@@ -1,8 +1,8 @@
 package com.menu.pubganalyzer.util;
 
 import com.menu.pubganalyzer.telemetries.dto.response.ContributeDamageChartDataset;
-import com.menu.pubganalyzer.telemetries.dto.response.ContributeDamageChartRes;
-import com.menu.pubganalyzer.telemetries.dto.response.PhaseDamageChartRes;
+import com.menu.pubganalyzer.telemetries.dto.response.ContributeDamageChartResponse;
+import com.menu.pubganalyzer.telemetries.dto.response.PhaseDamageChartResponse;
 import com.menu.pubganalyzer.telemetries.model.LogPlayerKillV2;
 import com.menu.pubganalyzer.telemetries.model.LogPlayerTakeDamage;
 
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class ChartUtil {
     private static final int PHASE_SIZE = 10; // 0 ~ 9
 
-    public static PhaseDamageChartRes phaseDamageChart(final List<LogPlayerTakeDamage> logPlayerTakeDamages) {
+    public static PhaseDamageChartResponse phaseDamageChart(final List<LogPlayerTakeDamage> logPlayerTakeDamages) {
         float[] phaseDamageDealt = new float[PHASE_SIZE];
 
         for (LogPlayerTakeDamage logPlayerTakeDamage : logPlayerTakeDamages) {
@@ -20,10 +20,10 @@ public class ChartUtil {
             phaseDamageDealt[phase] += logPlayerTakeDamage.getDamage();
         }
 
-        return new PhaseDamageChartRes(phaseDamageDealt);
+        return new PhaseDamageChartResponse(phaseDamageDealt);
     }
 
-    public static ContributeDamageChartRes contributeDamageChart(
+    public static ContributeDamageChartResponse contributeDamageChart(
             final String player,
             final Set<String> members,
             final List<LogPlayerKillV2> logPlayerKills,
@@ -67,6 +67,6 @@ public class ChartUtil {
             }
         }
 
-        return new ContributeDamageChartRes(victims, datasets);
+        return new ContributeDamageChartResponse(victims, datasets);
     }
 }

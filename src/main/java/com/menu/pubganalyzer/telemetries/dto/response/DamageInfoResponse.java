@@ -13,15 +13,15 @@ import java.util.Objects;
 @Getter
 @Builder
 @AllArgsConstructor
-public class DamageInfoRes {
+public class DamageInfoResponse {
     private final DamageReason damageReason; // enum
     private final DamageTypeCategory damageTypeCategory; // enum
     private final DamageCauserName damageCauserName; // enum
     private final float distance;
 
-    public static DamageInfoRes from(DamageInfo damageInfo) {
+    public static DamageInfoResponse from(DamageInfo damageInfo) {
         if (Objects.isNull(damageInfo)) return null;
-        return DamageInfoRes.builder()
+        return DamageInfoResponse.builder()
                 .damageReason(damageInfo.getDamageReason())
                 .damageTypeCategory(damageInfo.getDamageTypeCategory())
                 .damageCauserName(damageInfo.getDamageCauserName())

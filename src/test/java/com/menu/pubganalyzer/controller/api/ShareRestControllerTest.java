@@ -1,7 +1,7 @@
 package com.menu.pubganalyzer.controller.api;
 
 import com.menu.pubganalyzer.share.controller.ShareRestController;
-import com.menu.pubganalyzer.share.dto.request.ShareLinkReq;
+import com.menu.pubganalyzer.share.dto.request.ShareLinkRequest;
 import com.menu.pubganalyzer.share.model.ShortLink;
 import com.menu.pubganalyzer.common.exception.LinkNotFoundException;
 import com.menu.pubganalyzer.share.service.ShortLinkService;
@@ -34,10 +34,10 @@ class ShareRestControllerTest {
     @Test
     void createShortLink() throws Exception {
         String link = "/matches/0001/player/abcde";
-        ShareLinkReq req = new ShareLinkReq(link);
+        ShareLinkRequest req = new ShareLinkRequest(link);
         ShortLink shortLink = req.toShortLink();
 
-        when(shortLinkService.create(any(ShareLinkReq.class)))
+        when(shortLinkService.create(any(ShareLinkRequest.class)))
                 .thenReturn(shortLink.getId());
 
         ResultActions result = mockMvc.perform(
@@ -53,7 +53,7 @@ class ShareRestControllerTest {
                 .andExpect(jsonPath("$.result.path").value(SHARE_API_URL + "/" + shortLink.getId()))
         ;
 
-        verify(shortLinkService).create(any(ShareLinkReq.class));
+        verify(shortLinkService).create(any(ShareLinkRequest.class));
     }
 
     @Test

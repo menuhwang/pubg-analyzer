@@ -2,13 +2,13 @@ package com.menu.pubganalyzer.share.dto.request;
 
 import com.menu.pubganalyzer.share.model.ShortLink;
 
-public class ShareLinkReq {
+public class ShareLinkRequest {
     private String link;
 
-    protected ShareLinkReq() {
+    protected ShareLinkRequest() {
     }
 
-    public ShareLinkReq(String link) {
+    public ShareLinkRequest(String link) {
         this.link = link;
     }
 

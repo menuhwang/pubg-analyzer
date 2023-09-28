@@ -5,10 +5,10 @@ import lombok.ToString;
 
 @ToString
 @Getter
-public class PhaseDamageChartRes {
+public class PhaseDamageChartResponse {
     private final float[] data;
 
-    public PhaseDamageChartRes(float[] data) {
+    public PhaseDamageChartResponse(float[] data) {
         this.data = data;
     }
 }
