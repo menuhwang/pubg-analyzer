@@ -1,4 +1,4 @@
-package com.menu.pubganalyzer.controller.api;
+package com.menu.pubganalyzer.matches.controller;
 
 import com.menu.pubganalyzer.matches.dto.response.MatchInfoResponse;
 import com.menu.pubganalyzer.matches.dto.response.MatchResultResponse;

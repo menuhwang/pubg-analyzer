@@ -1,4 +1,4 @@
-package com.menu.pubganalyzer.service;
+package com.menu.pubganalyzer.fetch.service;
 
 import com.menu.pubganalyzer.fetch.service.FetchAPIService;
 import com.menu.pubganalyzer.fetch.service.PubgService;

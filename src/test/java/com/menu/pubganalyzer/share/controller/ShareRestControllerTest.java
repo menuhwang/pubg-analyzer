@@ -1,4 +1,4 @@
-package com.menu.pubganalyzer.controller.api;
+package com.menu.pubganalyzer.share.controller;
 
 import com.menu.pubganalyzer.share.controller.ShareRestController;
 import com.menu.pubganalyzer.share.dto.request.ShareLinkRequest;

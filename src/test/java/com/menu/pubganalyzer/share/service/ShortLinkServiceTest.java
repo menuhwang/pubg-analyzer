@@ -1,4 +1,4 @@
-package com.menu.pubganalyzer.service;
+package com.menu.pubganalyzer.share.service;
 
 import com.menu.pubganalyzer.share.dto.request.ShareLinkRequest;
 import com.menu.pubganalyzer.share.model.ShortLink;

@@ -1,4 +1,4 @@
-package com.menu.pubganalyzer.controller.api;
+package com.menu.pubganalyzer.telemetries.controller;
 
 import com.menu.pubganalyzer.telemetries.dto.response.DamageLogResponse;
 import com.menu.pubganalyzer.telemetries.dto.response.KillLogResponse;

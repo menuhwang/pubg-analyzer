@@ -1,4 +1,4 @@
-package com.menu.pubganalyzer.service;
+package com.menu.pubganalyzer.matches.service;
 
 import com.menu.pubganalyzer.matches.dto.response.MatchInfoResponse;
 import com.menu.pubganalyzer.matches.dto.response.MatchResultResponse;

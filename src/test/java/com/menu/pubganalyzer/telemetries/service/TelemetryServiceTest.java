@@ -1,4 +1,4 @@
-package com.menu.pubganalyzer.service;
+package com.menu.pubganalyzer.telemetries.service;
 
 import com.menu.pubganalyzer.telemetries.dto.response.ContributeDamageChartResponse;
 import com.menu.pubganalyzer.telemetries.dto.response.PhaseDamageChartResponse;

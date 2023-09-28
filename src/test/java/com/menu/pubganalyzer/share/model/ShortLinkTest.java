@@ -1,4 +1,4 @@
-package com.menu.pubganalyzer.domain.model;
+package com.menu.pubganalyzer.share.model;
 
 import com.menu.pubganalyzer.share.model.ShortLink;
 import org.junit.jupiter.api.Test;

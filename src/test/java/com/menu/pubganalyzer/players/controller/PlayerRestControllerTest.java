@@ -1,4 +1,4 @@
-package com.menu.pubganalyzer.controller.api;
+package com.menu.pubganalyzer.players.controller;
 
 import com.menu.pubganalyzer.players.controller.PlayerRestController;
 import com.menu.pubganalyzer.players.service.PlayerService;

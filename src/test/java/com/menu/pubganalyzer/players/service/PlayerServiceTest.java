@@ -1,4 +1,4 @@
-package com.menu.pubganalyzer.service;
+package com.menu.pubganalyzer.players.service;
 
 import com.menu.pubganalyzer.fetch.service.PubgService;
 import com.menu.pubganalyzer.matches.repository.MatchRepository;

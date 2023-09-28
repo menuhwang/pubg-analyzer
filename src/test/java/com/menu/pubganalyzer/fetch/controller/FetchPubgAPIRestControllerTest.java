@@ -1,4 +1,4 @@
-package com.menu.pubganalyzer.controller.api;
+package com.menu.pubganalyzer.fetch.controller;
 
 import com.menu.pubganalyzer.fetch.controller.FetchPubgAPIRestController;
 import com.menu.pubganalyzer.fetch.service.FetchAPIService;
