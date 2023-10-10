@@ -6,7 +6,7 @@ import com.menu.pubganalyzer.matches.model.Match;
 import com.menu.pubganalyzer.telemetries.model.Telemetry;
 import com.menu.pubganalyzer.util.pubgAPI.PubgAPI;
 import com.menu.pubganalyzer.util.pubgAPI.response.match.MatchResponse;
-import com.menu.pubganalyzer.util.pubgAPI.response.PlayersResponse;
+import com.menu.pubganalyzer.util.pubgAPI.response.player.PlayersResponse;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.core.task.TaskExecutor;
