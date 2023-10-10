@@ -1,7 +1,8 @@
 package com.menu.pubganalyzer.matches.model;
 
 import com.menu.pubganalyzer.common.exception.IllegalPlayerNameException;
-import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
+import com.menu.pubganalyzer.util.pubgAPI.response.match.Element;
+import com.menu.pubganalyzer.util.pubgAPI.response.match.MatchResponse;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -38,7 +39,7 @@ public class Roster {
         this.teamId = teamId;
     }
 
-    public static Roster of(MatchResponse.Element roster) {
+    public static Roster of(Element roster) {
         return Roster.builder()
                 .id(roster.getId())
                 .won(roster.getAttributes().getWon())

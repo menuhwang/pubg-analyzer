@@ -1,7 +1,7 @@
 package com.menu.pubganalyzer.util.pubg;
 
 import com.menu.pubganalyzer.support.feign.FeignClientTest;
-import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
+import com.menu.pubganalyzer.util.pubgAPI.response.match.MatchResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.PlayersResponse;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;

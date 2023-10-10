@@ -3,7 +3,7 @@ package com.menu.pubganalyzer.fetch.controller;
 import com.menu.pubganalyzer.fetch.service.FetchAPIService;
 import com.menu.pubganalyzer.support.admin.AdminOnly;
 import com.menu.pubganalyzer.common.dto.response.ApiResult;
-import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
+import com.menu.pubganalyzer.util.pubgAPI.response.match.MatchResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.PlayersResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

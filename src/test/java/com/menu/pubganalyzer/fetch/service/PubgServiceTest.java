@@ -2,11 +2,10 @@ package com.menu.pubganalyzer.fetch.service;
 
 import com.menu.pubganalyzer.config.tasks.CustomThreadPoolConfig;
 import com.menu.pubganalyzer.players.model.Player;
-import com.menu.pubganalyzer.fetch.service.PubgService;
 import com.menu.pubganalyzer.matches.model.Match;
 import com.menu.pubganalyzer.telemetries.model.Telemetry;
 import com.menu.pubganalyzer.util.pubgAPI.PubgAPI;
-import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
+import com.menu.pubganalyzer.util.pubgAPI.response.match.MatchResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.PlayersResponse;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

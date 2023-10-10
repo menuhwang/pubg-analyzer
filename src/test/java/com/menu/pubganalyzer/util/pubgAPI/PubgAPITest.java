@@ -2,7 +2,7 @@ package com.menu.pubganalyzer.util.pubgAPI;
 
 import com.menu.pubganalyzer.util.pubgAPI.exception.PubgAPIMatchNotFoundException;
 import com.menu.pubganalyzer.util.pubgAPI.exception.PubgAPIPlayerNotFoundException;
-import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
+import com.menu.pubganalyzer.util.pubgAPI.response.match.MatchResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.PlayersResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.TelemetryResponse;
 import org.junit.jupiter.api.*;

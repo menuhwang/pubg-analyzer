@@ -1,6 +1,7 @@
 package com.menu.pubganalyzer.matches.model;
 
-import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
+import com.menu.pubganalyzer.util.pubgAPI.response.match.Element;
+import com.menu.pubganalyzer.util.pubgAPI.response.match.MatchResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +21,7 @@ public class Asset {
     protected Asset() {
     }
 
-    public static Asset of(MatchResponse.Element asset) {
+    public static Asset of(Element asset) {
         return Asset.builder()
                 .id(asset.getId())
                 .name(asset.getAttributes().getName())

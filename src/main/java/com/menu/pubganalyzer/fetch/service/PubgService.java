@@ -5,7 +5,7 @@ import com.menu.pubganalyzer.common.enums.Shard;
 import com.menu.pubganalyzer.matches.model.Match;
 import com.menu.pubganalyzer.telemetries.model.Telemetry;
 import com.menu.pubganalyzer.util.pubgAPI.PubgAPI;
-import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
+import com.menu.pubganalyzer.util.pubgAPI.response.match.MatchResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.PlayersResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.TelemetryResponse;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,9 @@
 package com.menu.pubganalyzer.matches.model;
 
-import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
+import com.menu.pubganalyzer.util.pubgAPI.response.match.Attribute;
+import com.menu.pubganalyzer.util.pubgAPI.response.match.Element;
+import com.menu.pubganalyzer.util.pubgAPI.response.match.MatchResponse;
+import com.menu.pubganalyzer.util.pubgAPI.response.match.Stat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,9 +43,9 @@ public class Participant {
     protected Participant() {
     }
 
-    public static Participant of(MatchResponse.Element participant) {
-        MatchResponse.Attribute attribute = participant.getAttributes();
-        MatchResponse.Stat stat = participant.getAttributes().getStats();
+    public static Participant of(Element participant) {
+        Attribute attribute = participant.getAttributes();
+        Stat stat = participant.getAttributes().getStats();
 
         return Participant.builder()
                 .id(participant.getId())

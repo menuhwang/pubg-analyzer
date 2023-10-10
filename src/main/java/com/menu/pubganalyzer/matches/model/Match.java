@@ -1,7 +1,7 @@
 package com.menu.pubganalyzer.matches.model;
 
 import com.menu.pubganalyzer.common.exception.IllegalPlayerNameException;
-import com.menu.pubganalyzer.util.pubgAPI.response.MatchResponse;
+import com.menu.pubganalyzer.util.pubgAPI.response.match.MatchResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
