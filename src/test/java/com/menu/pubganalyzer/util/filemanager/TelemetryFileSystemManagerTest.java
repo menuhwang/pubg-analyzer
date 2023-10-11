@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.menu.pubganalyzer.telemetries.model.Telemetry;
-import com.menu.pubganalyzer.util.pubgAPI.response.TelemetryResponse;
+import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import org.junit.jupiter.api.*;
 
 import java.io.BufferedReader;
@@ -42,7 +42,7 @@ class TelemetryFileSystemManagerTest {
                     BufferedReader br = new BufferedReader(fr);
             ) {
                 br.lines().forEach(sb::append);
-                List<TelemetryResponse> telemetryResponses = objectMapper.readValue(sb.toString(), new TypeReference<List<TelemetryResponse>>() {});
+                List<TelemetryResponse> telemetryResponses = objectMapper.readValue(sb.toString(), new TypeReference<>() {});
                 List<Telemetry> result = telemetryResponses.stream()
                         .map(Telemetry::from)
                         .collect(Collectors.toList());
