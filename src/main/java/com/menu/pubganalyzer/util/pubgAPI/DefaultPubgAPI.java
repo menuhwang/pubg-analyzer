@@ -1,96 +1,56 @@
 package com.menu.pubganalyzer.util.pubgAPI;
 
-import com.menu.pubganalyzer.util.pubgAPI.exception.PubgAPIMatchNotFoundException;
+import com.menu.pubganalyzer.util.pubg.MatchClient;
+import com.menu.pubganalyzer.util.pubg.PlayerClient;
+import com.menu.pubganalyzer.util.pubg.TelemetryClient;
 import com.menu.pubganalyzer.util.pubgAPI.exception.PubgAPIPlayerNotFoundException;
 import com.menu.pubganalyzer.util.pubgAPI.response.match.MatchResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.player.PlayersResponse;
-import com.menu.pubganalyzer.util.pubgAPI.response.TelemetryResponse;
+import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.menu.pubganalyzer.util.pubg.TelemetryClient.PUBG_TELEMETRY_CDN;
 
 @Slf4j
+@Component
 public class DefaultPubgAPI implements PubgAPI {
-    private final RestTemplate restTemplate;
-    private static final String BASE_URL = "https://api.pubg.com";
+    private final MatchClient matchClient;
+    private final PlayerClient playerClient;
+    private final TelemetryClient telemetryClient;
 
-    private final HttpEntity<MultiValueMap<String, String>> DEFAULT_HTTP_ENTITY;
-    private final HttpEntity<MultiValueMap<String, String>> AUTH_HTTP_ENTITY;
-
-    public DefaultPubgAPI(String token, RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-        HttpHeaders defaultHeaders = new HttpHeaders();
-        defaultHeaders.set("accept", "application/vnd.api+json");
-
-        DEFAULT_HTTP_ENTITY = new HttpEntity<>(defaultHeaders);
-
-        HttpHeaders authHeaders = new HttpHeaders();
-        authHeaders.set("accept", "application/vnd.api+json");
-        authHeaders.set("Authorization", "Bearer " + token);
-
-        AUTH_HTTP_ENTITY = new HttpEntity<>(authHeaders);
+    public DefaultPubgAPI(MatchClient matchClient, PlayerClient playerClient, TelemetryClient telemetryClient) {
+        this.matchClient = matchClient;
+        this.playerClient = playerClient;
+        this.telemetryClient = telemetryClient;
     }
 
     @Override
     @Cacheable(cacheNames = "match", key = "#matchId")
     public MatchResponse match(String shardId, String matchId) {
-        String url = BASE_URL + "/shards/" + shardId.toLowerCase() + "/matches/" + matchId;
-        MatchResponse matchResponse = null;
-        try {
-            ResponseEntity<MatchResponse> response = restTemplate.exchange(url, HttpMethod.GET, DEFAULT_HTTP_ENTITY, MatchResponse.class);
-            matchResponse = response.getBody();
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
-                throw new PubgAPIMatchNotFoundException(matchId);
-            } else {
-                log.warn("you need to handle exception");
-                log.error("{}", e.getMessage(), e);
-            }
-        }
-        return matchResponse;
+        return matchClient.fetchMatch(shardId, matchId);
     }
 
     @Override
-    @Cacheable(cacheNames = "player", key = "#nickname")
-    public PlayersResponse player(String shardId, String nickname) throws PubgAPIPlayerNotFoundException {
-        StringBuilder url = new StringBuilder(BASE_URL);
-        url.append("/shards/")
-                .append(shardId.toLowerCase())
-                .append("/players?filter[playerNames]=")
-                .append(nickname);
-
-        PlayersResponse playersResponse = null;
-        try {
-            ResponseEntity<PlayersResponse> response = restTemplate.exchange(url.toString(), HttpMethod.GET, AUTH_HTTP_ENTITY, PlayersResponse.class);
-            playersResponse = response.getBody();
-        } catch (HttpClientErrorException e) {
-            switch (e.getStatusCode()) {
-                case NOT_FOUND:
-                    throw new PubgAPIPlayerNotFoundException();
-                case TOO_MANY_REQUESTS:
-                    log.warn("you have exceeded the number of available requests");
-                    break;
-                default:
-                    log.warn("you need to handle exception");
-                    log.error("{}", e.getMessage(), e);
-                    break;
-            }
-        }
-
-        return playersResponse;
+    @Cacheable(cacheNames = "player", key = "#playerName")
+    public PlayersResponse player(String shardId, String playerName) throws PubgAPIPlayerNotFoundException {
+        return playerClient.fetchPlayers(shardId, playerName);
     }
 
     @Override
     @Cacheable(cacheNames = "telemetry")
     public List<TelemetryResponse> telemetry(String url) {
-        ParameterizedTypeReference<List<TelemetryResponse>> responseType = new ParameterizedTypeReference<>() {
-        };
-        return restTemplate.exchange(url, HttpMethod.GET, DEFAULT_HTTP_ENTITY, responseType).getBody();
+        if (!url.startsWith(PUBG_TELEMETRY_CDN))
+            throw new IllegalArgumentException("telemetry url is wrong.");
+
+        url = url.substring(PUBG_TELEMETRY_CDN.length());
+
+        List<Object> raw = telemetryClient.fetchTelemetry(url);
+
+        return raw.stream().map(TelemetryResponse::from).collect(Collectors.toList());
     }
 }
