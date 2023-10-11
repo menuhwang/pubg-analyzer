@@ -7,7 +7,7 @@ import com.menu.pubganalyzer.telemetries.model.Telemetry;
 import com.menu.pubganalyzer.util.pubgAPI.PubgAPI;
 import com.menu.pubganalyzer.util.pubgAPI.response.match.MatchResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.player.PlayersResponse;
-import com.menu.pubganalyzer.util.pubgAPI.response.TelemetryResponse;
+import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
