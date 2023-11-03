@@ -30,6 +30,12 @@ public class PlayerService {
                 .filter(id -> !matchRepository.existsById(id))
                 .collect(Collectors.toList());
 
+        if (matchIds.size() > 100) {
+            int to = matchIds.size();
+            int from = to - 100;
+            matchIds = matchIds.subList(from, to);
+        }
+
         List<Match> matches = pubgService.fetchMatches(matchIds);
 
         player.validateEqualShard(matches);
