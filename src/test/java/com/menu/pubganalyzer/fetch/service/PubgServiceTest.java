@@ -1,12 +1,8 @@
 package com.menu.pubganalyzer.fetch.service;
 
 import com.menu.pubganalyzer.config.tasks.CustomThreadPoolConfig;
-import com.menu.pubganalyzer.players.model.Player;
 import com.menu.pubganalyzer.matches.model.Match;
-import com.menu.pubganalyzer.telemetries.model.Telemetry;
-import com.menu.pubganalyzer.util.pubgAPI.PubgAPI;
-import com.menu.pubganalyzer.util.pubgAPI.response.match.MatchResponse;
-import com.menu.pubganalyzer.util.pubgAPI.response.player.PlayersResponse;
+import com.menu.pubganalyzer.util.pubg.PubgClient;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.core.task.TaskExecutor;
@@ -29,51 +25,51 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 class PubgServiceTest {
-    private final PubgAPI pubgAPI = Mockito.mock(PubgAPI.class);
+    private final PubgClient pubgClient = Mockito.mock(PubgClient.class);
     private final TaskExecutor pubgApiExecutor = new CustomThreadPoolConfig().pubgApiExecutor();
-    private final PubgService pubgService = new PubgService(pubgAPI, pubgApiExecutor);
+    private final PubgService pubgService = new PubgService(pubgClient, pubgApiExecutor);
 
     @Test
     void fetchPlayerReturnRaw() {
-        given(pubgAPI.player(eq(PLAYER_SHARD), eq(PLAYER_NAME)))
+        given(pubgClient.player(eq(PLAYER_SHARD), eq(PLAYER_NAME)))
                 .willReturn(PLAYERS_RESPONSE);
 
-        PlayersResponse result = assertDoesNotThrow(() -> pubgService.fetchPlayer(PLAYER_SHARD, PLAYER_NAME));
+        assertDoesNotThrow(() -> pubgService.fetchPlayer(PLAYER_SHARD, PLAYER_NAME));
 
-        verify(pubgAPI).player(eq(PLAYER_SHARD), eq(PLAYER_NAME));
+        verify(pubgClient).player(eq(PLAYER_SHARD), eq(PLAYER_NAME));
     }
 
     @Test
     void fetchMatch() {
-        given(pubgAPI.match(eq(MATCH_SHARD), eq(MATCH_ID)))
+        given(pubgClient.match(eq(MATCH_SHARD), eq(MATCH_ID)))
                 .willReturn(MATCH_RESPONSE);
 
-        MatchResponse result = assertDoesNotThrow(() -> pubgService.fetchMatch(MATCH_SHARD, MATCH_ID));
+        assertDoesNotThrow(() -> pubgService.fetchMatch(MATCH_SHARD, MATCH_ID));
 
-        verify(pubgAPI).match(eq(MATCH_SHARD), eq(MATCH_ID));
+        verify(pubgClient).match(eq(MATCH_SHARD), eq(MATCH_ID));
     }
 
     @Test
     void fetchPlayerReturnDomain() {
-        given(pubgAPI.player(eq(PLAYER_SHARD), eq(PLAYER_NAME)))
+        given(pubgClient.player(eq(PLAYER_SHARD.toLowerCase()), eq(PLAYER_NAME)))
                 .willReturn(PLAYERS_RESPONSE);
 
-        Player result = assertDoesNotThrow(() -> pubgService.fetchPlayer(PLAYER_NAME));
+        assertDoesNotThrow(() -> pubgService.fetchPlayer(PLAYER_NAME));
 
-        verify(pubgAPI).player(eq(PLAYER_SHARD), eq(PLAYER_NAME));
+        verify(pubgClient).player(eq(PLAYER_SHARD.toLowerCase()), eq(PLAYER_NAME));
     }
 
     @Test
     void fetchMatches() {
         List<String> matchIds = List.of(MATCH_ID);
-        given(pubgAPI.match(anyString(), eq(MATCH_ID)))
+        given(pubgClient.match(anyString(), eq(MATCH_ID)))
                 .willReturn(MATCH_RESPONSE);
 
         List<Match> result = assertDoesNotThrow(() -> pubgService.fetchMatches(matchIds));
 
         assertFalse(result.isEmpty());
 
-        verify(pubgAPI).match(anyString(), eq(MATCH_ID));
+        verify(pubgClient).match(anyString(), eq(MATCH_ID));
     }
 
     @Test
@@ -84,16 +80,16 @@ class PubgServiceTest {
 
         assertTrue(result.isEmpty());
 
-        verify(pubgAPI, never()).match(anyString(), anyString());
+        verify(pubgClient, never()).match(anyString(), anyString());
     }
 
     @Test
     void fetchTelemetry() {
-        given(pubgAPI.telemetry(MATCH_ASSET_URL))
+        given(pubgClient.telemetry(MATCH_ASSET_URL))
                 .willReturn(OFFICIAL_TELEMETRY_RESPONSE);
 
-        List<Telemetry> result = assertDoesNotThrow(() ->pubgService.fetchTelemetry(MATCH));
+        assertDoesNotThrow(() -> pubgService.fetchTelemetry(MATCH));
 
-        verify(pubgAPI).telemetry(MATCH_ASSET_URL);
+        verify(pubgClient).telemetry(MATCH_ASSET_URL);
     }
 }
