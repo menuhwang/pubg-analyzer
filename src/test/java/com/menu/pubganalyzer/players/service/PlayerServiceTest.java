@@ -3,7 +3,6 @@ package com.menu.pubganalyzer.players.service;
 import com.menu.pubganalyzer.fetch.service.PubgService;
 import com.menu.pubganalyzer.matches.repository.MatchRepository;
 import com.menu.pubganalyzer.players.repository.PlayerRepository;
-import com.menu.pubganalyzer.players.service.PlayerService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
