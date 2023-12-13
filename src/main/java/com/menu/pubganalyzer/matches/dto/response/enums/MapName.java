@@ -20,7 +20,8 @@ public enum MapName {
     SAVAGE_MAIN("Sanhok", "사녹"),
     SUMMERLAND_MAIN("Karakin", "카라킨"),
     TIGER_MAIN("Taego", "태이고"),
-    ITALY_MAIN("Riviera", "리비에라")
+    ITALY_MAIN("Riviera", "리비에라"),
+    NEON_MAIN("Rondo", "론도"),
     ;
 
     private final String eng;
