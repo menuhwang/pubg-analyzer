@@ -1,6 +1,6 @@
 package com.menu.pubganalyzer.support.fixture;
 
-import com.menu.pubganalyzer.domain.model.Player;
+import com.menu.pubganalyzer.players.model.Player;
 import com.menu.pubganalyzer.support.fixture.pubgapi.PlayerResponseFixture;
 
 public class PlayerFixture {

@@ -1,10 +1,11 @@
 package com.menu.pubganalyzer.util;
 
-import com.menu.pubganalyzer.domain.dto.ContributeDamageChartDataset;
-import com.menu.pubganalyzer.domain.dto.ContributeDamageChartRes;
-import com.menu.pubganalyzer.domain.dto.PhaseDamageChartRes;
-import com.menu.pubganalyzer.domain.model.telemetries.LogPlayerKillV2;
-import com.menu.pubganalyzer.domain.model.telemetries.LogPlayerTakeDamage;
+import com.menu.pubganalyzer.telemetries.dto.response.ContributeDamageChartDataset;
+import com.menu.pubganalyzer.telemetries.dto.response.ContributeDamageChartResponse;
+import com.menu.pubganalyzer.telemetries.dto.response.PhaseDamageChartResponse;
+import com.menu.pubganalyzer.util.pubg.response.telemetry.events.LogPlayerKillV2;
+import com.menu.pubganalyzer.util.pubg.response.telemetry.events.LogPlayerTakeDamage;
+import com.menu.pubganalyzer.util.pubg.response.telemetry.objects.CharacterResponse;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,37 +13,38 @@ import java.util.stream.Collectors;
 public class ChartUtil {
     private static final int PHASE_SIZE = 10; // 0 ~ 9
 
-    public static PhaseDamageChartRes phaseDamageChart(final List<LogPlayerTakeDamage> logPlayerTakeDamages) {
+    public static PhaseDamageChartResponse phaseDamageChart(final List<LogPlayerTakeDamage> logPlayerTakeDamages) {
         float[] phaseDamageDealt = new float[PHASE_SIZE];
 
         for (LogPlayerTakeDamage logPlayerTakeDamage : logPlayerTakeDamages) {
             int phase = logPlayerTakeDamage.getPhase();
-            phaseDamageDealt[phase] += logPlayerTakeDamage.getDamage();
+            phaseDamageDealt[phase] += (float) logPlayerTakeDamage.getDamage();
         }
 
-        return new PhaseDamageChartRes(phaseDamageDealt);
+        return new PhaseDamageChartResponse(phaseDamageDealt);
     }
 
-    public static ContributeDamageChartRes contributeDamageChart(
+    public static ContributeDamageChartResponse contributeDamageChart(
             final String player,
             final Set<String> members,
             final List<LogPlayerKillV2> logPlayerKills,
             final List<LogPlayerTakeDamage> logPlayerTakeDamages) {
         List<String> victims = logPlayerKills.stream()
-                .map(LogPlayerKillV2::getVictimName)
+                .map(LogPlayerKillV2::getVictim)
+                .map(CharacterResponse::getName)
                 .collect(Collectors.toList());
 
         Map<String, Map<String, Float>> victimPlayerDamageDealt = new HashMap<>();
 
         for (LogPlayerTakeDamage logPlayerTakeDamage : logPlayerTakeDamages) {
-            if (!victims.contains(logPlayerTakeDamage.getVictimName())) continue;
+            if (!victims.contains(logPlayerTakeDamage.getVictim().getName())) continue;
 
-            String vitim = logPlayerTakeDamage.getVictimName();
-            String attacker = logPlayerTakeDamage.getAttackerName();
+            String vitim = logPlayerTakeDamage.getVictim().getName();
+            String attacker = logPlayerTakeDamage.getAttacker().getName();
 
             Map<String, Float> attackerDamageDealt = victimPlayerDamageDealt.getOrDefault(vitim, new HashMap<>());
             float damageDealt = attackerDamageDealt.getOrDefault(attacker, 0F);
-            damageDealt += logPlayerTakeDamage.getDamage();
+            damageDealt += (float) logPlayerTakeDamage.getDamage();
             attackerDamageDealt.put(attacker, damageDealt);
             victimPlayerDamageDealt.put(vitim, attackerDamageDealt);
         }
@@ -67,6 +69,6 @@ public class ChartUtil {
             }
         }
 
-        return new ContributeDamageChartRes(victims, datasets);
+        return new ContributeDamageChartResponse(victims, datasets);
     }
 }

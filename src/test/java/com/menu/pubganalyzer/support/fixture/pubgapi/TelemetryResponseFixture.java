@@ -3,13 +3,14 @@ package com.menu.pubganalyzer.support.fixture.pubgapi;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.menu.pubganalyzer.util.pubgAPI.response.TelemetryResponse;
+import com.menu.pubganalyzer.util.pubg.response.telemetry.TelemetryResponse;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.menu.pubganalyzer.support.fixture.pubgapi.MatchResponseFixture.MATCH_ID;
 
@@ -27,15 +28,11 @@ public class TelemetryResponseFixture {
         }
     }
 
-    private static List<TelemetryResponse> read(File file) {
+    private static List<TelemetryResponse> read(File file) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-        List<TelemetryResponse> result = Collections.emptyList();
-        try {
-            result = objectMapper.readValue(file, new TypeReference<List<TelemetryResponse>>() {});
-        } catch (IOException e) {
-            throw new RuntimeException();
-        }
-
-        return result;
+        List<Map<String, Object>> raw = objectMapper.readValue(file, new TypeReference<>() {});
+        return raw.stream()
+                .map(TelemetryResponse::from)
+                .collect(Collectors.toList());
     }
 }
