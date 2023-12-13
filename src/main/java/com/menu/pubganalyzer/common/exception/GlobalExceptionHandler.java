@@ -2,7 +2,7 @@ package com.menu.pubganalyzer.common.exception;
 
 import com.menu.pubganalyzer.common.dto.response.ApiResult;
 import com.menu.pubganalyzer.common.dto.response.ApiResultUtil;
-import com.menu.pubganalyzer.util.pubgAPI.exception.PubgAPIException;
+import com.menu.pubganalyzer.util.pubg.exception.PubgAPIException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

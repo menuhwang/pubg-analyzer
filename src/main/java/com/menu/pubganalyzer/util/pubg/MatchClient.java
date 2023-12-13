@@ -1,6 +1,6 @@
 package com.menu.pubganalyzer.util.pubg;
 
-import com.menu.pubganalyzer.util.pubgAPI.response.match.MatchResponse;
+import com.menu.pubganalyzer.util.pubg.response.match.MatchResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

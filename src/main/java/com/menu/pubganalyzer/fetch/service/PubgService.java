@@ -3,11 +3,10 @@ package com.menu.pubganalyzer.fetch.service;
 import com.menu.pubganalyzer.players.model.Player;
 import com.menu.pubganalyzer.common.enums.Shard;
 import com.menu.pubganalyzer.matches.model.Match;
-import com.menu.pubganalyzer.telemetries.model.Telemetry;
-import com.menu.pubganalyzer.util.pubgAPI.PubgAPI;
-import com.menu.pubganalyzer.util.pubgAPI.response.match.MatchResponse;
-import com.menu.pubganalyzer.util.pubgAPI.response.player.PlayersResponse;
-import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
+import com.menu.pubganalyzer.util.pubg.PubgClient;
+import com.menu.pubganalyzer.util.pubg.response.match.MatchResponse;
+import com.menu.pubganalyzer.util.pubg.response.player.PlayersResponse;
+import com.menu.pubganalyzer.util.pubg.response.telemetry.TelemetryResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -20,7 +19,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
 
 import static com.menu.pubganalyzer.common.enums.Shard.STEAM;
 
@@ -28,19 +26,19 @@ import static com.menu.pubganalyzer.common.enums.Shard.STEAM;
 @RequiredArgsConstructor
 @Slf4j
 public class PubgService {
-    private final PubgAPI pubgAPI;
+    private final PubgClient pubgClient;
     private final TaskExecutor pubgApiExecutor;
 
     public PlayersResponse fetchPlayer(String shard, String nickname) {
-        return pubgAPI.player(Shard.valueOf(shard).name(), nickname);
+        return pubgClient.player(Shard.valueOf(shard).name(), nickname);
     }
 
     public MatchResponse fetchMatch(String shard, String matchId) {
-        return pubgAPI.match(Shard.valueOf(shard).name(), matchId);
+        return pubgClient.match(Shard.valueOf(shard).name(), matchId);
     }
 
     public Player fetchPlayer(String nickname) {
-        PlayersResponse playersResponse = pubgAPI.player(STEAM.name(), nickname);
+        PlayersResponse playersResponse = pubgClient.player(STEAM.name().toLowerCase(), nickname);
         return Player.of(playersResponse).get(0);
     }
 
@@ -53,7 +51,7 @@ public class PubgService {
         ExecutorService executorService = new ExecutorServiceAdapter(pubgApiExecutor);
         for (String matchId : matchIds) {
             Future<Match> matchFuture = executorService.submit(() ->
-                    Match.of(pubgAPI.match(STEAM.name(), matchId))
+                    Match.of(pubgClient.match(STEAM.name(), matchId))
             );
 
             matchFutures.add(matchFuture);
@@ -76,12 +74,8 @@ public class PubgService {
         return matches;
     }
 
-    public List<Telemetry> fetchTelemetry(Match match) {
+    public List<TelemetryResponse> fetchTelemetry(Match match) {
         String telemetryUrl = match.getTelemetryUrl();
-        List<TelemetryResponse> telemetryResponses = pubgAPI.telemetry(telemetryUrl);
-
-        return telemetryResponses.stream()
-                .map(Telemetry::from)
-                .collect(Collectors.toList());
+        return pubgClient.telemetry(telemetryUrl);
     }
 }

@@ -1,7 +1,7 @@
 package com.menu.pubganalyzer.support.fixture.pubgapi;
 
 import com.menu.pubganalyzer.common.enums.Shard;
-import com.menu.pubganalyzer.util.pubgAPI.response.player.*;
+import com.menu.pubganalyzer.util.pubg.response.player.*;
 
 import java.util.List;
 

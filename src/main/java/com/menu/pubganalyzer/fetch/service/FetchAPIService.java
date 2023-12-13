@@ -1,7 +1,7 @@
 package com.menu.pubganalyzer.fetch.service;
 
-import com.menu.pubganalyzer.util.pubgAPI.response.match.MatchResponse;
-import com.menu.pubganalyzer.util.pubgAPI.response.player.PlayersResponse;
+import com.menu.pubganalyzer.util.pubg.response.match.MatchResponse;
+import com.menu.pubganalyzer.util.pubg.response.player.PlayersResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

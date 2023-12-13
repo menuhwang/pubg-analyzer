@@ -1,7 +1,7 @@
 package com.menu.pubganalyzer.players.model;
 
 import com.menu.pubganalyzer.matches.model.Match;
-import com.menu.pubganalyzer.util.pubgAPI.response.player.PlayersResponse;
+import com.menu.pubganalyzer.util.pubg.response.player.PlayersResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.springframework.data.annotation.CreatedDate;
@@ -105,14 +105,14 @@ public class Player {
 
     public static List<Player> of(PlayersResponse playersResponse) {
         List<Player> result = new ArrayList<>();
-        for (com.menu.pubganalyzer.util.pubgAPI.response.player.Player prp : playersResponse.getPlayers()) {
+        for (com.menu.pubganalyzer.util.pubg.response.player.Player prp : playersResponse.getPlayers()) {
             Player player = Player.from(prp);
             result.add(player);
         }
         return result;
     }
 
-    private static Player from(com.menu.pubganalyzer.util.pubgAPI.response.player.Player prp) {
+    private static Player from(com.menu.pubganalyzer.util.pubg.response.player.Player prp) {
         return Player.builder()
                 .id(prp.getId())
                 .name(prp.getAttributes().getName())
