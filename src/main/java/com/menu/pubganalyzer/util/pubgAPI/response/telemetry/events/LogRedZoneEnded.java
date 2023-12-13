@@ -3,14 +3,16 @@ package com.menu.pubganalyzer.util.pubgAPI.response.telemetry.events;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.objects.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Getter
+@NoArgsConstructor
 public class LogRedZoneEnded extends TelemetryResponse {
-    private final List<CharacterResponse> drivers;
+    private List<CharacterResponse> drivers;
 
     @SuppressWarnings("unchecked")
     private LogRedZoneEnded(Map<String, Object> origin) {

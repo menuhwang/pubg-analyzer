@@ -3,17 +3,19 @@ package com.menu.pubganalyzer.util.pubgAPI.response.telemetry.events;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.objects.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
 @Getter
+@NoArgsConstructor
 public class LogPlayerAttack extends TelemetryResponse {
-    private final int attackId;
-    private final int fireWeaponStackCount;
-    private final CharacterResponse attacker;
-    private final String attackType;
-    private final ItemResponse weapon;
-    private final VehicleResponse vehicle;
+    private int attackId;
+    private int fireWeaponStackCount;
+    private CharacterResponse attacker;
+    private String attackType;
+    private ItemResponse weapon;
+    private VehicleResponse vehicle;
 
     private LogPlayerAttack(Map<String, Object> origin) {
         super(origin);

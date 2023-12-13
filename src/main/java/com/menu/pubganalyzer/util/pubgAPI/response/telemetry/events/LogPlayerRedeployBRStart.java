@@ -3,14 +3,16 @@ package com.menu.pubganalyzer.util.pubgAPI.response.telemetry.events;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.objects.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Getter
+@NoArgsConstructor
 public class LogPlayerRedeployBRStart extends TelemetryResponse {
-    private final List<CharacterResponse> characters;
+    private List<CharacterResponse> characters;
 
     @SuppressWarnings("unchecked")
     private LogPlayerRedeployBRStart(Map<String, Object> origin) {

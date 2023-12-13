@@ -3,14 +3,16 @@ package com.menu.pubganalyzer.util.pubgAPI.response.telemetry.events;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.objects.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
 @Getter
+@NoArgsConstructor
 public class LogItemPickupFromVehicleTrunk extends TelemetryResponse {
-    private final CharacterResponse character;
-    private final VehicleResponse vehicle;
-    private final ItemResponse item;
+    private CharacterResponse character;
+    private VehicleResponse vehicle;
+    private ItemResponse item;
 
     private LogItemPickupFromVehicleTrunk(Map<String, Object> origin) {
         super(origin);

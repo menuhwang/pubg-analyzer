@@ -3,27 +3,29 @@ package com.menu.pubganalyzer.util.pubgAPI.response.telemetry.events;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.objects.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
 
 @Getter
+@NoArgsConstructor
 public class LogPlayerKillV2 extends TelemetryResponse {
-    private final int attackId;
-    private final int dBNOId;
-    private final GameResultResponse victimGameResult;
-    private final CharacterResponse victim;
-    private final String victimWeapon;
-    private final List<String> victimWeaponAdditionalInfo;
-    private final CharacterResponse dBNOMaker;
-    private final DamageInfoResponse dBNODamageInfo;
-    private final CharacterResponse finisher;
-    private final DamageInfoResponse finishDamageInfo;
-    private final CharacterResponse killer;
-    private final DamageInfoResponse killerDamageInfo;
-    private final List<String> assists_AccountId;
-    private final List<String> teamKillers_AccountId;
-    private final boolean isSuicide;
+    private int attackId;
+    private int dBNOId;
+    private GameResultResponse victimGameResult;
+    private CharacterResponse victim;
+    private String victimWeapon;
+    private List<String> victimWeaponAdditionalInfo;
+    private CharacterResponse dBNOMaker;
+    private DamageInfoResponse dBNODamageInfo;
+    private CharacterResponse finisher;
+    private DamageInfoResponse finishDamageInfo;
+    private CharacterResponse killer;
+    private DamageInfoResponse killerDamageInfo;
+    private List<String> assists_AccountId;
+    private List<String> teamKillers_AccountId;
+    private boolean isSuicide;
 
     @SuppressWarnings("unchecked")
     private LogPlayerKillV2(Map<String, Object> origin) {

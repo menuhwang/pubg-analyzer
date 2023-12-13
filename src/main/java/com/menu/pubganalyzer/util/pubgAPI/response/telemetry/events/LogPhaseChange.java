@@ -2,13 +2,15 @@ package com.menu.pubganalyzer.util.pubgAPI.response.telemetry.events;
 
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
 @Getter
+@NoArgsConstructor
 public class LogPhaseChange extends TelemetryResponse {
-    private final int phase;
-    private final double elapsedTime;
+    private int phase;
+    private double elapsedTime;
 
     private LogPhaseChange(Map<String, Object> origin) {
         super(origin);

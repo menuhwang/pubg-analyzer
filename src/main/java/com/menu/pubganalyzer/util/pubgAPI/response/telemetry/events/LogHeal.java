@@ -3,14 +3,16 @@ package com.menu.pubganalyzer.util.pubgAPI.response.telemetry.events;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.objects.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
 @Getter
+@NoArgsConstructor
 public class LogHeal extends TelemetryResponse {
-    private final CharacterResponse character;
-    private final ItemResponse item;
-    private final float healAmount;
+    private CharacterResponse character;
+    private ItemResponse item;
+    private float healAmount;
 
     private LogHeal(Map<String, Object> origin) {
         super(origin);

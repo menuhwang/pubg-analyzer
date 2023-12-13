@@ -3,15 +3,17 @@ package com.menu.pubganalyzer.util.pubgAPI.response.telemetry.events;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.objects.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Getter
+@NoArgsConstructor
 public class LogMatchEnd extends TelemetryResponse {
-    private final List<CharacterWrapperResponse> characters;
-    private final GameResultOnFinishedResponse gameResultOnFinished;
+    private List<CharacterWrapperResponse> characters;
+    private GameResultOnFinishedResponse gameResultOnFinished;
 
     @SuppressWarnings("unchecked")
     private LogMatchEnd(Map<String, Object> origin) {

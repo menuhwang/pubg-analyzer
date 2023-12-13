@@ -3,13 +3,15 @@ package com.menu.pubganalyzer.util.pubgAPI.response.telemetry.events;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.objects.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
 @Getter
+@NoArgsConstructor
 public class LogVaultStart extends TelemetryResponse {
-    private final CharacterResponse character;
-    private final boolean isLedgeGrab;
+    private CharacterResponse character;
+    private boolean isLedgeGrab;
 
     private LogVaultStart(Map<String, Object> origin) {
         super(origin);

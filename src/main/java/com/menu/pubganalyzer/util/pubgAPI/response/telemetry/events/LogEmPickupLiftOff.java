@@ -3,15 +3,17 @@ package com.menu.pubganalyzer.util.pubgAPI.response.telemetry.events;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.objects.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Getter
+@NoArgsConstructor
 public class LogEmPickupLiftOff extends TelemetryResponse {
-    private final CharacterResponse instigator;
-    private final List<CharacterResponse> riders;
+    private CharacterResponse instigator;
+    private List<CharacterResponse> riders;
 
     @SuppressWarnings("unchecked")
     private LogEmPickupLiftOff(Map<String, Object> origin) {

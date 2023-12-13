@@ -3,18 +3,20 @@ package com.menu.pubganalyzer.util.pubgAPI.response.telemetry.events;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.objects.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
 @Getter
+@NoArgsConstructor
 public class LogVehicleDamage extends TelemetryResponse {
-    private final int attackId;
-    private final CharacterResponse attacker;
-    private final VehicleResponse vehicle;
-    private final String damageTypeCategory;
-    private final String damageCauserName;
-    private final double damage;
-    private final double distance;
+    private int attackId;
+    private CharacterResponse attacker;
+    private VehicleResponse vehicle;
+    private String damageTypeCategory;
+    private String damageCauserName;
+    private double damage;
+    private double distance;
 
     private LogVehicleDamage(Map<String, Object> origin) {
         super(origin);

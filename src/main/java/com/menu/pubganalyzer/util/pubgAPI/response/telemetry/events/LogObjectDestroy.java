@@ -3,14 +3,16 @@ package com.menu.pubganalyzer.util.pubgAPI.response.telemetry.events;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.objects.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
 @Getter
+@NoArgsConstructor
 public class LogObjectDestroy extends TelemetryResponse {
-    private final CharacterResponse character;
-    private final String objectType;
-    private final LocationResponse objectLocation;
+    private CharacterResponse character;
+    private String objectType;
+    private LocationResponse objectLocation;
 
     private LogObjectDestroy(Map<String, Object> origin) {
         super(origin);

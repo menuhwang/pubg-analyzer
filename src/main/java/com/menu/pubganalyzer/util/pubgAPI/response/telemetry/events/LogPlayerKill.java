@@ -3,26 +3,28 @@ package com.menu.pubganalyzer.util.pubgAPI.response.telemetry.events;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.objects.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
 
 @Getter
+@NoArgsConstructor
 public class LogPlayerKill extends TelemetryResponse {
-    private final int attackId;
-    private final CharacterResponse killer;
-    private final CharacterResponse victim;
-    private final CharacterResponse assistant;
-    private final int dBNOId;
-    private final String damageReason;
-    private final String damageTypeCategory;
-    private final String damageCauserName;
-    private final List<String> damageCauserAdditionalInfo;
-    private final String victimWeapon;
-    private final List<String> victimWeaponAdditionalInfo;
-    private final double distance;
-    private final GameResultResponse victimGameResult;
-    private final boolean isThroughPenetrableWall;
+    private int attackId;
+    private CharacterResponse killer;
+    private CharacterResponse victim;
+    private CharacterResponse assistant;
+    private int dBNOId;
+    private String damageReason;
+    private String damageTypeCategory;
+    private String damageCauserName;
+    private List<String> damageCauserAdditionalInfo;
+    private String victimWeapon;
+    private List<String> victimWeaponAdditionalInfo;
+    private double distance;
+    private GameResultResponse victimGameResult;
+    private boolean isThroughPenetrableWall;
 
     @SuppressWarnings("unchecked")
     private LogPlayerKill(Map<String, Object> origin) {

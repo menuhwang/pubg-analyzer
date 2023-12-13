@@ -2,12 +2,14 @@ package com.menu.pubganalyzer.util.pubgAPI.response.telemetry.events;
 
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
 @Getter
+@NoArgsConstructor
 public class LogPlayerLogout extends TelemetryResponse {
-    private final String accountId;
+    private String accountId;
 
     private LogPlayerLogout(Map<String, Object> origin) {
         super(origin);

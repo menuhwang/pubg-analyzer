@@ -3,17 +3,19 @@ package com.menu.pubganalyzer.util.pubgAPI.response.telemetry.events;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.objects.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Getter
+@NoArgsConstructor
 public class LogVehicleRide extends TelemetryResponse {
-    private final CharacterResponse character;
-    private final VehicleResponse vehicle;
-    private final int seatIndex;
-    private final List<CharacterResponse> fellowPassengers;
+    private CharacterResponse character;
+    private VehicleResponse vehicle;
+    private int seatIndex;
+    private List<CharacterResponse> fellowPassengers;
 
     @SuppressWarnings("unchecked")
     private LogVehicleRide(Map<String, Object> origin) {

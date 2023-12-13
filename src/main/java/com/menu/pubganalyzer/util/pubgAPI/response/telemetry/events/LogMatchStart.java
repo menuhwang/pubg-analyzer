@@ -3,21 +3,23 @@ package com.menu.pubganalyzer.util.pubgAPI.response.telemetry.events;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.objects.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Getter
+@NoArgsConstructor
 public class LogMatchStart extends TelemetryResponse {
-    private final String mapName;
-    private final String weatherId;
-    private final List<CharacterWrapperResponse> characters;
-    private final String cameraViewBehaviour;
-    private final int teamSize;
-    private final boolean isCustomGame;
-    private final boolean isEventMode;
-    private final String blueZoneCustomOptions;
+    private String mapName;
+    private String weatherId;
+    private List<CharacterWrapperResponse> characters;
+    private String cameraViewBehaviour;
+    private int teamSize;
+    private boolean isCustomGame;
+    private boolean isEventMode;
+    private String blueZoneCustomOptions;
 
     @SuppressWarnings("unchecked")
     private LogMatchStart(Map<String, Object> origin) {

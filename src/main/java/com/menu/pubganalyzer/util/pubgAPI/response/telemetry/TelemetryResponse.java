@@ -10,9 +10,12 @@ import java.util.Map;
 
 @Getter
 public class TelemetryResponse {
-    private final LocalDateTime timestamp;
-    private final String type;
-    private final CommonResponse common;
+    private LocalDateTime timestamp;
+    private String type;
+    private CommonResponse common;
+
+    protected TelemetryResponse() {
+    }
 
     protected TelemetryResponse(Map<String, Object> origin) {
         this.timestamp = LocalDateTimeParser.parse((String) origin.get("_D"));

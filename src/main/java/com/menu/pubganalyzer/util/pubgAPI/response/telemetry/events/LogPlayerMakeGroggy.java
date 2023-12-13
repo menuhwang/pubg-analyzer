@@ -3,25 +3,27 @@ package com.menu.pubganalyzer.util.pubgAPI.response.telemetry.events;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.objects.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
 
 @Getter
+@NoArgsConstructor
 public class LogPlayerMakeGroggy extends TelemetryResponse {
-    private final int attackId;
-    private final CharacterResponse attacker;
-    private final CharacterResponse victim;
-    private final String damageReason;
-    private final String damageTypeCategory;
-    private final String damageCauserName;
-    private final List<String> damageCauserAdditionalInfo;
-    private final String VictimWeapon;
-    private final List<String> VictimWeaponAdditionalInfo;
-    private final double distance;
-    private final boolean isAttackerInVehicle;
-    private final int dBNOId;
-    private final boolean isThroughPenetrableWall;
+    private int attackId;
+    private CharacterResponse attacker;
+    private CharacterResponse victim;
+    private String damageReason;
+    private String damageTypeCategory;
+    private String damageCauserName;
+    private List<String> damageCauserAdditionalInfo;
+    private String VictimWeapon;
+    private List<String> VictimWeaponAdditionalInfo;
+    private double distance;
+    private boolean isAttackerInVehicle;
+    private int dBNOId;
+    private boolean isThroughPenetrableWall;
 
     @SuppressWarnings("unchecked")
     private LogPlayerMakeGroggy(Map<String, Object> origin) {

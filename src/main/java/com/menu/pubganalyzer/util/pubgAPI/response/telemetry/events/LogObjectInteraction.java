@@ -3,16 +3,18 @@ package com.menu.pubganalyzer.util.pubgAPI.response.telemetry.events;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.objects.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
 
 @Getter
+@NoArgsConstructor
 public class LogObjectInteraction extends TelemetryResponse {
-    private final CharacterResponse character;
-    private final String objectType;
-    private final String objectTypeStatus;
-    private final List<String> objectTypeAdditionalInfo;
+    private CharacterResponse character;
+    private String objectType;
+    private String objectTypeStatus;
+    private List<String> objectTypeAdditionalInfo;
 
     @SuppressWarnings("unchecked")
     private LogObjectInteraction(Map<String, Object> origin) {

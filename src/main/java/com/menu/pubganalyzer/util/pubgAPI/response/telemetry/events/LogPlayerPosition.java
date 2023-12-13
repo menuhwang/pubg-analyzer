@@ -3,15 +3,17 @@ package com.menu.pubganalyzer.util.pubgAPI.response.telemetry.events;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.objects.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
 @Getter
+@NoArgsConstructor
 public class LogPlayerPosition extends TelemetryResponse {
-    private final CharacterResponse character;
-    private final VehicleResponse vehicle;
-    private final double elapsedTime;
-    private final int numAlivePlayers;
+    private CharacterResponse character;
+    private VehicleResponse vehicle;
+    private double elapsedTime;
+    private int numAlivePlayers;
 
     private LogPlayerPosition(Map<String, Object> origin) {
         super(origin);

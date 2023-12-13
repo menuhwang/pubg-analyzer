@@ -3,19 +3,21 @@ package com.menu.pubganalyzer.util.pubgAPI.response.telemetry.events;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.objects.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
 @Getter
+@NoArgsConstructor
 public class LogPlayerTakeDamage extends TelemetryResponse {
-    private final int attackId;
-    private final CharacterResponse attacker;
-    private final CharacterResponse victim;
-    private final String damageTypeCategory;
-    private final String damageReason;
-    private final double damage;
-    private final String damageCauserName;
-    private final boolean isThroughPenetrableWall;
+    private int attackId;
+    private CharacterResponse attacker;
+    private CharacterResponse victim;
+    private String damageTypeCategory;
+    private String damageReason;
+    private double damage;
+    private String damageCauserName;
+    private boolean isThroughPenetrableWall;
 
     private LogPlayerTakeDamage(Map<String, Object> origin) {
         super(origin);

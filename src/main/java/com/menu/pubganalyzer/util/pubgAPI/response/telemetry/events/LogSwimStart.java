@@ -3,12 +3,14 @@ package com.menu.pubganalyzer.util.pubgAPI.response.telemetry.events;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.TelemetryResponse;
 import com.menu.pubganalyzer.util.pubgAPI.response.telemetry.objects.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
 @Getter
+@NoArgsConstructor
 public class LogSwimStart extends TelemetryResponse {
-    private final CharacterResponse character;
+    private CharacterResponse character;
 
     private LogSwimStart(Map<String, Object> origin) {
         super(origin);
