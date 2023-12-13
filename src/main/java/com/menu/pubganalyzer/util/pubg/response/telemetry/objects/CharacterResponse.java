@@ -1,5 +1,6 @@
 package com.menu.pubganalyzer.util.pubg.response.telemetry.objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
@@ -73,5 +74,10 @@ public class CharacterResponse {
             System.err.println(map);
             throw e;
         }
+    }
+
+    @JsonIgnore
+    public boolean isBot() {
+        return accountId.startsWith("ai.");
     }
 }

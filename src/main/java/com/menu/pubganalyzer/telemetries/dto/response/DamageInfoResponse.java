@@ -3,7 +3,6 @@ package com.menu.pubganalyzer.telemetries.dto.response;
 import com.menu.pubganalyzer.telemetries.dto.response.enums.DamageCauserName;
 import com.menu.pubganalyzer.telemetries.dto.response.enums.DamageReason;
 import com.menu.pubganalyzer.telemetries.dto.response.enums.DamageTypeCategory;
-import com.menu.pubganalyzer.telemetries.model.DamageInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,12 +18,12 @@ public class DamageInfoResponse {
     private final DamageCauserName damageCauserName; // enum
     private final float distance;
 
-    public static DamageInfoResponse from(DamageInfo damageInfo) {
+    public static DamageInfoResponse from(com.menu.pubganalyzer.util.pubg.response.telemetry.objects.DamageInfoResponse damageInfo) {
         if (Objects.isNull(damageInfo)) return null;
         return DamageInfoResponse.builder()
-                .damageReason(damageInfo.getDamageReason())
-                .damageTypeCategory(damageInfo.getDamageTypeCategory())
-                .damageCauserName(damageInfo.getDamageCauserName())
+                .damageReason(DamageReason.of(damageInfo.getDamageReason()))
+                .damageTypeCategory(DamageTypeCategory.of(damageInfo.getDamageTypeCategory()))
+                .damageCauserName(DamageCauserName.of(damageInfo.getDamageCauserName()))
                 .distance(damageInfo.getDistance())
                 .build();
     }

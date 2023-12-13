@@ -1,6 +1,5 @@
 package com.menu.pubganalyzer.telemetries.dto.response;
 
-import com.menu.pubganalyzer.telemetries.model.Character;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +17,7 @@ public class CharacterResponse {
     private final String accountId;
     private final boolean bot;
 
-    public static CharacterResponse from(Character character) {
+    public static CharacterResponse from(com.menu.pubganalyzer.util.pubg.response.telemetry.objects.CharacterResponse character) {
         if (Objects.isNull(character)) return null;
         return CharacterResponse.builder()
                 .name(character.getName())

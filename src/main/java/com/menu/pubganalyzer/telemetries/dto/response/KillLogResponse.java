@@ -1,6 +1,6 @@
 package com.menu.pubganalyzer.telemetries.dto.response;
 
-import com.menu.pubganalyzer.telemetries.model.LogPlayerKillV2;
+import com.menu.pubganalyzer.util.pubg.response.telemetry.events.LogPlayerKillV2;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,7 +28,7 @@ public class KillLogResponse {
         CharacterResponse killer = CharacterResponse.from(logPlayerKillV2.getKiller());
 
         DamageInfoResponse dBNOInfo = DamageInfoResponse.from(logPlayerKillV2.getDBNODamageInfo());
-        DamageInfoResponse finishInfo = DamageInfoResponse.from(logPlayerKillV2.getFinisherDamageInfo());
+        DamageInfoResponse finishInfo = DamageInfoResponse.from(logPlayerKillV2.getFinishDamageInfo());
         DamageInfoResponse killInfo = DamageInfoResponse.from(logPlayerKillV2.getKillerDamageInfo());
 
         return KillLogResponse.builder()

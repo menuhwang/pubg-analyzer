@@ -229,6 +229,7 @@ public enum DamageCauserName {
 
     public static DamageCauserName of(String name) {
         if (name.isBlank()) return null;
+        name = name.toUpperCase();
         for (DamageCauserName damageCauserName : values()) {
             if (damageCauserName.name().equals(name)) return damageCauserName;
         }
