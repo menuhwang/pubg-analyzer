@@ -19,7 +19,7 @@ public class LoggingAspect {
     private static final String RESPONSE_LOG = "[{}] RESPONSE {}ms";
     private static final String QUERY_PATH_PATTERN = "%s?%s";
 
-    @Around("within(com.menu.pubganalyzer.controller..*)")
+    @Around("within(com.menu.pubganalyzer.*.controller.*)")
     public Object logResponseTime(ProceedingJoinPoint pjp) throws Throwable {
         HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String transactionId = MDC.get("transactionId");
@@ -35,7 +35,7 @@ public class LoggingAspect {
         return result;
     }
 
-    @Around("within(com.menu.pubganalyzer.service..*)")
+    @Around("within(com.menu.pubganalyzer.*.service.*)")
     public Object logServiceExecutionTime(ProceedingJoinPoint pjp) throws Throwable {
         long start = System.currentTimeMillis();
 
