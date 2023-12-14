@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface TelemetryRepository extends MongoRepository<TelemetryEntity, String> {
     boolean existsByMatchId(String matchId);
-    @Query("{'matchId': ?0, 'telemetry.type': 'LogPlayerTakeDamage', 'telemetry.attacker.name': ?1}")
+    @Query("{'matchId': ?0, 'telemetry.type': 'LogPlayerTakeDamage', 'telemetry.attacker.name': ?1, 'telemetry.victim.name':  {$ne: ?1}}")
     List<TelemetryEntity> findLogPlayerTakeDamageByAttacker(String matchId, String attacker);
     @Query("{'matchId': ?0, 'telemetry.type': 'LogPlayerKillV2', 'telemetry.killer.name': ?1}")
     List<TelemetryEntity> findLogPlayerKillByMatchIdAndPlayerName(String matchId, String playerName);
