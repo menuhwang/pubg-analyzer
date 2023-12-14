@@ -20,6 +20,7 @@ public enum DamageCauserName {
     BP_BEARV2_C("Bear", "곰"),
     BP_BRDM_C("BRDM-2", "교통사고[BRDM]"),
     BP_BICYCLE_C("Mountain Bike", "교통사고[Mountain Bike]"),
+    BP_BLANC_C("Blanc", "교통사고[Blanc]"),
     BP_COUPERB_C("Coupe RB", "교통사고[Coupe RB]"),
     BP_DO_CIRCLE_TRAIN_MERGED_C("Train", "교통사고[Train]"),
     BP_DO_LINE_TRAIN_DINO_MERGED_C("Train", "교통사고[Train]"),
