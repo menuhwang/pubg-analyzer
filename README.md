@@ -2,9 +2,9 @@
    게임 배틀그라운드의 매치 로그를 분석해주는 서비스입니다.
 
 # 🔗 Site
-   - [API 명세서](https://docs.battlestats.site/swagger-ui/index.html?urls.primaryName=public)
-   - [홈페이지](https://www.battlestats.site)
-   - [Demo 플레이어 조회](https://www.battlestats.site/player/WackyJacky101)
+   - ~~API 명세서~~
+   - [홈페이지](https://battlestats.menuhwang.com)
+   - [Demo 플레이어 조회](https://battlestats.menuhwang.com/player/WackyJacky101)
 
 # 🏢 Infra Architecture
 ### AWS
