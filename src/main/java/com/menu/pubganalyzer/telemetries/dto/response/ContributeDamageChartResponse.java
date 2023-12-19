@@ -9,9 +9,9 @@ import java.util.List;
 @Getter
 public class ContributeDamageChartResponse {
     private final List<String> labels;
-    private final List<ContributeDamageChartDataset> datasets;
+    private final List<BarChartDataset<Float>> datasets;
 
-    public ContributeDamageChartResponse(List<String> labels, List<ContributeDamageChartDataset> datasets) {
+    public ContributeDamageChartResponse(List<String> labels, List<BarChartDataset<Float>> datasets) {
         this.labels = labels;
         this.datasets = datasets;
     }

@@ -1,6 +1,6 @@
 package com.menu.pubganalyzer.util;
 
-import com.menu.pubganalyzer.telemetries.dto.response.ContributeDamageChartDataset;
+import com.menu.pubganalyzer.telemetries.dto.response.BarChartDataset;
 import com.menu.pubganalyzer.telemetries.dto.response.ContributeDamageChartResponse;
 import com.menu.pubganalyzer.telemetries.dto.response.PhaseDamageChartResponse;
 import com.menu.pubganalyzer.util.pubg.response.telemetry.events.LogPlayerKillV2;
@@ -49,19 +49,20 @@ public class ChartUtil {
             victimPlayerDamageDealt.put(vitim, attackerDamageDealt);
         }
 
-        LinkedList<ContributeDamageChartDataset> datasets = new LinkedList<>();
+        LinkedList<BarChartDataset<Float>> datasets = new LinkedList<>();
         for (String member : members) {
-            float[] data = new float[victims.size()];
+            Float[] data = new Float[victims.size()];
+            Arrays.fill(data, 0F);
             for (int i = 0; i < data.length; i++) {
                 data[i] = victimPlayerDamageDealt.get(victims.get(i)).getOrDefault(member, 0F);
             }
 
-            datasets.add(new ContributeDamageChartDataset(member, data));
+            datasets.add(new BarChartDataset<>(member, data));
         }
 
-        Iterator<ContributeDamageChartDataset> iterator = datasets.iterator();
+        Iterator<BarChartDataset<Float>> iterator = datasets.iterator();
         while (iterator.hasNext()) {
-            ContributeDamageChartDataset data = iterator.next();
+            BarChartDataset<Float> data = iterator.next();
             if (player.equals(data.getLabel())) { // 조회한 유저의 데이터를 가장 앞으로 이동한다.
                 iterator.remove();
                 datasets.addFirst(data);
