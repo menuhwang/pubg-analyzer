@@ -5,13 +5,11 @@ import com.menu.pubganalyzer.fetch.service.PubgService;
 import com.menu.pubganalyzer.matches.model.Match;
 import com.menu.pubganalyzer.matches.model.Roster;
 import com.menu.pubganalyzer.matches.repository.MatchRepository;
-import com.menu.pubganalyzer.telemetries.dto.response.ContributeDamageChartResponse;
-import com.menu.pubganalyzer.telemetries.dto.response.DamageLogResponse;
-import com.menu.pubganalyzer.telemetries.dto.response.KillLogResponse;
-import com.menu.pubganalyzer.telemetries.dto.response.PhaseDamageChartResponse;
+import com.menu.pubganalyzer.telemetries.dto.response.*;
 import com.menu.pubganalyzer.telemetries.model.TelemetryEntity;
 import com.menu.pubganalyzer.telemetries.repository.TelemetryRepository;
 import com.menu.pubganalyzer.util.ChartUtil;
+import com.menu.pubganalyzer.util.pubg.response.telemetry.events.LogPlayerAttack;
 import com.menu.pubganalyzer.util.pubg.response.telemetry.events.LogPlayerKillV2;
 import com.menu.pubganalyzer.util.pubg.response.telemetry.events.LogPlayerTakeDamage;
 import com.menu.pubganalyzer.util.pubg.response.telemetry.objects.CharacterResponse;
@@ -164,4 +162,13 @@ public class TelemetryService {
             return true;
         }
     };
+
+    public WeaponAccuracyChartResponse getWeaponAccuracyChart(String id, String playerName) {
+        fetchTelemetryIfAbsent(id);
+
+        List<LogPlayerAttack> playerAttacksHittableWeapon = telemetryRepository.findPlayerAttackByHittableWeapon(id, playerName);
+        List<LogPlayerTakeDamage> playerTakeDamages = telemetryRepository.findPlayerTakeDamageNotSelfDamage(id, playerName);
+
+        return ChartUtil.weaponAccuracyChart(playerAttacksHittableWeapon, playerTakeDamages);
+    }
 }

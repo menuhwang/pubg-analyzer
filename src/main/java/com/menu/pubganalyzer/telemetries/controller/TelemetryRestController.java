@@ -1,10 +1,7 @@
 package com.menu.pubganalyzer.telemetries.controller;
 
+import com.menu.pubganalyzer.telemetries.dto.response.*;
 import com.menu.pubganalyzer.telemetries.service.TelemetryService;
-import com.menu.pubganalyzer.telemetries.dto.response.ContributeDamageChartResponse;
-import com.menu.pubganalyzer.telemetries.dto.response.DamageLogResponse;
-import com.menu.pubganalyzer.telemetries.dto.response.KillLogResponse;
-import com.menu.pubganalyzer.telemetries.dto.response.PhaseDamageChartResponse;
 import com.menu.pubganalyzer.common.dto.response.ApiResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -91,6 +88,20 @@ public class TelemetryRestController {
             @PathVariable String playerName
     ) {
         ContributeDamageChartResponse result = telemetryService.getContributeDamageChart(id, playerName);
+
+        return ResponseEntity.ok(success(result));
+    }
+
+    @GetMapping("/{id}/player/{playerName}/weapon-accuracy-chart")
+    @Operation(
+            summary = "무기 정확도 차트 조회",
+            description = "무기 정확도 차트를 조회합니다."
+    )
+    public ResponseEntity<ApiResult<WeaponAccuracyChartResponse>> getWeaponAccuracy(
+            @PathVariable String id,
+            @PathVariable String playerName
+    ) {
+        WeaponAccuracyChartResponse result = telemetryService.getWeaponAccuracyChart(id, playerName);
 
         return ResponseEntity.ok(success(result));
     }
