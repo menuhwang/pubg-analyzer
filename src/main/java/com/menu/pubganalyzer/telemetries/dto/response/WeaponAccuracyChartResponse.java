@@ -7,11 +7,11 @@ import java.util.List;
 
 @ToString
 @Getter
-public class ContributeDamageChartResponse {
+public class WeaponAccuracyChartResponse {
     private final List<String> labels;
-    private final List<BarChartDataset<Float>> datasets;
+    private final List<BarChartDataset<Integer>> datasets;
 
-    public ContributeDamageChartResponse(List<String> labels, List<BarChartDataset<Float>> datasets) {
+    public WeaponAccuracyChartResponse(List<String> labels, List<BarChartDataset<Integer>> datasets) {
         this.labels = labels;
         this.datasets = datasets;
     }
