@@ -5,11 +5,11 @@ import lombok.ToString;
 
 @ToString
 @Getter
-public class ContributeDamageChartDataset {
+public class BarChartDataset<E> {
     private final String label;
-    private final float[] data;
+    private final E[] data;
 
-    public ContributeDamageChartDataset(String label, float[] data) {
+    public BarChartDataset(String label, E[] data) {
         this.label = label;
         this.data = data;
     }

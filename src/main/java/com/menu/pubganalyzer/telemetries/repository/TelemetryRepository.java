@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.repository.Query;
 import java.util.Collection;
 import java.util.List;
 
-public interface TelemetryRepository extends MongoRepository<TelemetryEntity, String> {
+public interface TelemetryRepository extends MongoRepository<TelemetryEntity, String>, CustomizedTelemetryRepository {
     boolean existsByMatchId(String matchId);
     @Query("{'matchId': ?0, 'telemetry.type': 'LogPlayerTakeDamage', 'telemetry.attacker.name': ?1, 'telemetry.victim.name':  {$ne: ?1}}")
     List<TelemetryEntity> findLogPlayerTakeDamageByAttacker(String matchId, String attacker);
