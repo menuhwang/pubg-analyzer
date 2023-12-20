@@ -115,7 +115,7 @@ public class ChartUtil {
             Weapon weapon = Weapon.of(firedWeapon);
 
             fireData[index] = fire.get(firedWeapon);
-            hitData[index] = hit.get(firedWeapon);
+            hitData[index] = hit.getOrDefault(firedWeapon, 0);
             labels.add(String.format("%s (%d%%)", weapon.getEng(), 100 * hitData[index] / fireData[index]));
             index++;
         }
