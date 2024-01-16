@@ -14,6 +14,7 @@ public enum DamageTypeCategory {
     DAMAGE_BLUEZONE("Bluezone Damage", ""),
     DAMAGE_BLUEZONEGRENADE("Bluezone Grenade Damage", ""),
     DAMAGE_DRONEPACKAGE("Drone Damage", ""),
+    DAMAGE_DROPSTRUCTHIT("Drop struct Damage", ""),
     DAMAGE_DROWN("Drowning Damage", ""),
     DAMAGE_EXPLOSION_AIRCRAFT("Aircraft Explosion Damage", ""),
     DAMAGE_EXPLOSION_BLACKZONE("Blackzone Damage", ""),
