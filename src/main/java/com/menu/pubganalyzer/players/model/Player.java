@@ -78,6 +78,10 @@ public class Player {
         return matches;
     }
 
+    public int getUpdateCount() {
+        return updateCount;
+    }
+
     public void validateEqualShard(List<Match> matches) {
         if (matches.isEmpty()) return;
 

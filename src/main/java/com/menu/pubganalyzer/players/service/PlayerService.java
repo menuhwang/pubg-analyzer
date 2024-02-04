@@ -39,10 +39,13 @@ public class PlayerService {
 
         List<Match> matches = pubgService.fetchMatches(matchIds);
 
-        player.validateEqualShard(matches);
-        player.plusUpdateCount();
+        Player updatePlayer = playerRepository.findByName(nickname)
+                        .orElse(player);
 
-        playerRepository.save(player);
+        updatePlayer.validateEqualShard(matches);
+        updatePlayer.plusUpdateCount();
+
+        playerRepository.save(updatePlayer);
         matchRepository.saveAll(matches);
     }
 }
