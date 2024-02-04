@@ -14,6 +14,7 @@ on:
 env:
   REGISTRY: ghcr.io
   TAG: 1.1.3
+  SCOUTER: 2.20.0
 
 
 jobs:
@@ -61,7 +62,20 @@ jobs:
       packages: write
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cache Scouter
+        uses: actions/cache@v4
+        with:
+          path: './scouter'
+          key: scouter-${{env.SCOUTER}}
+
+      - name: Install Scouter
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          wget https://github.com/scouter-project/scouter/releases/download/v${{env.SCOUTER}}/scouter-all-${{env.SCOUTER}}.tar.gz
+          tar xzvf scouter-all-${{env.SCOUTER}}.tar.gz
 
       - name: Docker Login
         uses: docker/login-action@v1.12.0
