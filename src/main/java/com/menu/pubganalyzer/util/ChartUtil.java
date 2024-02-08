@@ -4,6 +4,7 @@ import com.menu.pubganalyzer.telemetries.dto.response.BarChartDataset;
 import com.menu.pubganalyzer.telemetries.dto.response.ContributeDamageChartResponse;
 import com.menu.pubganalyzer.telemetries.dto.response.PhaseDamageChartResponse;
 import com.menu.pubganalyzer.telemetries.dto.response.WeaponAccuracyChartResponse;
+import com.menu.pubganalyzer.telemetries.dto.response.enums.Shotgun;
 import com.menu.pubganalyzer.telemetries.dto.response.enums.Weapon;
 import com.menu.pubganalyzer.util.pubg.response.telemetry.events.LogPlayerAttack;
 import com.menu.pubganalyzer.util.pubg.response.telemetry.events.LogPlayerKillV2;
@@ -115,6 +116,12 @@ public class ChartUtil {
             Weapon weapon = Weapon.of(firedWeapon);
 
             fireData[index] = fire.get(firedWeapon);
+            // 샷건 (탄환 수 / 격발) 계산
+            if (Shotgun.contains(weapon)) {
+                Shotgun shotgun = Shotgun.of(weapon);
+                fireData[index] *= shotgun.getAmmo();
+            }
+
             hitData[index] = hit.getOrDefault(firedWeapon, 0);
             labels.add(String.format("%s (%d%%)", weapon.getEng(), 100 * hitData[index] / fireData[index]));
             index++;
