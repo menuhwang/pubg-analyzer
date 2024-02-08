@@ -74,6 +74,7 @@ public enum DamageCauserName {
     BP_PICKUPTRUCK_B_03_C("Pickup Truck (open top)", "교통사고[Pickup Truck]"),
     BP_PICKUPTRUCK_B_04_C("Pickup Truck (open top)", "교통사고[Pickup Truck]"),
     BP_PICKUPTRUCK_B_05_C("Pickup Truck (open top)", "교통사고[Pickup Truck]"),
+    BP_PICOBUS_C("Pico bus", "교통사고[피코 버스]"),
     BP_PILLAR_CAR_C("Pillar Security Car", "교통사고[Pillar Security Car]"),
     BP_PONYCOUPE_C("Pony Coupe", "교통사고[Pony Coupe]"),
     BP_PORTER_C("Porter", "교통사고[Porter]"),
