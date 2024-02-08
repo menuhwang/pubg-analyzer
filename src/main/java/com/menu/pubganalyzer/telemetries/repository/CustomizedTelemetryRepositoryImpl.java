@@ -51,7 +51,7 @@ public class CustomizedTelemetryRepositoryImpl implements CustomizedTelemetryRep
     }
 
     @Override
-    public List<LogPlayerTakeDamage> findPlayerTakeDamageNotSelfDamage(String matchId, String attackerName) {
+    public List<LogPlayerTakeDamage> findPlayerTakeDamageGunByAttacker(String matchId, String attackerName) {
         /*
         * {
             'matchId': 'c768dd59-0413-4fe9-b1ec-94c422c161cf',
@@ -64,7 +64,8 @@ public class CustomizedTelemetryRepositoryImpl implements CustomizedTelemetryRep
                         Criteria.where("matchId").is(matchId)
                                 .and("telemetry.type").is("LogPlayerTakeDamage")
                                 .and("telemetry.attacker.name").is(attackerName)
-                                .and("telemetry.victime.name").ne(attackerName)
+                                .and("telemetry.victim.name").ne(attackerName)
+                                .and("telemetry.damageTypeCategory").is("Damage_Gun")
                 ),
                 TelemetryEntity.class
         );
