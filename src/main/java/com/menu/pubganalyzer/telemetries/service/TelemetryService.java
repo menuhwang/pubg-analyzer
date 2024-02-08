@@ -167,7 +167,7 @@ public class TelemetryService {
         fetchTelemetryIfAbsent(id);
 
         List<LogPlayerAttack> playerAttacksHittableWeapon = telemetryRepository.findPlayerAttackByHittableWeapon(id, playerName);
-        List<LogPlayerTakeDamage> playerTakeDamages = telemetryRepository.findPlayerTakeDamageNotSelfDamage(id, playerName);
+        List<LogPlayerTakeDamage> playerTakeDamages = telemetryRepository.findPlayerTakeDamageGunByAttacker(id, playerName);
 
         return ChartUtil.weaponAccuracyChart(playerAttacksHittableWeapon, playerTakeDamages);
     }

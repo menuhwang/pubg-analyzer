@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface CustomizedTelemetryRepository {
     List<LogPlayerAttack> findPlayerAttackByHittableWeapon(String matchId, String attackerName);
-    List<LogPlayerTakeDamage> findPlayerTakeDamageNotSelfDamage(String matchId, String attackerName);
+    List<LogPlayerTakeDamage> findPlayerTakeDamageGunByAttacker(String matchId, String attackerName);
 }
