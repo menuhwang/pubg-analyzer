@@ -1,11 +1,11 @@
 package com.menu.pubganalyzer.util;
 
-import com.menu.pubganalyzer.telemetries.dto.response.BarChartDataset;
 import com.menu.pubganalyzer.telemetries.dto.response.ContributeDamageChartResponse;
 import com.menu.pubganalyzer.telemetries.dto.response.PhaseDamageChartResponse;
 import com.menu.pubganalyzer.telemetries.dto.response.WeaponAccuracyChartResponse;
 import com.menu.pubganalyzer.telemetries.dto.response.enums.Shotgun;
 import com.menu.pubganalyzer.telemetries.dto.response.enums.Weapon;
+import com.menu.pubganalyzer.util.chartjs.Dataset;
 import com.menu.pubganalyzer.util.pubg.response.telemetry.events.LogPlayerAttack;
 import com.menu.pubganalyzer.util.pubg.response.telemetry.events.LogPlayerKillV2;
 import com.menu.pubganalyzer.util.pubg.response.telemetry.events.LogPlayerTakeDamage;
@@ -18,14 +18,23 @@ public class ChartUtil {
     private static final int PHASE_SIZE = 10; // 0 ~ 9
 
     public static PhaseDamageChartResponse phaseDamageChart(final List<LogPlayerTakeDamage> logPlayerTakeDamages) {
-        float[] phaseDamageDealt = new float[PHASE_SIZE];
+        List<String> labels = new ArrayList<>();
+        List<Float> phaseDamageDealt = new ArrayList<>();
+
+        for (int i = 0; i < PHASE_SIZE; i++) {
+            labels.add(i + " 페이즈");
+            phaseDamageDealt.add(0F);
+        }
 
         for (LogPlayerTakeDamage logPlayerTakeDamage : logPlayerTakeDamages) {
             int phase = logPlayerTakeDamage.getPhase();
-            phaseDamageDealt[phase] += (float) logPlayerTakeDamage.getDamage();
+            float damage = (float) logPlayerTakeDamage.getDamage();
+            phaseDamageDealt.set(phase, phaseDamageDealt.get(phase) + damage);
         }
 
-        return new PhaseDamageChartResponse(phaseDamageDealt);
+        Dataset dataset = new Dataset("", phaseDamageDealt);
+
+        return new PhaseDamageChartResponse(labels, List.of(dataset));
     }
 
     public static ContributeDamageChartResponse contributeDamageChart(
@@ -53,20 +62,22 @@ public class ChartUtil {
             victimPlayerDamageDealt.put(vitim, attackerDamageDealt);
         }
 
-        LinkedList<BarChartDataset<Float>> datasets = new LinkedList<>();
+        LinkedList<Dataset> datasets = new LinkedList<>();
         for (String member : members) {
-            Float[] data = new Float[victims.size()];
-            Arrays.fill(data, 0F);
-            for (int i = 0; i < data.length; i++) {
-                data[i] = victimPlayerDamageDealt.get(victims.get(i)).getOrDefault(member, 0F);
+            List<Float> data = new ArrayList<>();
+            for (int i = 0; i < victims.size(); i++) {
+                data.add(0F);
+            }
+            for (int i = 0; i < victims.size(); i++) {
+                data.set(i, victimPlayerDamageDealt.get(victims.get(i)).getOrDefault(member, 0F));
             }
 
-            datasets.add(new BarChartDataset<>(member, data));
+            datasets.add(new Dataset(member, data));
         }
 
-        Iterator<BarChartDataset<Float>> iterator = datasets.iterator();
+        Iterator<Dataset> iterator = datasets.iterator();
         while (iterator.hasNext()) {
-            BarChartDataset<Float> data = iterator.next();
+            Dataset data = iterator.next();
             if (player.equals(data.getLabel())) { // 조회한 유저의 데이터를 가장 앞으로 이동한다.
                 iterator.remove();
                 datasets.addFirst(data);
@@ -85,7 +96,9 @@ public class ChartUtil {
      * @param playerTakeDamages 'telemetry.attacker.name'과 'telemetry.victim.name'가 다른 데이터가 필요합니다.
      * @return
      */
-    public static WeaponAccuracyChartResponse weaponAccuracyChart(List<LogPlayerAttack> playerAttacks, List<LogPlayerTakeDamage> playerTakeDamages) {
+    public static WeaponAccuracyChartResponse weaponAccuracyChart(
+            final List<LogPlayerAttack> playerAttacks,
+            final List<LogPlayerTakeDamage> playerTakeDamages) {
         Set<String> firedWeapons = new LinkedHashSet<>();
         Map<String, Integer> fire = new HashMap<>();
         for (LogPlayerAttack playerAttack : playerAttacks) {
@@ -105,30 +118,31 @@ public class ChartUtil {
             hit.compute(weapon, (k, v) -> v == null ? 1 : v + 1);
         }
 
-        int size = firedWeapons.size();
-
         List<String> labels = new ArrayList<>();
-        int index = 0;
-        Integer[] fireData = new Integer[size];
-        Integer[] hitData = new Integer[size];
+        List<Integer> fireData = new ArrayList<>();
+        List<Integer> hitData = new ArrayList<>();
 
         for (String firedWeapon : firedWeapons) {
             Weapon weapon = Weapon.of(firedWeapon);
 
-            fireData[index] = fire.get(firedWeapon);
+            int f = fire.get(firedWeapon);
+
             // 샷건 (탄환 수 / 격발) 계산
             if (Shotgun.contains(weapon)) {
                 Shotgun shotgun = Shotgun.of(weapon);
-                fireData[index] *= shotgun.getAmmo();
+                f *= shotgun.getAmmo();
             }
 
-            hitData[index] = hit.getOrDefault(firedWeapon, 0);
-            labels.add(String.format("%s (%d%%)", weapon.getEng(), 100 * hitData[index] / fireData[index]));
-            index++;
+            fireData.add(f);
+
+            int h = hit.getOrDefault(firedWeapon, 0);
+            hitData.add(h);
+
+            labels.add(String.format("%s (%d%%)", weapon.getEng(), 100 * h / f));
         }
 
-        BarChartDataset<Integer> fireDataset = new BarChartDataset<>("fire", fireData);
-        BarChartDataset<Integer> hitDataset = new BarChartDataset<>("hit", hitData);
+        Dataset fireDataset = new Dataset("fire", fireData);
+        Dataset hitDataset = new Dataset("hit", hitData);
 
         return new WeaponAccuracyChartResponse(labels, List.of(fireDataset, hitDataset));
     }
