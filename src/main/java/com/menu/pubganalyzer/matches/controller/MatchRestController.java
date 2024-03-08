@@ -1,6 +1,7 @@
 package com.menu.pubganalyzer.matches.controller;
 
 import com.menu.pubganalyzer.common.dto.response.PageDTO;
+import com.menu.pubganalyzer.matches.dto.request.MatchFindCondition;
 import com.menu.pubganalyzer.matches.service.MatchService;
 import com.menu.pubganalyzer.matches.model.Match;
 import com.menu.pubganalyzer.matches.dto.response.*;
@@ -62,8 +63,9 @@ public class MatchRestController {
     )
     public ResponseEntity<ApiResult<SearchPlayerResponse>> findByPlayerName(
             @PathVariable final String playerName,
-            @PageableDefault(size = 20, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<Match> matchPage = matchService.findByPlayerName(playerName, pageable);
+            @PageableDefault(size = 20, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            MatchFindCondition matchFindCondition) {
+        Page<Match> matchPage = matchService.findByPlayerName(playerName, pageable, matchFindCondition);
         Page<MatchStatsResponse> matchStatsResPage = matchPage.map(match -> MatchStatsResponse.of(match, playerName));
         PageDTO<MatchStatsResponse> matchResPageDTO = PageDTO.of(matchStatsResPage);
 

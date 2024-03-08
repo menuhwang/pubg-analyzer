@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Id;
+import jakarta.persistence.Id;
 
 @Getter
 @AllArgsConstructor

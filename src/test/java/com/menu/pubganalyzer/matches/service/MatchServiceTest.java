@@ -5,7 +5,6 @@ import com.menu.pubganalyzer.matches.dto.response.MatchResultResponse;
 import com.menu.pubganalyzer.matches.dto.response.RosterResponse;
 import com.menu.pubganalyzer.matches.repository.MatchRepository;
 import com.menu.pubganalyzer.common.exception.MatchNotFoundException;
-import com.menu.pubganalyzer.matches.service.MatchService;
 import com.menu.pubganalyzer.support.fixture.MatchFixture;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -61,12 +60,12 @@ class MatchServiceTest {
 
     @Test
     void findByPlayerName() {
-        given(matchRepository.findByRosters_Participants_Name(PLAYER_NAME, PAGEABLE))
+        given(matchRepository.findByPlayerName(PLAYER_NAME, PAGEABLE, null))
                 .willReturn(MatchFixture.MATCH_PAGE);
 
-        assertDoesNotThrow(() -> matchService.findByPlayerName(PLAYER_NAME, PAGEABLE));
+        assertDoesNotThrow(() -> matchService.findByPlayerName(PLAYER_NAME, PAGEABLE, null));
 
-        verify(matchRepository).findByRosters_Participants_Name(PLAYER_NAME, PAGEABLE);
+        verify(matchRepository).findByPlayerName(PLAYER_NAME, PAGEABLE, null);
     }
 
     @Test

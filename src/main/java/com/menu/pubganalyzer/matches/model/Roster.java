@@ -5,7 +5,7 @@ import com.menu.pubganalyzer.util.pubg.response.match.Element;
 import lombok.Builder;
 import lombok.Getter;
 
-import javax.persistence.Column;
+import jakarta.persistence.Column;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
