@@ -1,5 +1,6 @@
 package com.menu.pubganalyzer.matches.service;
 
+import com.menu.pubganalyzer.matches.dto.request.MatchFindCondition;
 import com.menu.pubganalyzer.matches.model.Match;
 import com.menu.pubganalyzer.matches.model.Participant;
 import com.menu.pubganalyzer.matches.model.Roster;
@@ -31,8 +32,9 @@ public class MatchService {
     }
     public Page<Match> findByPlayerName(
             final String playerName,
-            final Pageable pageable) {
-        return matchRepository.findByRosters_Participants_Name(playerName, pageable);
+            final Pageable pageable,
+            final MatchFindCondition matchFindCondition) {
+        return matchRepository.findByPlayerName(playerName, pageable, matchFindCondition);
     }
 
     public MatchInfoResponse findMatchInfo(final String id) {

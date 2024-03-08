@@ -1,5 +1,6 @@
 package com.menu.pubganalyzer.matches.controller;
 
+import com.menu.pubganalyzer.matches.dto.request.MatchFindCondition;
 import com.menu.pubganalyzer.matches.dto.response.MatchInfoResponse;
 import com.menu.pubganalyzer.matches.dto.response.MatchResultResponse;
 import com.menu.pubganalyzer.matches.dto.response.RosterResponse;
@@ -80,14 +81,14 @@ class MatchRestControllerTest {
 
     @Test
     void findByPlayerName() throws Exception {
-        given(matchService.findByPlayerName(eq(PLAYER_NAME), any(Pageable.class)))
+        given(matchService.findByPlayerName(eq(PLAYER_NAME), any(Pageable.class), any(MatchFindCondition.class)))
                 .willReturn(MATCH_PAGE);
 
         ResultActions result = mockMvc.perform(
                 get(MATCH_API_URL + "/player/" + PLAYER_NAME)
         );
 
-        verify(matchService).findByPlayerName(eq(PLAYER_NAME), any(Pageable.class));
+        verify(matchService).findByPlayerName(eq(PLAYER_NAME), any(Pageable.class), any(MatchFindCondition.class));
 
         result.andDo(print())
                 .andExpect(status().isOk())
