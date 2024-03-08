@@ -8,7 +8,7 @@ import lombok.Getter;
 import org.hibernate.Hibernate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Id;
+import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.*;
 
