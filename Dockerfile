@@ -1,4 +1,4 @@
-FROM openjdk:11.0-slim
+FROM openjdk:17.0-slim
 WORKDIR /app
 RUN mkdir log
 RUN mkdir scouter
