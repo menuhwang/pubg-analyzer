@@ -31,7 +31,7 @@ public enum DamageTypeCategory {
     DAMAGE_EXPLOSION_PROPANETANK("Propane Tank", ""),
     DAMAGE_EXPLOSION_REDZONE("Redzone Explosion Damage", ""),
     DAMAGE_EXPLOSION_STICKYBOMB("Sticky Bomb Explosion Damage", ""),
-    DAMAGE_EXPLOSION_VEHICLE("Vehicle Explosion Damage", ""),
+    DAMAGE_EXPLOSION_VEHICLE("Vehicle Explosion Damage", "차량 폭발"),
     DAMAGE_GROGGY("Bleed out damage", ""),
     DAMAGE_GUN("Gun Damage", ""),
     DAMAGE_GUN_PENETRATE_BRDM("BRDM", ""),
