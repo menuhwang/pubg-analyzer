@@ -202,6 +202,7 @@ public enum DamageCauserName {
     WEAPPANPROJECTILE_C("Pan Projectile", "프라이팬"),
     WEAPPAN_C("Pan", "프라이팬"),
     WEAPPANZERFAUST100M1_C("Panzerfaust", "판처"),
+    WEAPPICKAXE_C("Pick axe", "곡괭이"),
     WEAPQBU88_C("QBU88", "QBU88"),
     WEAPQBZ95_C("QBZ95", "QBZ95"),
     WEAPRHINO_C("R45", "R45"),
